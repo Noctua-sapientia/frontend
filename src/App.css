@@ -2,6 +2,16 @@
   text-align: center;
 }
 
+.TextLeft {
+  text-align: left;
+  margin-left: 15px;
+}
+
+.TextRight{
+  text-align: right;
+  margin-right: 15px;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

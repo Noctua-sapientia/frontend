@@ -1,12 +1,28 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useState, useEffect} from 'react';
 import EditableBook from './EditableBook.js'
 import Alert from './Alert.js';
 import NewBook from './NewBook.js';
+import BooksApi from './BooksApi.js';
+import { Link } from 'react-router-dom'; 
 
 function Books(props){
 
     const [message, setMessage] = useState(null);
-    const[books, setBooks] = useState(props.books);
+    const[books, setBooks] = useState([]);
+
+    useEffect(() => {
+        async function fetchBooks(){
+            try{
+            const c = await BooksApi.getAllBooks();
+            setBooks(c);
+            } catch (error) {
+                setMessage('No se pudo contactar con el servidor');
+            }
+        }
+
+        fetchBooks();
+    }
+    , []);
 
     function onAlertClose(){
         setMessage(null);
@@ -90,6 +106,13 @@ function Books(props){
                     {books.map((book) => 
                             <EditableBook key={book.titulo} book={book} onEdit={(newBook) => onBookEdit(newBook, book)} onDelete={onBookDelete}/>
                         )}
+                        <tr>
+                            <td>
+                                {/* Botón para redirigir a la página de detalles */}
+                                     <Link to={`/`} className="btn btn-primary">Pantalla Principal</Link>
+                            </td>
+
+                        </tr>
                 </tbody>
             </table> 
         </Fragment>

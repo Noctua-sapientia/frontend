@@ -1,0 +1,76 @@
+/* styles.css */
+
+.home-container {
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .column-container {
+    display: flex;
+    padding: 20px;
+    height: auto;
+    background-color: rgb(36, 99, 225);
+    border-radius: 30pt;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .column {
+    flex: 1;
+    padding: 20px;
+    margin: 0 10px;
+    text-align: center; /* Centro el texto en la columna */
+  }
+  
+  .column h2 {
+    margin-bottom: 20px;
+    color: #ffffff;
+  }
+  
+  .column h1{
+      color: white;
+  }
+  
+  .column p {
+    margin-bottom: 30px;
+  }
+  .column Button {
+    background-color: rgb(70, 75, 85);
+    border-radius: 5pt;
+    max-width: 100px;
+    padding: 2%;
+    margin: auto;
+  }
+  
+  .column Button:hover {
+    background-color: rgb(92, 100, 117);
+    border-radius: 20pt;
+    max-width: 800px;
+    padding: 2%;
+  }
+  .backHome {
+      text-align: center;
+  }
+  
+  .separator {
+    width: 100%; /* O ajusta el ancho según tus necesidades */
+    height: 1px;
+    background-color: #ddd;
+    margin: 20px 0; /* Ajusta el margen según tus necesidades */
+  }
+  
+  .registerForm {
+    padding: 0.5%;
+  }
+  
+  .icono {
+    width: 60px; /* Ajusta el ancho según tus necesidades */
+    height: 60px; /* Ajusta la altura según tus necesidades */
+    vertical-align: middle;
+  }
+  
+  .register-Button {
+    background-color: #a1a5a1; /* Cambia el color a verde (puedes utilizar cualquier color hexadecimal, RGB, etc.) */
+    color: white; /* Cambia el color del texto */
+  }

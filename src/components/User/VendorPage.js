@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
 import './user_styles.css'; // Importa tus estilos CSS aquí
 import logoImage from '../../img/logo.png'
@@ -47,10 +46,6 @@ function VendorPage() {
                         />
                     </Col>
                 </Row>
-                <div className="separator"></div>
-                <Col align='center'>
-                    <Link to="/" className="btn btn-primary" > Vuelve a principal </Link>
-                </Col>
             </Col>
         </Container>
     );

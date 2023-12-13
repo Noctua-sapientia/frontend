@@ -1,6 +1,5 @@
 // LoginPage.js
 import React from 'react';
-import { Link } from 'react-router-dom';
 import authService from '../../services/authService';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
 import './user_styles.css'; // Importa tus estilos CSS aquí
@@ -31,10 +30,11 @@ function LoginPage() {
         </Col>
         <Col md={4} className="column">
           <h1>Registrate</h1>
-          <Link to="/login/register">Registrate</Link>
+          <Button variant="primary" type="button" href="/login/register">
+            Registrarse
+          </Button>
         </Col>
       </Row>
-      <Link to="/" className='backHome'>Volver a Home</Link>
     </Container>
   );
 }

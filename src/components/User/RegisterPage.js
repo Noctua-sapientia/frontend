@@ -61,8 +61,6 @@ function RegisterPage() {
               </Link>
               </div>
             </Row>
-            <div className="separator"></div>
-            <Link to="/" className="btn btn-primary"> Vuelve a principal </Link>
           </Col>
         </Row>
         

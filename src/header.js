@@ -7,7 +7,7 @@ function Header() {
         <Container>
             <Row>
                 <Col xs={2}><a href='/'><img src={logo} alt="Logo" className="icono"/></a></Col>
-                <Col xs={4}>
+                <Col xs={2}>
                     <InputGroup className="mb-5">
                         <FormControl
                             placeholder="Buscar..."
@@ -18,13 +18,16 @@ function Header() {
                     </InputGroup>
                 </Col>
                 <Col xs={2}>
-                    <Button className="btn btn-primary"> Reviews </Button>
+                    <Button className="btn btn-primary" href="/review"> Reviews </Button>
                 </Col>
                 <Col xs={2}>
-                    <Button className="btn btn-primary"> Orders </Button> 
+                    <Button className="btn btn-primary" href="/order"> Orders </Button> 
                 </Col>
                 <Col xs={2}>
-                    <Button className="btn btn-primary"> Cuenta </Button>                
+                    <Button className="btn btn-primary" href="/vendorUser"> Account </Button>                
+                </Col>
+                <Col xs={2}>
+                    <Button className="btn btn-primary" href="/login"> Login </Button>                
                 </Col>
             </Row>
         </Container>

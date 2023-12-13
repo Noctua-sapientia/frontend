@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'; 
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
 /*import BooksApi from './BooksApi.js';*/
+import libro1 from '../src/img/book1.jpeg';
 
 import './book_styles.css';
 
@@ -27,32 +28,32 @@ return(
             <Col>
                 <Row>
                     <Col align='center'>
-                        <h2>Libro</h2>
+                        <h2>Harry Potter y La Piedra Filosofal</h2>
                     </Col>
                 </Row>
                 <Row>
                     {/* Columna de botones */}
                     <Col className='column align-items-center justify-content-center' >
                         <Row>
-                            <CardText>TÍTULO</CardText>
+                            <CardText>J.K. Rowling</CardText>
                         </Row>
                         <Row>
-                            <CardText>AUTOR</CardText>
+                            <CardText>Fantasía</CardText>
                         </Row>
                         <Row>
-                            <CardText>CATEGORÍA</CardText>
+                            <CardText>Vendedor 1: 10€ (4,3)</CardText>    
                         </Row>
                         <Row>
-                            <CardText>PRECIO</CardText>    
+                            <CardText>Vendedor 2: 11€ (4,9)</CardText>    
                         </Row>
                         <Row>
-                            <CardText>VENDEDORES</CardText>    
+                            <CardText>Vendedor 3: 7€ (3,7)</CardText>    
                         </Row>
                         <Row>
-                            <Link to="/books/book" className="btn btn-primary" > Comprar </Link>
+                            <Link to="/orders/book" className="btn btn-primary" > Añadir al Carrito </Link>
                         </Row>
                         <Row>
-                            <Button variant="primary"> Reseñas </Button>
+                            <Link to="/reviews/seller" className="btn btn-primary" > Reseñas </Link>
                         </Row>                   
                         {/* Agrega más botones según sea necesario */}
                     </Col>
@@ -60,7 +61,7 @@ return(
                     {/* Gran imagen */}
                     <Col className='column'>
                         <img
-                        //src={logoImage} // Reemplaza con la URL de tu imagen
+                        src={libro1} 
                         alt="Logo"
                         className="img-fluid"
                         />

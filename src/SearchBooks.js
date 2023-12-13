@@ -1,9 +1,11 @@
-import React, { useState, useEffect, setMessage, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'; // Importa el CSS de Bootstrap
-import BooksApi from './BooksApi';
 import Book from './Book';
-import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
+import { Container, Button, Row, Col, CardText, Card, CardBody } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import libro1 from '../src/img/book1.jpeg';
+import libro2 from '../src/img/book2.jpeg';
+import libro3 from '../src/img/book3.jpeg';
 
 function BookSearch() {
   const initialBooks = [
@@ -70,56 +72,56 @@ function BookSearch() {
              ))}
       </ul>
     </div>
-    <Container className='home-container'>
-            {/* Cabecera */}
-            <Col>
-                <Row>
-                    <Col align='center'>
-                        <h2>Catálogo de Libros</h2>
-                    </Col>
-                </Row>
-                <Row>
-                    {/* Columna de botones */}
-                    <Col className='column align-items-center justify-content-center' >
-                        <Row>
-                            <CardText>TÍTULO</CardText>
-                        </Row>
-                        <Row>
-                            <CardText>AUTOR</CardText>
-                        </Row>
-                        <Row>
-                            <CardText>CATEGORÍA</CardText>
-                        </Row>
-                        <Row>
-                            <CardText>PRECIO</CardText>    
-                        </Row>
-                        <Row>
-                            <CardText>VENDEDORES</CardText>    
-                        </Row>
-                        <Row>
-                            <Link to="/books/book" className="btn btn-primary" > Ver Libro </Link>
-                        </Row>
-                        <Row>
-                            <Button variant="primary"> Reseñas </Button>
-                        </Row>                   
-                        {/* Agrega más botones según sea necesario */}
-                    </Col>
-        
-                    {/* Gran imagen */}
-                    <Col className='column'>
-                        <img
-                        //src={logoImage} // Reemplaza con la URL de tu imagen
-                        alt="Logo"
-                        className="img-fluid"
-                        />
-                    </Col>
-                </Row>
-                <div className="separator"></div>
+    <Container className='container'>
+      <Row>
+        <Col>
+          <Card>
+          <img          src={libro1} 
+                        alt="Libro"
+                        className="img-fluid" />
+            <CardBody>
+              <CardText>
+              <Link to="/books/book" className="btn btn-primary" > Ver Libro </Link>
+              <Link to="/reviews/book" className="btn btn-primary" > Reseñas </Link>
+              </CardText>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col>
+          <Card>
+          <img          src={libro2} 
+                        alt="Libro"
+                        className="img-fluid" />
+            <CardBody>
+              <CardText>
+              <Link to="/books/book" className="btn btn-primary" > Ver Libro </Link>
+              <Button variant="primary"> Reseñas </Button>
+              </CardText>
+            </CardBody>
+          </Card>
+        </Col>
+        <Col>
+          <Card>
+          <img          src={libro3} 
+                        alt="Libro"
+                        className="img-fluid" />
+            <CardBody>
+              <CardText>
+              <Link to="/books/book" className="btn btn-primary" > Ver Libro </Link>
+              <Button variant="primary"> Reseñas </Button>
+              </CardText>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+      <div className="separator"></div>
                 <Col align='center'>
                     <Link to="/" className="btn btn-primary" > Vuelve a principal </Link>
                 </Col>
-            </Col>
-        </Container>
+      <Col>
+  
+      </Col>
+    </Container>
     </Fragment>
   );
 }

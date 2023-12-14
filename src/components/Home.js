@@ -17,6 +17,8 @@ function Home() {
       <Link to="/book">Seccion books</Link>
       <div>---</div>
       <Link to="/review">Seccion review</Link>
+      <div>---</div>
+      <Link to="/pricing">Seccion pricing</Link>
 
     </div>
   );

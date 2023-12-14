@@ -29,10 +29,10 @@ function VendorPage() {
                         <CardText>DIRECCION POSTAL</CardText>    
                         </Row>
                         <Row>
-                        <Button className='profile-button'> Mis libros </Button>
+                        <Button className='profile-button' href="/book"> Mis libros </Button>
                         </Row>
                         <Row>
-                        <Button variant="primary"> Mis reseñas </Button>
+                        <Button className='profile-button' href="/review"> Mis reseñas </Button>
                         </Row>                   
                         {/* Agrega más botones según sea necesario */}
                     </Col>

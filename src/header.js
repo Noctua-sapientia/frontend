@@ -1,8 +1,11 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import { Container, Button, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
 import logo from './img/logo.png';
 
 function Header() {
+    const navigate = useNavigate();
+    function handleClick(path) {navigate(path);}
     return (
         <Container>
             <Row>
@@ -18,16 +21,23 @@ function Header() {
                     </InputGroup>
                 </Col>
                 <Col xs={2}>
-                    <Button className="btn btn-primary" href="/review"> Reviews </Button>
+                    {/*
+                    <Link to="/about">
+                        <Button variant="outline-light" size="lg">
+                            about
+                        </Button>
+                    </Link>
+                    */}
+                    <Button className="btn btn-primary" onClick={() => handleClick("/review")}> Review </Button> 
                 </Col>
                 <Col xs={2}>
-                    <Button className="btn btn-primary" href="/order"> Orders </Button> 
+                    <Button className="btn btn-primary" onClick={() => handleClick("/order")}> Orders </Button> 
                 </Col>
                 <Col xs={2}>
-                    <Button className="btn btn-primary" href="/vendorUser"> Account </Button>                
+                    <Button className="btn btn-primary" onClick={() => handleClick("/vendorUser")}> Account </Button>
                 </Col>
                 <Col xs={2}>
-                    <Button className="btn btn-primary" href="/login"> Login </Button>                
+                    <Button className="btn btn-primary" onClick={() => handleClick("/login")}> Login </Button>               
                 </Col>
             </Row>
         </Container>

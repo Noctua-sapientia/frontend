@@ -7,6 +7,7 @@ import VendorPage from './components/User/VendorPage';
 import Orders from './components/Order';
 import Books from './components/Book';
 import Review from './components/Review';
+import Pricing from './components/Pricing/pricingPage';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="/order" element={<Orders />} />
         <Route path="/book" element={<Books />} />
         <Route path="/review" element={<Review />} />
+        <Route path="/pricing" element={<Pricing />} />
         {/* Agrega más rutas según sea necesario */}
       </Routes>
     </Router>

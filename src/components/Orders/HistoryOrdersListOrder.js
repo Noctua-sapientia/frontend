@@ -1,15 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Badge, Button } from 'react-bootstrap';
 
 import './HistoryOrders.css';
 import { parseDate, chooseBadgeType } from './utils';  
 
 function HistoryOrdersListOrder(props) {
+  const navigate = useNavigate();
 
-
-  function goToOrderDetails() {
-    console.log('goToOrderDetails');
+  function goToOrderDetails(orderId) {
+    navigate(`/historyOrders/${orderId}`);
   }
 
   return (
@@ -18,12 +18,13 @@ function HistoryOrdersListOrder(props) {
       <td>{parseDate(props.order.creationDatetime)}</td>
       <td>{parseDate(props.order.maxDeliveryDate)}</td>
       <td>{props.order.payment}€</td>
-      <td><Badge bg={chooseBadgeType(props.order.status).bg} text={chooseBadgeType(props.order.status).text}>{props.order.status}</Badge></td>
       <td>
-        {/* <Button variant="info" onClick={goToOrderDetails}>Ver detalles</Button> */}
-        <Link to={`/historyOrders/${props.order.orderId}`}>
-          <Button variant="info">Ver detalles</Button>
-        </Link>
+        <Badge bg={chooseBadgeType(props.order.status).bg} text={chooseBadgeType(props.order.status).text}>
+          {props.order.status}
+        </Badge>
+      </td>
+      <td>
+        <Button variant="info" onClick={() => goToOrderDetails(props.order.orderId)}>Ver detalles</Button>
       </td>
     </tr>
   );

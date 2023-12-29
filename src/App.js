@@ -29,11 +29,10 @@ function App() {
 
         <Route path="/review" element={<Review />} />
 
-        <Route path="/historyOrders" element={<HistoryOrders />} />
-        <Route path="/historyOrders/1" element={<OrderDetails />} />
+        <Route path="/historyOrders" element={<HistoryOrders />}/>
+        <Route path="/historyOrders/:orderId" element={<OrderDetails />} />
 
         {/* <Route path="/pricing" element={<Pricing />} /> */}
-        
         {/* Agrega más rutas según sea necesario */}
       </Routes>
     </Router>

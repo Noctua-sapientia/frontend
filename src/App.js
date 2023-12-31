@@ -12,6 +12,7 @@ import Review from './components/Review';
 
 import HistoryOrders from './components/Orders/HistoryOrders';
 import OrderDetails from './components/Orders/OrderDetails';
+import BascketOrders from './components/Orders/BascketOrders';
 
 // import Pricing from './components/Pricing/pricingPage';
 
@@ -31,6 +32,7 @@ function App() {
 
         <Route path="/historyOrders" element={<HistoryOrders />}/>
         <Route path="/historyOrders/:orderId" element={<OrderDetails />} />
+        <Route path="/bascketOrders" element={<BascketOrders />} />
 
         {/* <Route path="/pricing" element={<Pricing />} /> */}
         {/* Agrega más rutas según sea necesario */}

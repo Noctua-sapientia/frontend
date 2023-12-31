@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Badge, Button } from 'react-bootstrap';
 
 import './HistoryOrders.css';
-import { parseDate, chooseBadgeType } from './utils';  
+import { parseDate, getBadgeStatus } from './utils';  
 
 function HistoryOrdersListOrder(props) {
   const navigate = useNavigate();
@@ -18,11 +18,7 @@ function HistoryOrdersListOrder(props) {
       <td>{parseDate(props.order.creationDatetime)}</td>
       <td>{parseDate(props.order.maxDeliveryDate)}</td>
       <td>{props.order.payment}€</td>
-      <td>
-        <Badge bg={chooseBadgeType(props.order.status).bg} text={chooseBadgeType(props.order.status).text}>
-          {props.order.status}
-        </Badge>
-      </td>
+      <td>{getBadgeStatus(props.order.status)}</td>
       <td>
         <Button variant="info" onClick={() => goToOrderDetails(props.order.orderId)}>Ver detalles</Button>
       </td>

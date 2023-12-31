@@ -1,7 +1,37 @@
+import { Badge} from 'react-bootstrap';
+
+
 function parseDate(dateTime){
     var date = dateTime.split('T')[0];
     return date;
   }
+
+function calculateOrderPayment(order){
+
+  var shippingCost = order.shippingCost;
+  var subtotal = 0;
+
+  order.books.forEach(book => {
+    subtotal += book.price * book.units;
+  });
+
+  return {
+    shippingCost: shippingCost,
+    subtotal: subtotal, 
+    payment: subtotal + shippingCost
+  };
+}
+
+function getBadgeStatus(status){
+
+  return(
+    <Badge bg={chooseBadgeType(status).bg} text={chooseBadgeType(status).text}>
+      {status}
+    </Badge>
+  );
+
+}
+
 
 function chooseBadgeType(status){
 
@@ -27,5 +57,4 @@ function chooseBadgeType(status){
   }
 
 
-export { parseDate };
-export { chooseBadgeType };
+export { parseDate, getBadgeStatus, calculateOrderPayment };

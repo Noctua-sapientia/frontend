@@ -13,6 +13,7 @@ import Review from './components/Review';
 import HistoryOrders from './components/Orders/HistoryOrders';
 import OrderDetails from './components/Orders/OrderDetails';
 import BascketOrders from './components/Orders/BascketOrders';
+import orders from './components/Orders/OrdersData';
 
 // import Pricing from './components/Pricing/pricingPage';
 
@@ -30,8 +31,8 @@ function App() {
 
         <Route path="/review" element={<Review />} />
 
-        <Route path="/historyOrders" element={<HistoryOrders />}/>
-        <Route path="/historyOrders/:orderId" element={<OrderDetails />} />
+        <Route path="/historyOrders" element={<HistoryOrders orders={orders} />}/>
+        <Route path="/historyOrders/:orderId" element={<OrderDetails orders={orders} />} />
         <Route path="/bascketOrders" element={<BascketOrders />} />
 
         {/* <Route path="/pricing" element={<Pricing />} /> */}

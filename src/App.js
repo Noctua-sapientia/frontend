@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 
@@ -18,6 +18,9 @@ import orders from './components/Orders/OrdersData';
 // import Pricing from './components/Pricing/pricingPage';
 
 function App() {
+
+  const [rawOrders, setOrders] = useState(orders);
+
   return (
     <Router>
       <Routes>
@@ -31,8 +34,8 @@ function App() {
 
         <Route path="/review" element={<Review />} />
 
-        <Route path="/historyOrders" element={<HistoryOrders orders={orders} />}/>
-        <Route path="/historyOrders/:orderId" element={<OrderDetails orders={orders} />} />
+        <Route path="/historyOrders" element={<HistoryOrders orders={rawOrders} />}/>
+        <Route path="/historyOrders/:orderId" element={<OrderDetails orders={rawOrders} setOrders={setOrders} />} />
         <Route path="/bascketOrders" element={<BascketOrders />} />
 
         {/* <Route path="/pricing" element={<Pricing />} /> */}

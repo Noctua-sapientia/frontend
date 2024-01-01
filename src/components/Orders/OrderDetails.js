@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 import { Container, Card, Button } from 'react-bootstrap';
 import './OrderDetails.css';
@@ -14,7 +14,12 @@ function OrderDetails(props) {
   const orderId = useParams().orderId;
   const order = props.orders.find(order => order.orderId === Number(orderId));
 
-  console.log(parseDate(order.maxDeliveryDate));
+  const navigate = useNavigate();
+
+  function onDeleteOrder(order){
+    props.setOrders(prevOrders => {return prevOrders.filter(o => o.orderId !== order.orderId)});
+    navigate('/historyOrders');
+  }
 
 
   return (
@@ -36,7 +41,7 @@ function OrderDetails(props) {
 
           <Container className="orderDetails-buttons d-flex justify-content-center gap-3">
             <Button variant="primary">Editar</Button>
-            <Button variant="info">Ver factura</Button>
+            <Button variant="info" onClick={() => onDeleteOrder(order)}>Delete</Button>
           </Container>
           
           </Card.Body>

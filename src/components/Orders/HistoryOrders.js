@@ -3,6 +3,8 @@ import HistoryOrdersFilter from './HistoryOrdersFilter';
 import HistoryOrdersList from './HistoryOrdersList';
 import { Container } from 'react-bootstrap';
 
+import { calculateOrderPayment } from './utils'; 
+
 import './HistoryOrders.css';
 
 function HistoryOrders(props) {
@@ -26,15 +28,15 @@ function HistoryOrders(props) {
     }
 
     if (minPrice) {
-      filteredOrders = filteredOrders.filter(order => order.payment >= parseFloat(minPrice));
+      filteredOrders = filteredOrders.filter(order => calculateOrderPayment(order).payment >= parseFloat(minPrice));
     }
 
     if (maxPrice) {
-      filteredOrders = filteredOrders.filter(order => order.payment <= parseFloat(maxPrice));
+      filteredOrders = filteredOrders.filter(order => calculateOrderPayment(order).payment <= parseFloat(maxPrice));
     }
 
     if (sortOrder === 'totalPayment') {
-      filteredOrders.sort((a, b) => a.payment - b.payment);
+      filteredOrders.sort((a, b) => calculateOrderPayment(a).payment - calculateOrderPayment(b).payment);
     } else if (sortOrder === 'deliveryDate') {
       filteredOrders.sort((a, b) => new Date(a.maxDeliveryDate) - new Date(b.maxDeliveryDate));
     } else if (sortOrder === 'orderDate') {

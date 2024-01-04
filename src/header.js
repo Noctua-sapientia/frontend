@@ -18,21 +18,13 @@ function Header() {
                     </InputGroup>
                 </Col>
                 <Col xs={2}>
-                    {/*
-                    <Link to="/about">
-                        <Button variant="outline-light" size="lg">
-                            about
-                        </Button>
-                    </Link>
-                    */}
                     <Button className="btn btn-primary" href="/review"> Orders </Button> 
-
                 </Col>
                 <Col xs={2}>
                     <Button className="btn btn-primary" href="/order"> Orders </Button> 
                 </Col>
                 <Col xs={2}>
-                    <Button className="btn btn-primary" href="/vendorUser"> Account </Button>                
+                    <Button className="btn btn-primary" href="/seller"> Account </Button>                
                 </Col>
                 <Col xs={2}>
                     <Button className="btn btn-primary" href="/login"> Login </Button>                

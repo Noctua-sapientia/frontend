@@ -5,7 +5,7 @@ import Comment from './Comment.js';
 
 function CommentList(props) {
   return(
-    <table className='table'>
+    <table className='table table-fixed table-margin'>
       <thead>
         <tr>
           <th></th>

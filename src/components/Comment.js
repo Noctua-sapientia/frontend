@@ -23,13 +23,11 @@ function Comment(props) {
   return(
     <tr>
       <td>Imagen del avatar si se pone</td>
+      <td className='TextCenter'>
+          {props.comment.id}
+      </td>
       <td className='TextLeft'>
-        <div>
-          {props.comment.customerDescription}
-        </div>
-        <div>
-          {props.comment.updatedDate}
-        </div>  
+          {props.comment.date}
       </td>
       <td className='TextLeft'>
         <Star numGoldStars={props.comment.rating} edit='false'/>
@@ -37,10 +35,10 @@ function Comment(props) {
           {props.comment.description} 
         </div>    
       </td>
-  
-      <FontAwesomeIcon icon={faPencilAlt} onClick={abrirModal} className="icono-lapiz" />
+      <td>
+        <FontAwesomeIcon icon={faPencilAlt} onClick={abrirModal} className="icono-lapiz" />
+      </td>
       <CommentWindow isOpen={modalAbierto} onClose={cerrarModal} description={props.comment.description} rating={props.comment.rating}/>
-
       <CommentWindow/>
     </tr>
   )

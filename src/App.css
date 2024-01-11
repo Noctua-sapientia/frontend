@@ -12,6 +12,10 @@
   margin-right: 15px;
 }
 
+.TextCenter{
+  text-align: center;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
@@ -45,4 +49,28 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+
+.table-fixed {
+  width: 50%; 
+  min-height: 300px;
+}
+
+.table-fixed th, .table-fixed td {
+  width: 25%; 
+}
+
+.table-margin {
+  margin: 0 auto; 
+  max-width: 80%; 
+}
+
+.faded {
+  opacity: 0.6; /* Disminuye la opacidad para un efecto 'apagado' */
+}
+
+.desplegable {
+  text-align: right;
+  margin-right: 15%;
 }

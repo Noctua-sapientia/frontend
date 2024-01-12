@@ -1,6 +1,5 @@
 // LoginPage.js
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import './user_styles.css'; // Importa tus estilos CSS aquí
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,6 +8,17 @@ import imageMeta from '../../img/meta.png';
 import imageGoogle from '../../img/google.png';
 
 function RegisterPage() {
+
+    const handleLoginWithMeta = () => {
+      // Lógica para iniciar sesión con Meta
+    };
+    const handleLoginWithMicrosoft = () => {
+      // Lógica para iniciar sesión con Microsoft
+    };
+    const handleLoginWithGoogle = () => {
+      // Lógica para iniciar sesión con Google
+    };
+
     return (
       <Container className="home-container">
         <Row className="column-container">
@@ -42,23 +52,22 @@ function RegisterPage() {
               <div className="d-flex justify-content-around align-items-center">
 
               {/* Botón para registrarse con Google */}
-              <Link to="/register/google" className="btn registerButton">
+              <div to="/register/google" className="btn registerButton">
                 <Col><img src={imageGoogle} alt="Google" className="icono" /></Col>
-                <Col>Registrarse con Google</Col>
-              </Link>
+                <Col><Button onClick={handleLoginWithGoogle}>Iniciar sesión con Google</Button></Col>
+              </div>
 
               {/* Botón para registrarse con Microsoft */}
-              <Link to="/register/microsoft" className="btn register-Button">
+              <div>
                 <Col><img src={imageMicrosoft} alt="Microsoft" className="icono" /></Col>
-                <Col>Registrarse con Microsoft</Col>
-              </Link>
+                <Col><Button onClick={handleLoginWithMicrosoft}>Iniciar sesión con Microsoft</Button></Col>
+              </div>
 
               {/* Botón para registrarse con Meta (Facebook) */}
-              <Link to="/register/meta" className="btn register-Button">
+              <div>
                 <Col><img src={imageMeta} alt="Meta" className="icono" /></Col>
-                <Col>Registrarse con Meta</Col>
-                
-              </Link>
+                <Col><Button onClick={handleLoginWithMeta}>Iniciar sesión con Meta</Button></Col>
+              </div>
               </div>
             </Row>
           </Col>

@@ -12,7 +12,7 @@ function SellerPage(props) {
     useEffect(() => {
         async function fetchUser() {
             try {
-                const c = await UserApi.getSeller(user);
+                const c = await UserApi.getCustomer(user);
                 setUser(c);
 
             } catch (error) {

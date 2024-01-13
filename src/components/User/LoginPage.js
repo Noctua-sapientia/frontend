@@ -22,7 +22,10 @@ function LoginPage() {
     // Verifica si el inicio de sesión fue exitoso
     if (success) {
       // Puedes redirigir al usuario a la página de su cuenta, por ejemplo:
-      navigate('/my-account');
+      navigate('/myaccount');
+    }
+    else{
+      console.log("Error al intentar acceder con este usuario")
     }
   };
 
@@ -30,6 +33,7 @@ function LoginPage() {
     <Container className="home-container">
       <Row className="column-container">
         <Col md={4} className="column">
+          <h1>Iniciar sesión</h1>
           {/* Formulario de inicio de sesión si no hay un token de acceso */}
           <Form className="mt-5">
             <Form.Group controlId="formUsername">

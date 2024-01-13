@@ -5,7 +5,7 @@ import './user_styles.css'; // Importa tus estilos CSS aquí
 import logoImage from '../../img/logo.png'
 import UserApi from './UserApi.js'
 
-function SellerPage(props) {
+function CustomerPage(props) {
     const [message, setMessage] = useState(null);
     const [user, setUser] = useState([]);
 
@@ -38,7 +38,7 @@ function SellerPage(props) {
             <Alert message={message} onClose={OnAlertClose}></Alert>
                 <Row>
                     <Col align='center'>
-                        <h2>Mi perfil de Vendedor</h2>
+                        <h2>Mi perfil de usuario</h2>
                     </Col>
                 </Row>
                 <Row>
@@ -79,4 +79,4 @@ function SellerPage(props) {
     );
   }
   
-  export default SellerPage;
+  export default CustomerPage;

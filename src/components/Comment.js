@@ -30,7 +30,7 @@ function Comment(props) {
           {props.comment.date}
       </td>
       <td className='TextLeft'>
-        <Star numGoldStars={props.comment.rating} edit='false'/>
+        <Star numGoldStars={props.comment.rating} edit='false'/> 
         <div>
           {props.comment.description} 
         </div>    

@@ -31,6 +31,8 @@ function Star(props) {
           style={{ color }}
           onClick={edit=='true' ? () => changeStarColor(index) : null}
         />
+   
+        
       ))}
       </div>
     )

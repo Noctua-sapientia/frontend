@@ -1,7 +1,7 @@
 import './App.css';
 import React, { useState } from 'react';
 import CommentList from './components/CommentList.js';
-import OrderCommentsBy from './components/OrderCommentsBy.js';
+import NewComment from './components/NewComment.js';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 const sellerReviews = [
@@ -31,9 +31,37 @@ function App() {
     setActiveType('book');
   };
 
-  const handleSort = (sortType) => {
-    console.log(1);
+
+  const [mostrarComponente, setMostrarComponente] = useState(false);
+
+  const showNewComment = () => {
+    setMostrarComponente(!mostrarComponente);
   };
+
+  const convertirCadenaAFecha = (cadena) => {
+    const [dia, mes, anio] = cadena.split('/').map(Number);
+    const fecha = new Date(anio, mes - 1, dia);
+  
+    return fecha;
+  };
+
+  const handleSort = (sortType) => {
+   
+    //actualizamos los registros segun lo que se haya elegido en el selector
+    if (sortType === 'fechaAsc') {
+      setActiveData([...activeData].sort((a, b) => convertirCadenaAFecha(a.date).getTime() - convertirCadenaAFecha(b.date).getTime()));
+    } else if (sortType === 'fechaDesc') {
+        setActiveData([...activeData].sort((a, b) => convertirCadenaAFecha(b.date).getTime() - convertirCadenaAFecha(a.date).getTime()));
+    }else if(sortType === 'valoracionAsc'){
+        setActiveData([...activeData].sort((a, b) => a.rating - b.rating));
+      
+    }else if(sortType === 'valoracionDesc'){
+        setActiveData([...activeData].sort((a, b) => b.rating - a.rating));
+        
+      }
+      
+
+};
 
   return (
     <div className="App">
@@ -48,6 +76,9 @@ function App() {
               onClick={handleSwitchToSellerReviews}>
         Vendedores
       </button>
+      
+      <h6 className="TextLeft" onClick={showNewComment} style={{ color:'blue'}}>Añadir un comentario</h6>
+      {mostrarComponente && <NewComment/>}
 
       <Dropdown className="desplegable">
         <Dropdown.Toggle variant="secondary" id="dropdown-basic">

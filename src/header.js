@@ -1,10 +1,9 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import { Container, Button, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
 import logo from './img/logo.png';
 
 function Header() {
-
-
     return (
             <Container>
                 <Row>
@@ -35,6 +34,4 @@ function Header() {
             </Container>
     );
   }
-  
   export default Header;
-  

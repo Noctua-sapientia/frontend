@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import Header from './header';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './components/AuthContext';
 
@@ -15,6 +14,8 @@ root.render(
         
         <App />
     </AuthProvider>
+
+
   </React.StrictMode>
 );
 

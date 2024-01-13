@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from "react-router-dom";
 import { Container, Button, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
 import logo from './img/logo.png';
 
@@ -19,7 +18,7 @@ function Header() {
                         </InputGroup>
                     </Col>
                     <Col xs={2}>
-                        <Button className="btn btn-primary" href="/review"> Orders </Button> 
+                        <Button className="btn btn-primary" href="/review"> Reviews </Button> 
                     </Col>
                     <Col xs={2}>
                         <Button className="btn btn-primary" href="/order"> Orders </Button> 

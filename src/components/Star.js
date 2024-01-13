@@ -8,7 +8,7 @@ function Star(props) {
   const numStarsGrey = 5-numStarsGold;
   const edit = props.edit;
   var arrayStars = null;
-  if (numStarsGold == 0){
+  if (numStarsGold === 0){
     arrayStars = Array(numStarsGrey).fill('grey');
   }else{
     arrayStars = Array(numStarsGold).fill('gold').concat(Array(numStarsGrey).fill('grey'));
@@ -31,7 +31,7 @@ function Star(props) {
           key={index}
           icon={faStar}
           style={{ color }}
-          onClick={edit=='true' ? () => changeStarColor(index) : null}
+          onClick={edit==='true' ? () => changeStarColor(index) : null}
         />
    
         

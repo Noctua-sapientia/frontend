@@ -5,11 +5,11 @@ import Star from './Star.js';
 function NewComment(props) {
 
     const [reviewDescription, setReviewDescription] = useState('');
-    const [rating, setRating] = useState(0);
+    const [reviewRating, setReviewRating] = useState(0);
     //hay que pasarle el bookId y customerId
     const numberOfGoldStars = (number) => {
       // Lógica para almacenar el numero de estrellas seleccionadas
-      setRating(number);
+      setReviewRating(number);
 
     };
     const reviewDescriptionSave = (description) => {
@@ -23,13 +23,13 @@ function NewComment(props) {
         const newBookReview = {
           id: 4,
           description:reviewDescription,
-          rating: rating,
+          rating: reviewRating,
           date :"07/15/2018"
         };
         const result =  props.addNewReviewFunction(newBookReview);
+   
         if (result){
-          setReviewDescription('');
-          setRating(0);
+          props.showComponentFunction(false);
         }
               
 
@@ -44,7 +44,7 @@ function NewComment(props) {
         </thead>
         <tbody>
             <tr>
-                <td><Star numGoldStars={rating} edit='true' onClick={numberOfGoldStars}/></td>
+                <td><Star numGoldStars={reviewRating} edit='true' onClick={numberOfGoldStars}/></td>
                 <td>
                     <TextArea maxCharacters='500' changeTextFunction={reviewDescriptionSave} valor={reviewDescription}/>
                     <div className='TextRight' style={{ justifyContent: 'flex-end'}}>

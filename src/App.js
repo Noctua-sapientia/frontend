@@ -83,6 +83,7 @@ function onAddReview(review){
       }
       
     });
+    return true;
     
   }
 
@@ -95,7 +96,7 @@ function onCloseAlert(){
 
 function onUpdateReview(newReviewData){
   //realizar comprobaciones
-  
+  console.log(newReviewData);
   setActiveData((prevReviews) => {
           return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);
         
@@ -128,7 +129,7 @@ function onDeleteReview(review){
       <Alert message={message} onClose={onCloseAlert}/>
       <OrderCommentsBy handleSort={handleSort}/>
       <h6 className="TextLeft" onClick={showNewComment} style={{ color:'blue'}}>Añadir un comentario</h6>
-      {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} />}
+      {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} showComponentFunction={setMostrarComponente}/>}
 
 
       <h2 className="TextLeft">Comentarios ({activeData.length})</h2>

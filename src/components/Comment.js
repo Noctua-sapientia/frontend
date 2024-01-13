@@ -13,12 +13,6 @@ function Comment(props) {
   const abrirModal = () => {
     setModalAbierto(true);
   };
-
-  const cerrarModal = () => {
-    setModalAbierto(false);
-    setNewRating(props.comment.rating);
-    setNewDescription(props.comment.description);
-  };
   const [newDescription, setNewDescription] = useState(props.comment.description);
     const [newRating, setNewRating] = useState(props.comment.rating);
     //hay que pasarle el bookId y customerId
@@ -32,6 +26,13 @@ function Comment(props) {
       setNewDescription(description);
 
     };
+
+  const cerrarModal = () => {
+    setModalAbierto(false);
+    setNewRating(props.comment.rating);
+    setNewDescription(props.comment.description);
+  };
+  
 
     const saveData = () => {
       // Lógica para guardar datos

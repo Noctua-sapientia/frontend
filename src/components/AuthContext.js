@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
           fakeToken = createFakeToken(username, password , 'customer');
           setAccessToken(fakeToken);
           setUserType('customer');
-          console.log('User type:', userType);
+          console.log('User type:::', userType);
           return true;
         }
         if (username === userSeller && password === userSellerPass) {

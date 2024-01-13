@@ -2,7 +2,9 @@ import './App.css';
 import React, { useState } from 'react';
 import CommentList from './components/CommentList.js';
 import NewComment from './components/NewComment.js';
-import Dropdown from 'react-bootstrap/Dropdown';
+import OrderCommentsBy from './components/OrderCommentsBy.js';
+import Alert from './components/Alert.js';
+
 
 const sellerReviews = [
   { id: 1, description: 'Un envío muy rápido y en perfectas condiciones', rating: 5, date:"06/10/2023" },
@@ -63,6 +65,53 @@ function App() {
 
 };
 
+function onAddReview(review){
+  //hay que hacer comprobaciones de que no se pueda añadir por ejemplo los que tengann descripcion vacia
+  if(review.description === ''){
+    setMessage('Añade una descripción para la review');
+    return false;
+  }if(activeData.find(br => br.id === review.id)){
+    setMessage('No se puede crear una review con el mismo id'); 
+    return false;
+  }else{
+    setActiveData((prevReviews) => {
+      if(!activeData.find(r => r.id === review.id)){
+        return [...prevReviews, review];
+      }else{
+        setMessage('Esta review ya existe')
+        return prevReviews;
+      }
+      
+    });
+    
+  }
+
+}
+
+const [message, setMessage] = useState(null);
+function onCloseAlert(){
+  setMessage(null);
+}
+
+function onUpdateReview(newReviewData){
+  //realizar comprobaciones
+  
+  setActiveData((prevReviews) => {
+          return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);
+        
+  });
+}
+
+function onDeleteReview(review){
+  
+  setActiveData((prevReviews) => {
+          return prevReviews.filter((r) => r.id !== review.id);
+        
+  });
+}
+
+
+
   return (
     <div className="App">
       <h1>Mis reseñas</h1>
@@ -76,27 +125,16 @@ function App() {
               onClick={handleSwitchToSellerReviews}>
         Vendedores
       </button>
-      
+      <Alert message={message} onClose={onCloseAlert}/>
+      <OrderCommentsBy handleSort={handleSort}/>
       <h6 className="TextLeft" onClick={showNewComment} style={{ color:'blue'}}>Añadir un comentario</h6>
-      {mostrarComponente && <NewComment/>}
+      {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} />}
 
-      <Dropdown className="desplegable">
-        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-          Ordenar por
-        </Dropdown.Toggle>
-
-        <Dropdown.Menu>
-          <Dropdown.Item href="#/fechaAsc" onClick={() => handleSort('fechaAsc')}>Fecha Ascendente</Dropdown.Item>
-          <Dropdown.Item href="#/fechaDesc" onClick={() => handleSort('fechaDesc')}>Fecha Descendente</Dropdown.Item>
-          <Dropdown.Item href="#/valoracionAsc" onClick={() => handleSort('valoracionAsc')}>Valoración Ascendente</Dropdown.Item>
-          <Dropdown.Item href="#/valoracionDesc" onClick={() => handleSort('valoracionDesc')}>Valoración Descendente</Dropdown.Item>
-        </Dropdown.Menu>
-      </Dropdown>
 
       <h2 className="TextLeft">Comentarios ({activeData.length})</h2>
-      {/* <OrderCommentsBy comments={activeData}/> */}
+      
       <div className="table-container">
-        <CommentList comments={activeData}/>
+        <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} />
       </div>
     </div>
     

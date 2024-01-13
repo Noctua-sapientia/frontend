@@ -1,22 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Modal from 'react-modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClose } from '@fortawesome/free-solid-svg-icons';
 import Star from './Star.js';
 import TextArea from './TextArea.js';
+import Alert from './Alert.js';
 
 //hay que pasarle la información de la fila que se ha hecho click
 function CommentWindow(props) {
-    const description = props.description;
-    const rating = props.rating;
+    
+   
     const isOpen = props.isOpen;
-    const onClose = props.onClose;
-      
-  
-    const guardarDatos = () => {
-      // Lógica para guardar datos
-     { onClose() }; // Cierra la ventana emergente después de guardar
-    };
+    const onClose = props.onClose; 
   
     return (
       <div>
@@ -41,13 +36,15 @@ function CommentWindow(props) {
               <FontAwesomeIcon icon={faClose } />
             </button>
           </div>
+          <div><Alert message={props.message} onClose={props.onCloseAlert}/></div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px'  }}>
-            <Star numGoldStars={rating} edit='true'/>
+          
+            <Star numGoldStars={props.rating} edit='true' onClick={props.numberOfGoldStarsChange}/>
           </div>
-          <TextArea valorInicial= {description} maxCharacters='500'/>
+          <TextArea valor= {props.description} maxCharacters='500' changeTextFunction={props.reviewDescriptionChange}/>
     
           <div className='TextRight' style={{ justifyContent: 'flex-end'}}>
-            <button className="btn btn-primary" onClick={guardarDatos}>Guardar</button>
+            <button className="btn btn-primary" onClick={props.saveFunction}>Guardar</button>
             </div>
         </Modal>
       </div>

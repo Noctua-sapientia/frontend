@@ -20,6 +20,8 @@ function Star(props) {
     const greyStar = 5 - goldenStar;
     const nuevosColores = Array(goldenStar).fill('gold').concat(Array(greyStar).fill('grey'));
     setColoresEstrellas(nuevosColores);
+    props.onClick(goldenStar);
+
   };
     return (
       <div>

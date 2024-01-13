@@ -10,13 +10,15 @@ function Home() {
       <div>---</div>
       <Link to="/login/register">Seccion registro</Link>
       <div>---</div>
-      <Link to="/vendorUser">Perfil vendedor</Link>
+      <Link to="/seller">Perfil vendedor</Link>
       <div>---</div>
       <Link to="/order">Seccion orders</Link>
       <div>---</div>
       <Link to="/books">Seccion books</Link>
       <div>---</div>
       <Link to="/review">Seccion review</Link>
+      <div>---</div>
+      <Link to="/pricing">Seccion pricing</Link>
 
     </div>
   );

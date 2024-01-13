@@ -1,32 +1,60 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
+import Alert from '../Alert.js';
 import './user_styles.css'; // Importa tus estilos CSS aquí
 import logoImage from '../../img/logo.png'
+import UserApi from './UserApi.js'
 
-function VendorPage() {
+function SellerPage(props) {
+    const [message, setMessage] = useState(null);
+    const [user, setUser] = useState([]);
+
+    useEffect(() => {
+        async function fetchUser() {
+            try {
+                const c = await UserApi.getSeller(user);
+                setUser(c);
+
+            } catch (error) {
+                setMessage(user);
+            }
+        }
+
+        fetchUser();
+    });
+    
+    function OnAlertClose(){
+        setMessage(null);
+    }
+    /*
+    function OnUserEdit(user){
+        setMessage(user);
+    }
+    */
     return (
         <Container className='home-container'>
             {/* Cabecera */}
             <Col>
+            <Alert message={message} onClose={OnAlertClose}></Alert>
                 <Row>
                     <Col align='center'>
-                        <h2>Mi Perfil de Vendedor</h2>
+                        <h2>Mi perfil de Vendedor</h2>
                     </Col>
                 </Row>
                 <Row>
                     {/* Columna de botones */}
                     <Col className='column align-items-center justify-content-center' >
                         <Row>
-                        <CardText>NOMBRE</CardText>
+                        <CardText>{user.map(user => user.name)}</CardText>
                         </Row>
                         <Row>
-                        <CardText>APELLIDOS</CardText>
+                        <CardText>Nº valorations: {user.map(user => user.valoration)}</CardText>
                         </Row>
                         <Row>
-                        <CardText>CORREO ELECTRONICO</CardText>
+                        <CardText>Nº orders: {user.map(user => user.orders)}</CardText>
                         </Row>
                         <Row>
-                        <CardText>DIRECCION POSTAL</CardText>    
+                        <CardText>Nº reviews: {user.map(user => user.reviews)}</CardText>    
                         </Row>
                         <Row>
                         <Button className='profile-button' href="/book"> Mis libros </Button>
@@ -51,4 +79,4 @@ function VendorPage() {
     );
   }
   
-  export default VendorPage;
+  export default SellerPage;

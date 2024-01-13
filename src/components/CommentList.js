@@ -1,9 +1,9 @@
-import React from 'react';
 import Comment from './Comment.js';
-
+import React, { useState } from 'react';
 
 
 function CommentList(props) {
+    
   return(
     <table className='table table-fixed table-margin'>
       <thead>
@@ -16,7 +16,7 @@ function CommentList(props) {
       </thead>
       <tbody>
         {props.comments.map((c) =>
-          <Comment key={c.id} comment={c}/>
+          <Comment key={c.id} comment={c} updateReviewFunction={props.updateReviewFunction} deleteReviewFunction={props.deleteReviewFunction}/>
         )}
       </tbody>
     </table>

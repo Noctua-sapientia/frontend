@@ -28,6 +28,9 @@ function Comment(props) {
 
   const cerrarModal = () => {
     setModalAbierto(false);
+    console.log(props.comment.rating);
+    setNewDescription(props.comment.description);
+    setNewRating(props.comment.rating);
   };
   
 
@@ -63,7 +66,7 @@ function Comment(props) {
   //que solo se muestre el lapiz con el usuario que coincida 
   return(
     <tr>
-      <td>Imagen del avatar si se pone</td>
+      <td>Imagen del avatar si se pone con su nombre</td>
       <td className='TextCenter'>
           {props.comment.id}
       </td>

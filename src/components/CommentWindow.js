@@ -12,6 +12,7 @@ function CommentWindow(props) {
    
     const isOpen = props.isOpen;
     const onClose = props.onClose; 
+    console.log(props.rating);
   
     return (
       <div>

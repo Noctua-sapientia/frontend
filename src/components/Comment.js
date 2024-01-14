@@ -33,6 +33,8 @@ function Comment(props) {
     setNewRating(props.comment.rating);
   };
 
+  
+
   const formatDate = (date) => {
     const fecha = new Date(date);
     const año = fecha.getFullYear();
@@ -45,18 +47,18 @@ function Comment(props) {
   
   
 
-  const saveData = () => {
+  const saveData = async () => {
     // Lógica para guardar datos
     if(newDescription === ''){
       setMessage('Añade una descripción para la review');
     }else{
-      const updatedBookReview = {
+      const updatedReview = {
         id: props.comment.id,
         description: newDescription,
         rating: newRating,
         date: props.comment.date
       };
-      props.updateReviewFunction(updatedBookReview);
+      await props.updateReviewFunction(updatedReview);
      // Cierra la ventana emergente después de guardar
      setModalAbierto(false);
     }

@@ -2,7 +2,7 @@ class ReviewsApi{
     static API_BASE_URL = "/api/v1/reviews";
     
     static requestHeaders(){
-        return {}
+        return {'Content-Type': 'application/json'}
     }
 
     static objToQueryString(obj) {
@@ -69,6 +69,27 @@ class ReviewsApi{
 
     }
 
+    static async updateReview(reviewId, reviewData, type){
+        const headers = this.requestHeaders();
+        console.log("reviewData");
+        console.log(reviewData);
+        console.log("json reviewData");
+        console.log(JSON.stringify(reviewData));
+        const body = JSON.stringify(reviewData);
+
+        const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"/" + reviewId, {
+            method: 'PUT',
+            headers: headers,
+            body: body
+        });
+
+        const response = await fetch(request);
+        if (!response.ok) {
+            throw Error("Response not valid: " + response.status);
+        }
+
+        return response.json();
+    }
 
 }
 

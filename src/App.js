@@ -123,14 +123,21 @@ function onCloseAlert(){
   return true;
 }
 
-function onUpdateReview(newReviewData){
+async function onUpdateReview(newReviewData){
   //realizar comprobaciones
-  console.log(newReviewData);
-  setActiveData((prevReviews) => {
-          return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);
-  });
 
+  const { id, date, ...restData } = newReviewData;
+  const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType);
+  if (newReview) {
+    setActiveData((prevReviews) => {
+      return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);
+  });
   return true;
+  } else {
+    return false;
+  }
+
+  
 }
 
 function onDeleteReview(review){

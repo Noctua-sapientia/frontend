@@ -5,8 +5,11 @@ import LoginPage from './components/User/LoginPage';
 import RegisterPage from './components/User/RegisterPage';
 import MyAccount from './components/User/Account';
 import Orders from './components/Order';
-import Books from './components/Book';
 import Review from './components/Review';
+import Books from './components/Books.js'
+import BookDetail from './components/Book/BookDetail.js'
+import SearchBooks from './components/Book/SearchBooks.js'
+
 
 function App() {
   return (
@@ -17,8 +20,10 @@ function App() {
         <Route path="/login/register" element={<RegisterPage />} />
         <Route path="/myaccount" element={<MyAccount />} />
         <Route path="/order" element={<Orders />} />
-        <Route path="/book" element={<Books />} />
         <Route path="/review" element={<Review />} />
+        <Route path="/books" element={<SearchBooks />} />
+        <Route path="/books/book" element={<BookDetail />} />
+        <Route path="/books/book/seller" element={<Books />} />
         {/* Agrega más rutas según sea necesario */}
       </Routes>
     </Router>

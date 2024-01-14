@@ -4,6 +4,7 @@ import BooksApi from './BooksApi';
 import Book from './Book';
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import imageBook1 from '../../img/HarryPotter.jpg';
 
 function BookSearch() {
   const initialBooks = [
@@ -81,6 +82,7 @@ function BookSearch() {
                 <Row>
                     {/* Columna de botones */}
                     <Col className='column align-items-center justify-content-center' >
+                        <img src={imageBook1} className="icono" style={{ width: '30%', height: '40vh'}} />
                         <Row>
                             <CardText>TÍTULO</CardText>
                         </Row>
@@ -91,10 +93,23 @@ function BookSearch() {
                             <CardText>CATEGORÍA</CardText>
                         </Row>
                         <Row>
-                            <CardText>PRECIO</CardText>    
+                            <Link to="/books/book" className="btn btn-primary" > Ver Libro </Link>
                         </Row>
                         <Row>
-                            <CardText>VENDEDORES</CardText>    
+                            <Button variant="primary"> Reseñas </Button>
+                        </Row>                   
+                        {/* Agrega más botones según sea necesario */}
+                    </Col>
+                    <Col className='column align-items-center justify-content-center' >
+                        <img src={imageBook1} className="icono" style={{ width: '30%', height: '40vh'}} />
+                        <Row>
+                            <CardText>TÍTULO</CardText>
+                        </Row>
+                        <Row>
+                            <CardText>AUTOR</CardText>
+                        </Row>
+                        <Row>
+                            <CardText>CATEGORÍA</CardText>
                         </Row>
                         <Row>
                             <Link to="/books/book" className="btn btn-primary" > Ver Libro </Link>
@@ -104,14 +119,46 @@ function BookSearch() {
                         </Row>                   
                         {/* Agrega más botones según sea necesario */}
                     </Col>
-        
-                    {/* Gran imagen */}
-                    <Col className='column'>
-                        <img
-                        //src={logoImage} // Reemplaza con la URL de tu imagen
-                        alt="Logo"
-                        className="img-fluid"
-                        />
+                </Row>
+                <Row>
+                    {/* Columna de botones */}
+                    <Col className='column align-items-center justify-content-center' >
+                        <img src={imageBook1} className="icono" style={{ width: '30%', height: '40vh'}} />
+                        <Row>
+                            <CardText>TÍTULO</CardText>
+                        </Row>
+                        <Row>
+                            <CardText>AUTOR</CardText>
+                        </Row>
+                        <Row>
+                            <CardText>CATEGORÍA</CardText>
+                        </Row>
+                        <Row>
+                            <Link to="/books/book" className="btn btn-primary" > Ver Libro </Link>
+                        </Row>
+                        <Row>
+                            <Button variant="primary"> Reseñas </Button>
+                        </Row>                   
+                        {/* Agrega más botones según sea necesario */}
+                    </Col>
+                    <Col className='column align-items-center justify-content-center' >
+                        <img src={imageBook1} className="icono" style={{ width: '30%', height: '40vh'}} />
+                        <Row>
+                            <CardText>TÍTULO</CardText>
+                        </Row>
+                        <Row>
+                            <CardText>AUTOR</CardText>
+                        </Row>
+                        <Row>
+                            <CardText>CATEGORÍA</CardText>
+                        </Row>
+                        <Row>
+                            <Link to="/books/book" className="btn btn-primary" > Ver Libro </Link>
+                        </Row>
+                        <Row>
+                            <Button variant="primary"> Reseñas </Button>
+                        </Row>                   
+                        {/* Agrega más botones según sea necesario */}
                     </Col>
                 </Row>
                 <div className="separator"></div>

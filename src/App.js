@@ -92,6 +92,7 @@ function onAddReview(review){
 const [message, setMessage] = useState(null);
 function onCloseAlert(){
   setMessage(null);
+  return true;
 }
 
 function onUpdateReview(newReviewData){
@@ -99,8 +100,9 @@ function onUpdateReview(newReviewData){
   console.log(newReviewData);
   setActiveData((prevReviews) => {
           return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);
-        
   });
+
+  return true;
 }
 
 function onDeleteReview(review){

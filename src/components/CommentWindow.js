@@ -37,10 +37,11 @@ function CommentWindow(props) {
             </button>
           </div>
           <div><Alert message={props.message} onClose={props.onCloseAlert}/></div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px'  }}>
-          
+
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px'}}>
             <Star numGoldStars={props.rating} edit='true' onClick={props.numberOfGoldStarsChange}/>
           </div>
+
           <TextArea valor= {props.description} maxCharacters='500' changeTextFunction={props.reviewDescriptionChange}/>
     
           <div className='TextRight' style={{ justifyContent: 'flex-end'}}>

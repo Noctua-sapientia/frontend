@@ -13,45 +13,7 @@ class ReviewsApi{
         return keyValuePairs.join('&');
       }
 
-    static async getAllBookReviews(filters){
-      
-        const headers = this.requestHeaders();
-        const queryString = ReviewsApi.objToQueryString(filters)
-        
-        const request = new Request(ReviewsApi.API_BASE_URL + "/books?"+queryString, {
-            method: 'GET',
-            headers: headers
-        });
-       
-        
-        const response = await fetch(request);
-        if (! response.ok) {
-            throw Error("Response not valid" + response.status);
-        }
-        
-
-        return response.json();
-
-    }
-
-    static async getAllSellerReviews(filters){
-        const headers = this.requestHeaders();
-        const queryString = ReviewsApi.objToQueryString(filters);
-        const request = new Request(ReviewsApi.API_BASE_URL + "/sellers?"+queryString, {
-            method: 'GET',
-            headers: headers
-        });
-
-        const response = await fetch(request);
-        if (! response.ok) {
-            throw Error("Response not valid" + response.status);
-        }
-
-        return response.json();
-
-    }
-
-    static async getReviews(filters, type) {
+       static async getReviews(filters, type) {
 
         const headers = this.requestHeaders();
         const queryString = ReviewsApi.objToQueryString(filters);
@@ -71,10 +33,6 @@ class ReviewsApi{
 
     static async updateReview(reviewId, reviewData, type){
         const headers = this.requestHeaders();
-        console.log("reviewData");
-        console.log(reviewData);
-        console.log("json reviewData");
-        console.log(JSON.stringify(reviewData));
         const body = JSON.stringify(reviewData);
 
         const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"/" + reviewId, {
@@ -89,6 +47,19 @@ class ReviewsApi{
         }
 
         return response.json();
+    }
+
+    static async deleteReviewById(reviewId, type){
+        const headers = this.requestHeaders();
+        const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"/" + reviewId, {
+            method: 'DELETE',
+            headers: headers,
+        });
+         const response = await fetch(request);
+        if (!response.ok) {
+            throw Error("Response not valid: " + response.status);
+        }
+     
     }
 
 }

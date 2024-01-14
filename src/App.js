@@ -5,6 +5,7 @@ import NewComment from './components/NewComment.js';
 import OrderCommentsBy from './components/OrderCommentsBy.js';
 import Alert from './components/Alert.js';
 import ReviewsApi from './ReviewsApi.js';
+import swal from 'sweetalert';
 
 
 /*const sellerReviews = [
@@ -44,7 +45,6 @@ function App() {
   
 useEffect(() => {
   async function getReviewsBySelector(){
-    console.log('Entra en la funcion');
     try{
       //le pasamos como queremos que nos las devuelva
       let filters = 
@@ -74,11 +74,6 @@ useEffect(() => {
           
         }
       let reviews = null;
-      // if (activeType === 'book'){
-      //   reviews = await ReviewsApi.getAllBookReviews(filters);
-      // }else if(activeType === 'seller'){
-      //   reviews = await ReviewsApi.getAllSellerReviews(filters);
-      // }
       reviews = await ReviewsApi.getReviews(filters, activeType);
       setActiveData(reviews);
     } catch (error) {
@@ -125,12 +120,12 @@ function onCloseAlert(){
 
 async function onUpdateReview(newReviewData){
   //realizar comprobaciones
-
   const { id, date, ...restData } = newReviewData;
   const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType);
   if (newReview) {
     setActiveData((prevReviews) => {
       return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);
+      
   });
   return true;
   } else {
@@ -140,14 +135,21 @@ async function onUpdateReview(newReviewData){
   
 }
 
-function onDeleteReview(review){
-  
-  setActiveData((prevReviews) => {
-          return prevReviews.filter((r) => r.id !== review.id);
-        
-  });
+
+async function onDeleteReview(review){
+  await ReviewsApi.deleteReviewById(review, activeType);
+       
 }
 
+
+
+const onYesCancelAlert = async(reviewIdToDelete) => {
+  await onDeleteReview(reviewIdToDelete);
+  swal({text:"El comentario se ha eliminado correctamente"});
+  setActiveData((prevReviews) => {
+  return prevReviews.filter((r) => r.id !== reviewIdToDelete)});
+   
+};
 
 
   return (
@@ -164,6 +166,7 @@ function onDeleteReview(review){
         Vendedores
       </button>
       <Alert message={message} onClose={onCloseAlert}/>
+     
       <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
       <h6 className="TextLeft" onClick={showNewComment} style={{ color:'blue'}}>Añadir un comentario</h6>
       {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} showComponentFunction={setMostrarComponente} activeType={activeType}/>}
@@ -172,7 +175,7 @@ function onDeleteReview(review){
       <h2 className="TextLeft">Comentarios ({activeData.length})</h2>
       
       <div className="table-container">
-        <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} />
+        <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert}/>
       </div>
     </div>
     

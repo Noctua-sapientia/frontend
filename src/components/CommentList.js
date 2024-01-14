@@ -16,7 +16,7 @@ function CommentList(props) {
       </thead>
       <tbody>
         {props.comments.map((c) =>
-          <Comment key={c.id} comment={c} updateReviewFunction={props.updateReviewFunction} deleteReviewFunction={props.deleteReviewFunction}/>
+          <Comment key={c.id} comment={c} updateReviewFunction={props.updateReviewFunction} deleteReviewFunction={props.deleteReviewFunction} onYesCancelAlert={props.onYesCancelAlert}/>
         )}
       </tbody>
     </table>

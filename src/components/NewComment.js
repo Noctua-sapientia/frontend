@@ -18,21 +18,30 @@ function NewComment(props) {
 
     };
     const save = () => {
-        // Lógica para guardar datos
-       
-        const newBookReview = {
-          id: 4,
+      let data = null;
+      if(props.activeType ==='sellers'){
+        data = {
+          sellerId: 6,
+          customerId: 1,
+          description:reviewDescription,
+          rating: reviewRating
+        }
+      }else if(props.activeType ==='books'){
+        data = {
+          bookId: 17,
+          customerId: 2,
           description:reviewDescription,
           rating: reviewRating
         };
-        const result =  props.addNewReviewFunction(newBookReview);
-   
+      }
+       
+        const result =  props.addNewReviewFunction(data);
         if (result){
           props.showComponentFunction(false);
         }
-              
-
       };
+
+
     return(
       <table className='table'>
         <thead>

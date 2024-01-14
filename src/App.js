@@ -26,7 +26,7 @@ function App() {
   const [activeType, setActiveType] = useState('books'); // Estado para rastrear el tipo activo
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(''); //para cambiar el estado del selector
 
-
+  console.log(activeType);
   const handleSwitchToSellerReviews = () => {
     setActiveType('sellers');
   };
@@ -88,7 +88,7 @@ useEffect(() => {
 
 
 
-function onAddReview(review){
+async function onAddReview(review){
   //hay que hacer comprobaciones de que no se pueda añadir por ejemplo los que tengann descripcion vacia
   if(review.description === ''){
     setMessage('Añade una descripción para la review');
@@ -97,16 +97,17 @@ function onAddReview(review){
     setMessage('No se puede crear una review con el mismo id'); 
     return false;
   }else{
-    setActiveData((prevReviews) => {
-      if(!activeData.find(r => r.id === review.id)){
-        return [...prevReviews, review];
-      }else{
-        setMessage('Esta review ya existe')
-        return prevReviews;
-      }
-      
-    });
-    return true;
+    //guardamos en bd
+    const newReview = await ReviewsApi.createReview(review, activeType);
+    if(newReview){
+      setActiveData((prevReviews) => {
+        return [...prevReviews, newReview];
+      });
+      return true;
+    }else{
+      return false;
+    }
+       
     
   }
 
@@ -122,6 +123,7 @@ async function onUpdateReview(newReviewData){
   //realizar comprobaciones
   const { id, date, ...restData } = newReviewData;
   const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType);
+  console.log(newReview);
   if (newReview) {
     setActiveData((prevReviews) => {
       return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);

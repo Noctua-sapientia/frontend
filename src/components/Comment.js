@@ -106,10 +106,14 @@ function Comment(props) {
           {props.comment.description} 
         </div>    
       </td>
-      <td>
+      {(() => {
+      if (props.comment.customerId === 2) {
+        return <td>
         <FontAwesomeIcon icon={faPencilAlt} onClick={abrirModal} className="icono-lapiz" />
         <FontAwesomeIcon icon={faTrash} onClick={() => showSweetAlert("Eliminar","¿Estás seguro de que desea eliminar el comentario?")}/>
       </td>
+      } 
+    })()}
       <CommentWindow isOpen={modalAbierto} onClose={cerrarModal} description={newDescription} rating={newRating} 
       saveFunction={saveData} numberOfGoldStarsChange={numberOfGoldStarsChange} 
       reviewDescriptionChange={reviewDescriptionChange} message={message} onCloseAlert={onCloseAlert}

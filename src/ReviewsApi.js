@@ -51,6 +51,24 @@ class ReviewsApi{
 
     }
 
+    static async getReviews(filters, type) {
+
+        const headers = this.requestHeaders();
+        const queryString = ReviewsApi.objToQueryString(filters);
+        const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"?"+queryString, {
+            method: 'GET',
+            headers: headers
+        });
+
+        const response = await fetch(request);
+        if (! response.ok) {
+            throw Error("Response not valid" + response.status);
+        }
+
+        return response.json();
+
+    }
+
 
 }
 

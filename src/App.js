@@ -22,16 +22,16 @@ const bookReviews = [
 function App() {
 
   const [activeData, setActiveData] = useState([]);
-  const [activeType, setActiveType] = useState('book'); // Estado para rastrear el tipo activo
+  const [activeType, setActiveType] = useState('books'); // Estado para rastrear el tipo activo
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(''); //para cambiar el estado del selector
 
 
   const handleSwitchToSellerReviews = () => {
-    setActiveType('seller');
+    setActiveType('sellers');
   };
 
   const handleSwitchToBookReviews = () => {
-    setActiveType('book');
+    setActiveType('books');
   };
 
 
@@ -74,11 +74,12 @@ useEffect(() => {
           
         }
       let reviews = null;
-      if (activeType === 'book'){
-        reviews = await ReviewsApi.getAllBookReviews(filters);
-      }else if(activeType === 'seller'){
-        reviews = await ReviewsApi.getAllSellerReviews(filters);
-      }
+      // if (activeType === 'book'){
+      //   reviews = await ReviewsApi.getAllBookReviews(filters);
+      // }else if(activeType === 'seller'){
+      //   reviews = await ReviewsApi.getAllSellerReviews(filters);
+      // }
+      reviews = await ReviewsApi.getReviews(filters, activeType);
       setActiveData(reviews);
     } catch (error) {
       console.log(error);
@@ -145,12 +146,12 @@ function onDeleteReview(review){
   return (
     <div className="App">
       <h1>Mis reseñas</h1>
-      <button className={activeType === 'book' ? 'btn btn-primary' : 'btn btn-primary faded'}
+      <button className={activeType === 'books' ? 'btn btn-primary' : 'btn btn-primary faded'}
               style={{ marginRight: "5px" }}
               onClick={handleSwitchToBookReviews}>
         Libros
       </button>
-      <button className={activeType === 'seller' ? 'btn btn-primary' : 'btn btn-primary faded'}
+      <button className={activeType === 'sellers' ? 'btn btn-primary' : 'btn btn-primary faded'}
               style={{ marginLeft: "5px" }}
               onClick={handleSwitchToSellerReviews}>
         Vendedores

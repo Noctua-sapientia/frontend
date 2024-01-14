@@ -47,7 +47,7 @@ function Comment(props) {
       };
       props.updateReviewFunction(updatedBookReview);
      // Cierra la ventana emergente después de guardar
-     cerrarModal();
+     setModalAbierto(false);
     }
 
     return true;

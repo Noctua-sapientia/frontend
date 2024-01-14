@@ -1,12 +1,13 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CommentList from './components/CommentList.js';
 import NewComment from './components/NewComment.js';
 import OrderCommentsBy from './components/OrderCommentsBy.js';
 import Alert from './components/Alert.js';
+import ReviewsApi from './ReviewsApi.js';
 
 
-const sellerReviews = [
+/*const sellerReviews = [
   { id: 1, description: 'Un envío muy rápido y en perfectas condiciones', rating: 5, date:"06/10/2023" },
   { id: 2, description: 'Un trato horroroso.', rating: 0, date:"23/10/2023" },
   { id: 3, description: 'Buen trato', rating: 4, date:"21/09/2023" },
@@ -16,20 +17,20 @@ const bookReviews = [
   { id: 1, description: 'Muy buen libro. Me ha encantado', rating: 5, date:"06/10/2023" },
   { id: 2, description: 'Horroroso', rating: 0, date:"23/10/2023" },
   { id: 3, description: 'Buen libro', rating: 4, date:"21/09/2023" },
-];
+];*/
 
 function App() {
 
-  const [activeData, setActiveData] = useState(bookReviews);
+  const [activeData, setActiveData] = useState([]);
   const [activeType, setActiveType] = useState('book'); // Estado para rastrear el tipo activo
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState(''); //para cambiar el estado del selector
+
 
   const handleSwitchToSellerReviews = () => {
-    setActiveData(sellerReviews);
     setActiveType('seller');
   };
 
   const handleSwitchToBookReviews = () => {
-    setActiveData(bookReviews);
     setActiveType('book');
   };
 
@@ -40,30 +41,56 @@ function App() {
     setMostrarComponente(!mostrarComponente);
   };
 
-  const convertirCadenaAFecha = (cadena) => {
-    const [dia, mes, anio] = cadena.split('/').map(Number);
-    const fecha = new Date(anio, mes - 1, dia);
   
-    return fecha;
-  };
-
-  const handleSort = (sortType) => {
-   
-    //actualizamos los registros segun lo que se haya elegido en el selector
-    if (sortType === 'fechaAsc') {
-      setActiveData([...activeData].sort((a, b) => convertirCadenaAFecha(a.date).getTime() - convertirCadenaAFecha(b.date).getTime()));
-    } else if (sortType === 'fechaDesc') {
-        setActiveData([...activeData].sort((a, b) => convertirCadenaAFecha(b.date).getTime() - convertirCadenaAFecha(a.date).getTime()));
-    }else if(sortType === 'valoracionAsc'){
-        setActiveData([...activeData].sort((a, b) => a.rating - b.rating));
-      
-    }else if(sortType === 'valoracionDesc'){
-        setActiveData([...activeData].sort((a, b) => b.rating - a.rating));
+useEffect(() => {
+  async function getReviewsBySelector(){
+    console.log('Entra en la funcion');
+    try{
+      //le pasamos como queremos que nos las devuelva
+      let filters = 
+       {       
+      };
+      if (opcionSeleccionada === 'fechaAsc') {
+        filters = {
+          sort:'date',
+          order:'asc'
+        }
+      } else if (opcionSeleccionada === 'fechaDesc') {
+        filters = {
+          sort:'date',
+          order:'desc'
+        }
+      }else if(opcionSeleccionada === 'valoracionAsc'){
+        filters = {
+          sort:'rating',
+          order:'asc'
+        }
         
+      }else if(opcionSeleccionada === 'valoracionDesc'){
+        filters = {
+          sort:'rating',
+          order:'desc'
+        }
+          
+        }
+      let reviews = null;
+      if (activeType === 'book'){
+        reviews = await ReviewsApi.getAllBookReviews(filters);
+      }else if(activeType === 'seller'){
+        reviews = await ReviewsApi.getAllSellerReviews(filters);
       }
-      
+      setActiveData(reviews);
+    } catch (error) {
+      console.log(error);
+      setMessage('Could not connect to server');
+    }     
+  }
+  getReviewsBySelector();
 
-};
+}, [activeType, opcionSeleccionada]);
+
+
+
 
 function onAddReview(review){
   //hay que hacer comprobaciones de que no se pueda añadir por ejemplo los que tengann descripcion vacia
@@ -129,9 +156,9 @@ function onDeleteReview(review){
         Vendedores
       </button>
       <Alert message={message} onClose={onCloseAlert}/>
-      <OrderCommentsBy handleSort={handleSort}/>
+      <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
       <h6 className="TextLeft" onClick={showNewComment} style={{ color:'blue'}}>Añadir un comentario</h6>
-      {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} showComponentFunction={setMostrarComponente}/>}
+      {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} showComponentFunction={setMostrarComponente} activeType={activeType}/>}
 
 
       <h2 className="TextLeft">Comentarios ({activeData.length})</h2>

@@ -23,8 +23,7 @@ function NewComment(props) {
         const newBookReview = {
           id: 4,
           description:reviewDescription,
-          rating: reviewRating,
-          date :"07/15/2018"
+          rating: reviewRating
         };
         const result =  props.addNewReviewFunction(newBookReview);
    

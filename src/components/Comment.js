@@ -32,6 +32,17 @@ function Comment(props) {
     setNewDescription(props.comment.description);
     setNewRating(props.comment.rating);
   };
+
+  const formatDate = (date) => {
+    const fecha = new Date(date);
+    const año = fecha.getFullYear();
+    const mes = ("0" + (fecha.getMonth() + 1)).slice(-2); // El mes es base 0, por lo que se suma 1
+    const dia = ("0" + fecha.getDate()).slice(-2);
+    const horas = ("0" + fecha.getHours()).slice(-2);
+    const minutos = ("0" + fecha.getMinutes()).slice(-2);
+    return `${dia}-${mes}-${año} ${horas}:${minutos}`;
+  };
+  
   
 
   const saveData = () => {
@@ -71,7 +82,8 @@ function Comment(props) {
           {props.comment.id}
       </td>
       <td className='TextLeft'>
-          {props.comment.date}
+        {formatDate(props.comment.createdAt)}
+        
       </td>
       <td className='TextLeft'>
         <Star numGoldStars={props.comment.rating} edit='false'/>

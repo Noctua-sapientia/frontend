@@ -13,14 +13,14 @@ function Star(props) {
   useEffect(() => {
     const newStars = Array(numGoldStars).fill('gold').concat(Array(numStarsGrey).fill('grey'));
     setColoresEstrellas(newStars);
-  }, [numGoldStars]);
+  }, [numGoldStars, numStarsGrey]);
 
   const changeStarColor = (index) => {
     const goldenStar = index + 1;
     const greyStar = 5 - goldenStar;
     const nuevosColores = Array(goldenStar).fill('gold').concat(Array(greyStar).fill('grey'));
     setColoresEstrellas(nuevosColores);
-    props.onClick(goldenStar);
+    onClick(goldenStar);
   };
 
   return (

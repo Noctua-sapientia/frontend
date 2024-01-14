@@ -32,7 +32,7 @@ function SellerPage(props) {
             <Col>
                 <Row>
                     <Col align='center'>
-                        <h2>Mi perfil de Vendedor</h2>
+                        <h2>Mi perfil de vendedor</h2>
                     </Col>
                 </Row>
                 <Row>

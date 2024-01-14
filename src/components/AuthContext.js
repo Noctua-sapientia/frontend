@@ -3,8 +3,8 @@
 import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
-const DEBUG = true;
 export const useAuth = () => useContext(AuthContext);
+const DEBUG = true;
 
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
         });
         if (response.ok) {
           const data = await response.json();
-          setAccessToken(data.accessToken);
+          setAccessToken(data.token);
           setUserType(data.userType);
           return true;
         } else {

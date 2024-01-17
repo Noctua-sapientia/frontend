@@ -4,11 +4,8 @@ import { useState } from 'react';
 
 import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import './OrderDetails.css';
-import { FaEye,  FaTrash } from "react-icons/fa";
 import { HiPencilSquare } from "react-icons/hi2";
 
-import { parseDate } from './utils'; 
-import OrderDetailsInfo from './OrderDetailsInfo';
 import OrderDetailsBooks from './OrderDetailsBooks';
 import OrderDetailsInfoEditable from './OrderDetailsInfoEditable';
 
@@ -52,7 +49,7 @@ function OrderDetails(props) {
 
 
   return (
-    <Container className="mt-5 d-flex justify-content-center orderDetails">
+    <Container className="mt-3 d-flex justify-content-center align-items-center orderDetails">
 
       {/* <Row>
         <Col className="d-flex justify-content-center">
@@ -62,7 +59,7 @@ function OrderDetails(props) {
 
       <Row>
         <Col className="d-flex justify-content-center">
-          <Card className="mb-3 col-9">
+          <Card className="col-12">
 
             <Card.Header className="text-center bg-primary text-white">
               Pedido ID={order.orderId}

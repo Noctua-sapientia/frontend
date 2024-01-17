@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Badge, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 
 import './HistoryOrders.css';
 import { parseDate, getBadgeStatus, calculateOrderPayment } from './utils';  

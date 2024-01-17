@@ -1,0 +1,27 @@
+.section-title {
+  text-align: center;
+  margin-top: 50px; 
+}
+
+.section-content {
+  margin-top: 20px; 
+}
+
+.history-orders-filter {
+  background-color: #edf7f8;
+}
+
+.history-orders-tableHeader > th {
+  background-color: #0d6efd;
+  color: white;
+}
+
+.history-orders-tableBody > tr > td,
+.history-orders-tableBody > tr > th {
+  background-color: #edf7f8
+}
+
+.btn-info {
+  color: white;
+}
+

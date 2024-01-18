@@ -12,7 +12,9 @@ function Home() {
       <div>---</div>
       <Link to="/books/book/seller">Perfil vendedor</Link>
       <div>---</div>
-      <Link to="/order">Seccion orders</Link>
+      <Link to="/historyOrders">Seccion orders</Link>
+      <div>---</div>
+      <Link to="/bascketOrders">Seccion carrito</Link>
       <div>---</div>
       <Link to="/books">Seccion books</Link>
       <div>---</div>

@@ -1,0 +1,30 @@
+    
+.basket-orders{
+    margin-top: 2rem;
+    }
+    
+    
+    .basket-order{
+        border-color: #17a2b8;
+        background-color: #edf7f8;
+    }
+      
+    .basket-order-header{
+        border-color: #17a2b8;
+        background-color: #17a2b8;
+        color: white;
+    }
+    
+    
+    .basket-order .list-group-item {
+      background-color: inherit;
+    }
+    
+    .section-title{
+      margin: 2rem;
+    }
+    
+    .update-quantity{
+        width: 60px;
+        display: inline-block;
+    }

@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import './OrderDetails.css';
-import { HiPencilSquare } from "react-icons/hi2";
+//import { HiPencilSquare } from "react-icons/hi2";
 
 import OrderDetailsBooks from './OrderDetailsBooks';
 import OrderDetailsInfoEditable from './OrderDetailsInfoEditable';
@@ -75,12 +75,7 @@ function OrderDetails(props) {
 
               <Container className="orderDetails-buttons d-flex justify-content-center gap-3">
 
-              {!isEditing && (
-              <Button variant="primary" onClick={() => setIsEditing(true)}>
-                <HiPencilSquare /> Editar
-              </Button>
               
-              )}
                 {/* <Button variant="primary" onClick={() => setIsEditing(true)} > <HiPencilSquare /> {isEditing ? '' : 'Editar'}</Button> */}
                 <Button variant="info" onClick={() => onDeleteOrder(order)}>Delete</Button>
               </Container>

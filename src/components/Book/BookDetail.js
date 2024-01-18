@@ -1,83 +1,92 @@
-
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import BooksApi from './BooksApi.js';
-import { Container, Col, Row, CardText } from 'react-bootstrap';
+import BookDetailOrder from './BookDetailOrder.js';
+import { Container, Col, Row, CardText, Table } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
-import styles from './book_detail_styles.css'
+import styles from './book_detail_styles.css';
 
-function Books(props) {
-  const [message, setMessage] = useState(null);
-  const [books, setBooks] = useState([]);
-
+function BookDetail(props) {
+  const [book, setBook] = useState(null);
+  const { isbn } = useParams();
+  const initialBooks = [
+    {
+      "isbn": 1,
+      "titulo": "Harry Potter y la piedra filosofal",
+      "autor": "J.K.Rowling",
+      "año": "1997",
+      "genero": "fantasía",
+      "options": [
+        { "vendedor": 2, "stock": 110, "prize": 9.9, "reseñas": 4.2 },
+        { "vendedor": 2, "stock": 120, "prize": 12.10, "reseñas": 3.8 }
+      ]
+    }
+  ];/*
   useEffect(() => {
-    async function fetchBooks() {
+    async function fetchBookDetails() {
       try {
-        const fetchedBooks = await BooksApi.getAllBooks();
-        setBooks(fetchedBooks);
+        const fetchedBook = await BooksApi.getBooksByISBN(isbn);
+        setBook(fetchedBook);
       } catch (error) {
-        setMessage('Could not contact the server');
+        console.error('Could not fetch book details', error);
       }
     }
 
-    fetchBooks();
-  }, []);
+    fetchBookDetails();
+  }, [isbn]);
+*/
+  // Verificación de nulidad antes de acceder a las propiedades del libro
+  if (!book) {
+    return <p>Cargando...</p>;
+  }
 
   return (
     <Fragment>
-      <Container className='home-container'>
+      <Container className="home-container">
         <Col>
           <Row>
-            <Col className='column'>
-              <img src={imageBook1} className="icono" style={{ width: '50%', height: '60vh'}} />
+            <Col className="column">
+              <img src={imageBook1} className="icono" style={{ width: '50%', height: '60vh' }} alt="Book Cover" />
             </Col>
-            <Col className='column align-items-center justify-content-center'>
+            <Col className="column align-items-center justify-content-center">
               <Row>
-                <CardText>TÍTULO: HARRY POTTER Y LA PIEDRA FILOSOFAL {books.map((book) => (book.title))}</CardText>
+                <CardText>TÍTULO={book.title}</CardText>
               </Row>
               <Row>
-                <CardText>AUTOR:  J.K.ROWLING{books.map((book) => (book.author))}</CardText>
+                <CardText>AUTOR={book.author}</CardText>
               </Row>
               <Row>
-                <CardText>GÉNERO:  FANTASÍA{books.map((book) => (book.category))}</CardText>
+                <CardText>GÉNERO={book.genre}</CardText>
+              </Row>
+              <Row>
+                <CardText>AÑO={book.year}</CardText>
               </Row>
               <Row>
                 <CardText>VENDEDORES</CardText>
-                <table className="table">
+                <Table className="mt-4 text-center">
                   <thead>
-                    <tr>
-                      <th>Vendedor</th>
-                      <th>Precio</th>
-                      <th>Stock</th>
-                      <th>Reseñas</th>
-                      <th>Compra</th>
+                    <tr className="book-orders-tableHeader">
+                      <th scope="col">Vendedor</th>
+                      <th scope="col">Precio</th>
+                      <th scope="col">Stock</th>
+                      <th scope="col">Reseñas</th>
+                      <th scope="col">Compra</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {books.map((book) => (
-                      book.options.map((option, index) => (
-                        <tr key={index}>
-                          <td>{option.seller}</td>
-                          <td>{option.stock}</td>
-                          <td>{option.prize}</td>
-                          <td>{option.reviews}</td>
-                          <div className={styles.rating}>
-                                <span className={styles.stars}>★★★★★</span>
-                            </div>
-                          <td><Link to={`/books`} className="btn btn-primary">Añadir al Carrito</Link></td>
-                        </tr>
-                      ))
-                    ))}
+                  <tbody className="book-orders-tableBody">
+                    <BookDetailOrder key={book.isbn} book={book} />
                   </tbody>
-                </table>
+                </Table>
               </Row>
             </Col>
           </Row>
         </Col>
       </Container>
-      <Link to={`/books`} className="btn btn-primary">Volver al Catálogo</Link>
+      <Link to={`/books`} className="btn btn-primary">
+        Volver al Catálogo
+      </Link>
     </Fragment>
   );
 }
 
-export default Books;
+export default BookDetail;

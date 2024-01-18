@@ -6,21 +6,10 @@ import OrderCommentsBy from './components/Review/OrderCommentsBy.js';
 import Alert from './components/Review/Alert.js';
 import ReviewsApi from './ReviewsApi.js';
 import swal from 'sweetalert';
+import { Link } from 'react-router-dom';
 
-
-/*const sellerReviews = [
-  { id: 1, description: 'Un envío muy rápido y en perfectas condiciones', rating: 5, date:"06/10/2023" },
-  { id: 2, description: 'Un trato horroroso.', rating: 0, date:"23/10/2023" },
-  { id: 3, description: 'Buen trato', rating: 4, date:"21/09/2023" },
-];
-
-const bookReviews = [
-  { id: 1, description: 'Muy buen libro. Me ha encantado', rating: 5, date:"06/10/2023" },
-  { id: 2, description: 'Horroroso', rating: 0, date:"23/10/2023" },
-  { id: 3, description: 'Buen libro', rating: 4, date:"21/09/2023" },
-];*/
-
-function App() {
+function Review() {
+  return (
 
   const [activeData, setActiveData] = useState([]);
   const [activeType, setActiveType] = useState('books'); // Estado para rastrear el tipo activo
@@ -181,6 +170,9 @@ const onYesCancelAlert = async(reviewIdToDelete) => {
       </div>
     </div>
     
+    <div>
+      <Link to="/">Volver a INICIO</Link>
+    </div>
   );
 }
 

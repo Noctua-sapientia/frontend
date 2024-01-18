@@ -7,9 +7,9 @@ import RegisterPage from './components/User/RegisterPage';
 
 import VendorPage from './components/User/VendorPage';
 import MyAccount from './components/User/Account';
-import Book from './components/Book/Book';
+import Books from './components/Books';
 
-import Review from './components/Review';
+import Review from './components/Review/Review.js';
 
 import BookDetail from './components/Book/BookDetail.js'
 import SearchBooks from './components/Book/SearchBooks.js'

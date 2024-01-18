@@ -1,15 +1,14 @@
-import './Review/Review.css';
+import './Review.css';
 import React, { useEffect, useState } from 'react';
-import CommentList from './components/Review/CommentList.js';
-import NewComment from './components/Review/NewComment.js';
-import OrderCommentsBy from './components/Review/OrderCommentsBy.js';
-import Alert from './components/Review/Alert.js';
-import ReviewsApi from './ReviewsApi.js';
+import CommentList from './CommentList.js';
+import NewComment from './NewComment.js';
+import OrderCommentsBy from './OrderCommentsBy.js';
+import Alert from './Alert.js';
+import ReviewsApi from '../../api/ReviewsApi.js';
 import swal from 'sweetalert';
 import { Link } from 'react-router-dom';
 
 function Review() {
-  return (
 
   const [activeData, setActiveData] = useState([]);
   const [activeType, setActiveType] = useState('books'); // Estado para rastrear el tipo activo
@@ -143,7 +142,7 @@ const onYesCancelAlert = async(reviewIdToDelete) => {
 };
 
 
-  return (
+  return(
     <div className="App">
       <h1>Mis reseñas</h1>
       <button className={activeType === 'books' ? 'btn btn-primary' : 'btn btn-primary faded'}
@@ -168,11 +167,13 @@ const onYesCancelAlert = async(reviewIdToDelete) => {
       <div className="table-container">
         <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert}/>
       </div>
+
+      <div>
+        <Link to="/">Volver a INICIO</Link>
+      </div>
+
     </div>
     
-    <div>
-      <Link to="/">Volver a INICIO</Link>
-    </div>
   );
 }
 

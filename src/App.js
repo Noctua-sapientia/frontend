@@ -7,7 +7,7 @@ import RegisterPage from './components/User/RegisterPage';
 
 import VendorPage from './components/User/VendorPage';
 import MyAccount from './components/User/Account';
-import Books from './components/Book';
+import Book from './components/Book/Book';
 
 import Review from './components/Review';
 

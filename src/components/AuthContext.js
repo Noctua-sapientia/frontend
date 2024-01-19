@@ -4,7 +4,7 @@ import React, { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
-const DEBUG = true;
+const DEBUG = false;
 
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
@@ -43,21 +43,24 @@ export const AuthProvider = ({ children }) => {
         console.log('Fake Token:', fakeToken);
       }else{
         // Simulación de una solicitud al backend para obtener el token de acceso
-        const response = await fetch('https://api.tuapp.com/login', {
+        const request= new Request('http://localhost:3000/api/v1/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            username,
-            password,
+            email:username,
+            password:password
           }),
-        });
+      });
+        
+        const response = await fetch(request);
+
         if (response.ok) {
           const data = await response.json();
           setAccessToken(data.token);
           setUserType(data.userType);
-          setUserType(data.userId);
+          setUserId(data.userId);
           return true;
         } else {
           // Manejo de errores
@@ -101,7 +104,7 @@ export const AuthProvider = ({ children }) => {
     handleLogout,
     isAuthenticated,
   };
-
+  
   return (
     <AuthContext.Provider value={contextValue}>
       {children}

@@ -1,35 +1,15 @@
 class UserApi {
-    static API_BASE_URL ="/api/v1";
 
-    static requestHearders(){
-        return {}
+    static requestHearders(accessToken){
+        return {
+            Authorization: accessToken
+        }
     }
 
-    static async getCustomer(){
-        /*
-        Customer: 
-        {
-            id : { Autogenerado// omitir
-                type: Number,
-                required: true
-            },
-            name : {
-                type: String,
-                required: true
-            },
-            surnames : {
-                type: String,
-                required: true
-            },
-            address : {
-                type: String,
-                required: true
-            }
-        
-        }
-        */
-        const headers = this.requestHearders();
-        const request = new Request(UserApi.API_BASE_URL + "/customers", {
+    static async getCustomer(accessToken,userId){
+
+        const headers = this.requestHearders(accessToken);
+        const request = new Request('http://localhost:3000/api/v1/customers/' + userId , {
             method: 'GET',
             headers: headers
         });
@@ -42,32 +22,10 @@ class UserApi {
 
         return response.json();
     }
-    static async getSeller(){
-        /*
-        Seller: 
-        id (autogenerado): {
-                type: Number,
-                required: true    
-            },
-            name : {
-                type: String,
-                required: true
-            },
-            valoration : { iniciado a 0
-                type: Number,
-                required: true
-            },
-            orders: { iniciado a 0
-                type: Number,
-                required: true
-            },
-            reviews: { iniciado a 0
-                type: Number,
-                required: true
-            }
-        */
-        const headers = this.requestHearders();
-        const request = new Request(UserApi.API_BASE_URL + "/sellers", {
+    static async getSeller(accessToken,userId){
+
+        const headers = this.requestHearders(accessToken);
+        const request = new Request('http://localhost:3000/api/v1/sellers/' + userId , {
             method: 'GET',
             headers: headers
         });

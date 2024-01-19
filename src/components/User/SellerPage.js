@@ -3,14 +3,17 @@ import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
 import './user_styles.css'; // Importa tus estilos CSS aquí
 import logoImage from '../../img/logo.png'
 import UserApi from './UserApi.js'
+import { useAuth } from '../AuthContext';
+
 
 function SellerPage(props) {
     const [user, setUser] = useState([]);
+    const {accessToken, userId } = useAuth();
 
     useEffect(() => {
         async function fetchUser() {
             try {
-                const c = await UserApi.getSeller(user);
+                const c = await UserApi.getSeller(accessToken, userId);
                 setUser(c);
 
             } catch (error) {
@@ -19,7 +22,7 @@ function SellerPage(props) {
         }
 
         fetchUser();
-    });
+    }, [accessToken, userId]);
 
     /*
     function OnUserEdit(user){
@@ -32,23 +35,23 @@ function SellerPage(props) {
             <Col>
                 <Row>
                     <Col align='center'>
-                        <h2>Mi perfil de vendedor</h2>
+                        <h2>My profile</h2>
                     </Col>
                 </Row>
                 <Row>
                     {/* Columna de botones */}
                     <Col className='column align-items-center justify-content-center' >
                         <Row>
-                        <CardText>{user.map(user => user.name)}</CardText>
+                        <CardText>Name: {user.name}</CardText>
                         </Row>
                         <Row>
-                        <CardText>Nº valorations: {user.map(user => user.valoration)}</CardText>
+                        <CardText>Nº valorations: {user.valoration}</CardText>
                         </Row>
                         <Row>
-                        <CardText>Nº orders: {user.map(user => user.orders)}</CardText>
+                        <CardText>Nº orders: {user.orders}</CardText>
                         </Row>
                         <Row>
-                        <CardText>Nº reviews: {user.map(user => user.reviews)}</CardText>    
+                        <CardText>Nº reviews: {user.reviews}</CardText>    
                         </Row>
                         <Row>
                         <Button className='profile-button' href="/book"> Mis libros </Button>

@@ -5,7 +5,7 @@ import Home from './components/Home';
 import LoginPage from './components/User/LoginPage';
 import RegisterPage from './components/User/RegisterPage';
 
-import VendorPage from './components/User/VendorPage';
+import VendorPage from './components/User/SellerPage';
 import MyAccount from './components/User/Account';
 import Books from './components/Books';
 
@@ -19,6 +19,7 @@ import OrderDetails from './components/Orders/OrderDetails';
 import BascketOrders from './components/Orders/BascketOrders';
 import orders from './components/Orders/OrdersData';
 import Header from './header';
+import SellerPage from './components/User/SellerPage';
 
 function App() {
 
@@ -35,7 +36,7 @@ function App() {
         <Route path="/login/register" element={<RegisterPage />} />
         <Route path="/myaccount" element={<MyAccount />} />
 
-        <Route path="/vendorUser" element={<VendorPage />} />
+        <Route path="/sellerUser" element={<SellerPage />} />
 
         <Route path="/book" element={<Books />} />
         <Route path="/books/book" element={<BookDetail />} />

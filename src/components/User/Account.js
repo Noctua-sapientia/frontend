@@ -5,11 +5,12 @@ import CustomerPage from './CustomerPage';
 import { useAuth } from '../AuthContext';
 
 const MyAccount = () => {
-  const {userType, handleLogout, isAuthenticated } = useAuth();
+  const {userType, handleLogout, isAuthenticated, userId } = useAuth();
   console.log("Estamos en myAccount y tenemos el usuario:", userType);
+  console.log("Numero de usuario:", userId);
   // Verifica si el usuario está autenticado antes de renderizar el contenido
   if (!isAuthenticated()) {
-    return <p>No has iniciado sesión.</p>;
+    return <h1> No has iniciado sesión </h1>;
   }
 
   return (

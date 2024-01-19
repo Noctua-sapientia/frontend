@@ -6,7 +6,6 @@ import { useAuth } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 
-
 function LoginPage() {
   const { handleLogin } = useAuth();
   const [username, setUsername] = useState('');

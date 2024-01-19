@@ -6,22 +6,10 @@ import { Container, Col, Row, CardText, Table } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
 import styles from './book_detail_styles.css';
 
-function BookDetail(props) {
-  const [book, setBook] = useState(null);
+function BookDetail() {
   const { isbn } = useParams();
-  const initialBooks = [
-    {
-      "isbn": 1,
-      "titulo": "Harry Potter y la piedra filosofal",
-      "autor": "J.K.Rowling",
-      "año": "1997",
-      "genero": "fantasía",
-      "options": [
-        { "vendedor": 2, "stock": 110, "prize": 9.9, "reseñas": 4.2 },
-        { "vendedor": 2, "stock": 120, "prize": 12.10, "reseñas": 3.8 }
-      ]
-    }
-  ];/*
+  const [book, setBook] = useState(null);
+
   useEffect(() => {
     async function fetchBookDetails() {
       try {
@@ -34,8 +22,7 @@ function BookDetail(props) {
 
     fetchBookDetails();
   }, [isbn]);
-*/
-  // Verificación de nulidad antes de acceder a las propiedades del libro
+
   if (!book) {
     return <p>Cargando...</p>;
   }
@@ -74,7 +61,9 @@ function BookDetail(props) {
                     </tr>
                   </thead>
                   <tbody className="book-orders-tableBody">
-                    <BookDetailOrder key={book.isbn} book={book} />
+                    {book.options.map((bookOption) => (
+                      <BookDetailOrder key={bookOption.seller} bookOption={bookOption} />
+                    ))}
                   </tbody>
                 </Table>
               </Row>
@@ -82,7 +71,7 @@ function BookDetail(props) {
           </Row>
         </Col>
       </Container>
-      <Link to={`/books`} className="btn btn-primary">
+      <Link to="/books" className="btn btn-primary">
         Volver al Catálogo
       </Link>
     </Fragment>

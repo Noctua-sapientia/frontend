@@ -22,20 +22,27 @@ class BooksApi {
     }
   
     static async getBooksByISBN(isbn) {
-      const headers = this.requestHeaders();
-      const request = new Request(BooksApi.API_BASE_URL + `/books/${isbn}`, {
-        method: 'GET',
-        headers: headers
-      });
-  
-      const response = await fetch(request);
-  
-      if (!response.ok) {
-        throw Error("Response not valid" + response.status);
+      try {
+        const headers = this.requestHeaders();
+        const request = new Request(BooksApi.API_BASE_URL + `/books/${isbn}`, {
+          method: 'GET',
+          headers: headers,
+        });
+    
+        const response = await fetch(request);
+    
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Failed to get book details. Status: ${response.status}, Message: ${errorData.message}`);
+        }
+    
+        return response.json();
+      } catch (error) {
+        console.error('Error in getBooksByISBN:', error);
+        throw error;
       }
-  
-      return response.json();
     }
+    
   }
   
   export default BooksApi;

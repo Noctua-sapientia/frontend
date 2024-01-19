@@ -1,160 +1,74 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import BooksApi from './BooksApi';
-import Book from './Book';
-import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Row, Col, Card, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import BooksApi from './BooksApi';
 import imageBook1 from '../../img/HarryPotter.jpg';
+import Book from './Book';  // Asegúrate de tener este componente creado
 
 function SearchBooks() {
-  const initialBooks = [
-    {
-      "isbn": 1,
-      "title": "Harry Potter and the Philosopher's Stone",
-      "author": "J.K.Rowling",
-      "year": "1997",
-      "genre": "fantasy",
-      "options": [
-        { "seller": 2, "stock": 110, "prize": 9.9, "reviews": 4.2 },
-        { "seller": 2, "stock": 120, "prize": 12.10, "reviews": 3.8 }
-      ]
-    }
-  ];
-
-  const [books, setBooks] = useState(initialBooks);
+  const [books, setBooks] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredBooks, setFilteredBooks] = useState([]);
 
   useEffect(() => {
-    // Logic to fetch books from your API or any data source
-    // Suppose 'books' contains the list of obtained books
-    /* async function fetchBooks() {
+    async function fetchBooks() {
       try {
-        const c = await BooksApi.getAllBooks();
-        setBooks(c);
+        const booksData = await BooksApi.getAllBooks();
+        setBooks(booksData);
       } catch (error) {
-        setMessage('Could not contact the server');
+        console.error('Could not fetch books:', error);
       }
     }
-    fetchBooks(); */
 
-    // Filter by title
-    const filtered = books.filter((book) =>
-      book.title.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    fetchBooks();
+  }, []);
 
-    // Sort by best reviews (assuming you have a 'reviews' property in each book)
-    filtered.sort((a, b) => b.options[0].reviews - a.options[0].reviews);
-
-    setFilteredBooks(filtered);
-  }, [books, searchTerm]);
-
-  const handleSearch = e => {
+  const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
 
+  const filteredBooks = books.filter((book) =>
+    book.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
-    <Fragment>
-      <div className="container mt-4">
-        <input
-          type="text"
-          className="form-control mb-3"
-          placeholder="Search by title"
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-      </div>
-      <Container className='home-container'>
-        {/* Header */}
-        <Col>
-          <Row>
-            <Col align='center'>
-              <h2>Book Catalog</h2>
+    <Container className="mt-4">
+      <input
+        type="text"
+        className="form-control mb-3"
+        placeholder="Search by title"
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+
+      <Container className="home-container">
+        <Row>
+          {filteredBooks.map((book) => (
+            <Col key={book.isbn} className="column align-items-center justify-content-center">
+              <Card>
+                <Card.Img variant="top" src={imageBook1} style={{ width: '100%', height: '40vh' }} />
+                <Card.Body>
+                  <Card.Title>{book.title}</Card.Title>
+                  <Card.Text>{book.author}</Card.Text>
+                  <Card.Text>{book.genre}</Card.Text>
+                  <Link to={`/books/${book.isbn}`} className="btn btn-primary">
+                    View Book
+                  </Link>
+                  <Button variant="primary">Reviews</Button>
+                </Card.Body>
+              </Card>
             </Col>
-          </Row>
-          <Row>
-          <Col className='column align-items-center justify-content-center' >
-              <img src={imageBook1} className="icono" style={{ width: '30%', height: '40vh' }} />
-              <Row>
-                <CardText>{books[0].title}</CardText>
-              </Row>
-              <Row>
-                <CardText>{books[0].author}</CardText>
-              </Row>
-              <Row>
-                <CardText>{books[0].genre}</CardText>
-              </Row>
-              <Row>
-                <Link to={`/books/${books[0].isbn}`}>View Book</Link>
-              </Row>
-              <Row>
-                <Button variant="primary"> Reviews </Button>
-              </Row>
-            </Col>
-            <Col className='column align-items-center justify-content-center' >
-              <img src={imageBook1} className="icono" style={{ width: '30%', height: '40vh' }} />
-              <Row>
-                <CardText>{books[0].title}</CardText>
-              </Row>
-              <Row>
-                <CardText>{books[0].author}</CardText>
-              </Row>
-              <Row>
-                <CardText>{books[0].genre}</CardText>
-              </Row>
-              <Row>
-                <Link to={`/books/${books[0].isbn}`}>View Book</Link>
-              </Row>
-              <Row>
-                <Button variant="primary"> Reviews </Button>
-              </Row>
-            </Col>
-          </Row>
-          <Row>
-          <Col className='column align-items-center justify-content-center' >
-              <img src={imageBook1} className="icono" style={{ width: '30%', height: '40vh' }} />
-              <Row>
-                <CardText>{books[0].title}</CardText>
-              </Row>
-              <Row>
-                <CardText>{books[0].author}</CardText>
-              </Row>
-              <Row>
-                <CardText>{books[0].genre}</CardText>
-              </Row>
-              <Row>
-                <Link to={`/books/${books[0].isbn}`}>View Book</Link>
-              </Row>
-              <Row>
-                <Button variant="primary"> Reviews </Button>
-              </Row>
-            </Col>
-            <Col className='column align-items-center justify-content-center' >
-              <img src={imageBook1} className="icono" style={{ width: '30%', height: '40vh' }} />
-              <Row>
-                <CardText>{books[0].title}</CardText>
-              </Row>
-              <Row>
-                <CardText>{books[0].author}</CardText>
-              </Row>
-              <Row>
-                <CardText>{books[0].genre}</CardText>
-              </Row>
-              <Row>
-                <Link to={`/books/${books[0].isbn}`}>View Book</Link>
-              </Row>
-              <Row>
-                <Button variant="primary"> Reviews </Button>
-              </Row>
-            </Col>
-          </Row>
-          <div className="separator"></div>
-          <Col align='center'>
-            <Link to="/" className="btn btn-primary" > Go back to main </Link>
-          </Col>
+          ))}
+        </Row>
+
+        <div className="separator"></div>
+
+        <Col align="center">
+          <Link to="/" className="btn btn-primary">
+            Go back to main
+          </Link>
         </Col>
       </Container>
-    </Fragment>
+    </Container>
   );
 }
 

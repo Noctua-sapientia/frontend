@@ -72,6 +72,26 @@ class OrdersApi {
         return response.json();
     }
 
+    static async updateOrder(orderId, newOrderData) {
+        const headers = new Headers();
+        headers.append('Content-Type', 'application/json');
+
+        const request = new Request(
+            OrdersApi.API_BASE_URL + "/orders/" + orderId, 
+            {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify(newOrderData)
+            }
+        );
+    
+        const response = await fetch(request);
+        if (!response.ok) {
+            throw Error("Response not valid: " + response.status);
+        }    
+        return response.json();
+    }
+
     
   }
   

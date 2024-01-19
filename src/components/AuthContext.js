@@ -9,6 +9,8 @@ const DEBUG = true;
 export const AuthProvider = ({ children }) => {
   const [accessToken, setAccessToken] = useState(null);
   const [userType, setUserType] = useState(null);
+  const [userId, setUserId] = useState(null);
+
 
   const handleLogin = async (username, password) => {
     try {
@@ -25,6 +27,7 @@ export const AuthProvider = ({ children }) => {
           fakeToken = createFakeToken(username, password , 'customer');
           setAccessToken(fakeToken);
           setUserType('customer');
+          setUserId(1);
           console.log('User type:::', userType);
           return true;
         }
@@ -32,6 +35,7 @@ export const AuthProvider = ({ children }) => {
           fakeToken = createFakeToken(username, password , 'seller');
           setAccessToken(fakeToken);
           setUserType('seller');
+          setUserId(2);
           console.log('User type:', userType);
           return true;
         }
@@ -53,6 +57,7 @@ export const AuthProvider = ({ children }) => {
           const data = await response.json();
           setAccessToken(data.token);
           setUserType(data.userType);
+          setUserType(data.userId);
           return true;
         } else {
           // Manejo de errores
@@ -91,6 +96,7 @@ export const AuthProvider = ({ children }) => {
   const contextValue = {
     accessToken,
     userType,
+    userId,
     handleLogin,
     handleLogout,
     isAuthenticated,

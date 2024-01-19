@@ -7,7 +7,7 @@ import RegisterPage from './components/User/RegisterPage';
 
 import VendorPage from './components/User/VendorPage';
 import MyAccount from './components/User/Account';
-import Books from './components/Book';
+import Books from './components/Book/Book';
 
 import Review from './components/Review';
 
@@ -18,11 +18,7 @@ import HistoryOrders from './components/Orders/HistoryOrders';
 import OrderDetails from './components/Orders/OrderDetails';
 import BascketOrders from './components/Orders/BascketOrders';
 import orders from './components/Orders/OrdersData';
-
-// import Pricing from './components/Pricing/pricingPage';
-
-
-
+import Header from './header';
 
 function App() {
 
@@ -30,6 +26,8 @@ function App() {
 
   return (
     <Router>
+      <Header />
+
       <Routes>
         <Route path="/" element={<Home />} />
 

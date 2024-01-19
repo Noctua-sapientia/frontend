@@ -1,6 +1,7 @@
 import React from 'react';
 import { Container, Button, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
 import logo from './img/logo.png';
+import { Link } from 'react-router-dom';
 
 
 function Header() {
@@ -8,7 +9,11 @@ function Header() {
     return (
             <Container>
                 <Row>
-                    <Col xs={2}><a href='/'><img src={logo} alt="Logo" className="icono"/></a></Col>
+                    <Col xs={2}>
+                        <Link to="/">
+                            <img src={logo} alt="Logo" className="icono"/>
+                        </Link>
+                    </Col>
                     <Col xs={2}>
                         <InputGroup className="mb-5">
                             <FormControl
@@ -20,16 +25,24 @@ function Header() {
                         </InputGroup>
                     </Col>
                     <Col xs={2}>
-                        <Button className="btn btn-primary" href="/review"> Reviews </Button> 
+                        <Link to="/review">
+                            <Button className="btn btn-primary">Review</Button>
+                        </Link> 
                     </Col>
                     <Col xs={2}>
-                        <Button className="btn btn-primary" href="/order"> Orders </Button> 
+                        <Link to="/order">
+                            <Button className="btn btn-primary">Orders</Button>
+                        </Link> 
                     </Col>
                     <Col xs={2}>
-                        <Button className="btn btn-primary" href="/myaccount"> My Account </Button>
+                        <Link to="/myaccount">
+                            <Button className="btn btn-primary">My Account</Button>
+                        </Link>
                     </Col>
                     <Col xs={2}>
-                        <Button className="btn btn-primary" href="/login"> Login </Button>                
+                        <Link to="/login"> 
+                            <Button className="btn btn-primary">Log in</Button>
+                        </Link>                
                     </Col>
                 </Row>
             </Container>

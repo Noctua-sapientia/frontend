@@ -28,6 +28,10 @@ export const AuthProvider = ({ children }) => {
           setAccessToken(fakeToken);
           setUserType('customer');
           setUserId(1);
+          // Almacenar en sessionStorage
+          sessionStorage.setItem('accessToken', accessToken);
+          sessionStorage.setItem('userType', userType);
+          sessionStorage.setItem('userId', userId);
           console.log('User type:::', userType);
           return true;
         }
@@ -36,6 +40,9 @@ export const AuthProvider = ({ children }) => {
           setAccessToken(fakeToken);
           setUserType('seller');
           setUserId(2);
+          sessionStorage.setItem('accessToken', accessToken);
+          sessionStorage.setItem('userType', userType);
+          sessionStorage.setItem('userId', userId);
           console.log('User type:', userType);
           return true;
         }
@@ -61,6 +68,12 @@ export const AuthProvider = ({ children }) => {
           setAccessToken(data.token);
           setUserType(data.userType);
           setUserId(data.userId);
+
+          // Almacenar en sessionStorage
+          sessionStorage.setItem('accessToken', data.token);
+          sessionStorage.setItem('userType', data.userType);
+          sessionStorage.setItem('userId', data.userId);
+
           return true;
         } else {
           // Manejo de errores
@@ -92,6 +105,11 @@ export const AuthProvider = ({ children }) => {
   const handleLogout = () => {
     setAccessToken(null);
     setUserType(null);
+
+    // Limpiar sessionStorage al cerrar sesión
+    sessionStorage.removeItem('accessToken');
+    sessionStorage.removeItem('userType');
+    sessionStorage.removeItem('userId');
   };
 
   const isAuthenticated = () => !!accessToken;

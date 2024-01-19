@@ -1,3 +1,6 @@
+import React from "react";
+
+
 function Alert({message, onClose}) {
     if (message == null) {
         return null;

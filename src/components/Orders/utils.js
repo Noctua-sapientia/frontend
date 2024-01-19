@@ -1,5 +1,5 @@
 import { Badge} from 'react-bootstrap';
-
+import React from 'react';
 
 function parseDate(dateTime){
     var date = dateTime.split('T')[0];

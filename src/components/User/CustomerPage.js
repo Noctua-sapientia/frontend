@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
-import Alert from '../Alert.js';
 import './user_styles.css'; // Importa tus estilos CSS aquí
 import logoImage from '../../img/logo.png'
 import UserApi from './UserApi.js'
 
 function CustomerPage(props) {
-    const [message, setMessage] = useState(null);
     const [user, setUser] = useState([]);
 
     useEffect(() => {
@@ -16,26 +14,17 @@ function CustomerPage(props) {
                 setUser(c);
 
             } catch (error) {
-                setMessage(user);
+                
             }
         }
 
         fetchUser();
     });
-    
-    function OnAlertClose(){
-        setMessage(null);
-    }
-    /*
-    function OnUserEdit(user){
-        setMessage(user);
-    }
-    */
+
     return (
         <Container className='home-container'>
             {/* Cabecera */}
             <Col>
-            <Alert message={message} onClose={OnAlertClose}></Alert>
                 <Row>
                     <Col align='center'>
                         <h2>Mi perfil de usuario</h2>

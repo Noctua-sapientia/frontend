@@ -43,7 +43,7 @@ function App() {
 
         <Route path="/review" element={<Review />} />
 
-        <Route path="/historyOrders" element={<HistoryOrders orders={rawOrders} />}/>
+        <Route path="/historyOrders" element={<HistoryOrders />}/>
         <Route path="/historyOrders/:orderId" element={<OrderDetails orders={rawOrders} setOrders={setOrders} />} />
         <Route path="/bascketOrders" element={<BascketOrders />} />
 

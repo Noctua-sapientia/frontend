@@ -1,15 +1,39 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+
+import { Container } from 'react-bootstrap';
+import './HistoryOrders.css';
+
 import HistoryOrdersFilter from './HistoryOrdersFilter';
 import HistoryOrdersList from './HistoryOrdersList';
-import { Container } from 'react-bootstrap';
+import OrdersApi from '../../api/OrdersApi';
 
 import { calculateOrderPayment } from './utils'; 
 
-import './HistoryOrders.css';
+
 
 function HistoryOrders(props) {
 
-  const orders = props.orders;
+  // -------------------------- Errors alert ---------------------------------------
+
+
+  // --------------------------  Orders loading --------------------------------------
+
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    async function fetchOrders() {
+      try {
+        const o = await OrdersApi.getAllOrders();
+        setOrders(o);
+      } catch (error) {
+        console.log(error);
+      //   setMessage('Could not contact with the server');
+      }
+    }  
+    fetchOrders();
+  }, []); 
+
+  // --------------------------  Orders filtering --------------------------------------
 
   const [filters, setFilters] = useState({
     orderStatus: '',
@@ -50,6 +74,8 @@ function HistoryOrders(props) {
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
   };
+
+  // --------------------------  History orders page --------------------------------------
 
   return (
     <Container>

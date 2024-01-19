@@ -56,6 +56,22 @@ class OrdersApi {
         return response.json();
     }
 
+    static async deleteOrder(orderId) {
+        const headers = this.requestHeaders();
+        const request = new Request(
+            OrdersApi.API_BASE_URL + "/orders/" + orderId, 
+            {
+            method: 'DELETE',
+            headers: headers
+            }
+        );
+        const response = await fetch(request);
+        if (!response.ok) {
+            throw Error("Response not valid" + response.status);
+        }    
+        return response.json();
+    }
+
     
   }
   

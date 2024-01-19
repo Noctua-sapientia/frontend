@@ -83,6 +83,17 @@ function OrderDetails(props) {
   //   navigate('/historyOrders');
   // }
 
+  // --------------------------  Order deleting --------------------------------------
+
+  async function onDeleteOrder(orderId) {
+    try {
+        await OrdersApi.deleteOrder(orderId);
+        navigate('/historyOrders');
+    } catch (error) {
+        console.log(error);
+    }
+  }
+
 
   return (
     <Container className="mt-3 d-flex justify-content-center align-items-center orderDetails">
@@ -120,7 +131,8 @@ function OrderDetails(props) {
                 
                 )} */}
                   {/* <Button variant="primary" onClick={() => setIsEditing(true)} > <HiPencilSquare /> {isEditing ? '' : 'Editar'}</Button> */}
-                  {/* <Button variant="info" onClick={() => onDeleteOrder(order)}>Delete</Button> */}
+                  <Button variant="danger" onClick={() => onDeleteOrder(order.orderId)}> <i className="bi bi-trash"></i> Delete </Button>
+                
                 </Container>
                 
                 </Card.Body>

@@ -1,14 +1,29 @@
 class OrdersApi {
-    static API_BASE_URL = "/api/v1";
-  
-    static requestHeaders() {
-      return {'Content-Type': 'application/json',};
+
+    static API_BASE_URL = "http://localhost:4003/api/v1";
+ 
+    static requestHeaders(accessToken) {
+      return {  'Content-Type': 'application/json',
+                'Authorization': accessToken
+            };
     }
+
+    // ------------------------ GET ------------------------------
   
-    static async getAllOrders() {
-        const headers = this.requestHeaders();
+    static async getAllOrders(accessToken, userType, userId) {
+        const headers = this.requestHeaders(accessToken);
+
+        let url;
+        if (userType === 'Customer') {
+            url = OrdersApi.API_BASE_URL + "/orders?userId=" + userId;
+        } else if (userType === 'Seller') {
+            url = OrdersApi.API_BASE_URL + "/orders?sellerId=" + userId;
+        } else {
+            throw Error("Invalid user type");
+        }
+
         const request = new Request(
-            OrdersApi.API_BASE_URL + "/orders", 
+            url, 
             {
             method: 'GET',
             headers: headers
@@ -22,8 +37,28 @@ class OrdersApi {
         return response.json();
         }
 
-    static async createOrder(order) {
-        const headers = {'Content-Type': 'application/json',};
+    
+    static async getOrder(accessToken, orderId) {
+        const headers = this.requestHeaders(accessToken);
+        const request = new Request(
+            OrdersApi.API_BASE_URL + "/orders/" + orderId, 
+            {
+            method: 'GET',
+            headers: headers
+            }
+        );
+        const response = await fetch(request);
+        if (!response.ok) {
+            throw Error("Response not valid" + response.status);
+        }    
+        return response.json();
+    }
+
+    // ------------------------ POST ------------------------------
+
+    static async createOrder(accessToken, order) {
+        const headers = this.requestHeaders(accessToken);
+
         const request = new Request(
             OrdersApi.API_BASE_URL + "/orders",
             {
@@ -40,41 +75,13 @@ class OrdersApi {
         return response.json();
     }
 
-    static async getOrder(orderId) {
-        const headers = this.requestHeaders();
-        const request = new Request(
-            OrdersApi.API_BASE_URL + "/orders/" + orderId, 
-            {
-            method: 'GET',
-            headers: headers
-            }
-        );
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw Error("Response not valid" + response.status);
-        }    
-        return response.json();
-    }
+    // ------------------------ PUT ------------------------------
 
-    static async deleteOrder(orderId) {
-        const headers = this.requestHeaders();
-        const request = new Request(
-            OrdersApi.API_BASE_URL + "/orders/" + orderId, 
-            {
-            method: 'DELETE',
-            headers: headers
-            }
-        );
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw Error("Response not valid" + response.status);
-        }    
-        return response.json();
-    }
+    static async updateOrder(accessToken, orderId, newOrderData) {
+        const headers = this.requestHeaders(accessToken);
 
-    static async updateOrder(orderId, newOrderData) {
-        const headers = new Headers();
-        headers.append('Content-Type', 'application/json');
+        console.log("order in createOrder:", newOrderData);
+        console.log("headers in createOrder:", headers);
 
         const request = new Request(
             OrdersApi.API_BASE_URL + "/orders/" + orderId, 
@@ -92,6 +99,23 @@ class OrdersApi {
         return response.json();
     }
 
+    // ------------------------ DELETE ------------------------------
+
+    static async deleteOrder(accessToken, orderId) {
+        const headers = this.requestHeaders(accessToken);
+        const request = new Request(
+            OrdersApi.API_BASE_URL + "/orders/" + orderId, 
+            {
+            method: 'DELETE',
+            headers: headers
+            }
+        );
+        const response = await fetch(request);
+        if (!response.ok) {
+            throw Error("Response not valid" + response.status);
+        }    
+        return response.json();
+    }
     
   }
   

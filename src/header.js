@@ -1,51 +1,54 @@
 import React from 'react';
-import { Container, Button, Row, Col, InputGroup, FormControl } from 'react-bootstrap';
+import { Container, Navbar, Nav, Form, FormControl } from 'react-bootstrap';
 import logo from './img/logo.png';
 import { Link } from 'react-router-dom';
 
-
 function Header() {
+  return (
+    <Navbar expand="lg">
+      <Container fluid>
+        <Link to="/" className="navbar-brand">
+          <img
+            src={logo}
+            width="50"
+            height="50"
+            className="d-inline-block align-top"
+            alt="logo"
+          />
+        </Link>
+        {/* Usa flex-grow-1 en el Form para que ocupe el espacio disponible */}
+        <Form className="flex-grow-1 mx-2">
+          <FormControl
+            type="text"
+            placeholder="Buscar..."
+            aria-label="Buscar..."
+            aria-describedby="basic-addon2"
+            className="mr-sm-2 w-100"
+          />
+        </Form>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+  <Navbar.Collapse id="basic-navbar-nav">
+    <Nav className="ml-auto">
+      <Link to="/review" className="nav-link">
+        <i className="bi bi-star-half"></i> Valoraciones
+      </Link>
+      <Link to="/historyOrders" className="nav-link">
+        <i className="bi bi-archive-fill"></i> Pedidos
+      </Link>
+      <Link to="/bascketOrders" className="nav-link">
+      <i className="bi bi-cart-fill"></i> Cesta
+      </Link>
+      <Link to="/myaccount" className="nav-link">
+        <i className="bi bi-person-circle"></i> Cuenta
+      </Link>
+      <Link to="/login" className="nav-link">
+        <i className="bi bi-box-arrow-in-right"></i> Log in
+      </Link>
+    </Nav>
+  </Navbar.Collapse>
+      </Container>
+    </Navbar>
+  );
+}
 
-    return (
-            <Container>
-                <Row>
-                    <Col xs={2}>
-                        <Link to="/">
-                            <img src={logo} alt="Logo" className="icono"/>
-                        </Link>
-                    </Col>
-                    <Col xs={2}>
-                        <InputGroup className="mb-5">
-                            <FormControl
-                                placeholder="Buscar..."
-                                aria-label="Buscar..."
-                                aria-describedby="basic-addon2"
-                            />
-                        
-                        </InputGroup>
-                    </Col>
-                    <Col xs={2}>
-                        <Link to="/review">
-                            <Button className="btn btn-primary">Review</Button>
-                        </Link> 
-                    </Col>
-                    <Col xs={2}>
-                        <Link to="/order">
-                            <Button className="btn btn-primary">Orders</Button>
-                        </Link> 
-                    </Col>
-                    <Col xs={2}>
-                        <Link to="/myaccount">
-                            <Button className="btn btn-primary">My Account</Button>
-                        </Link>
-                    </Col>
-                    <Col xs={2}>
-                        <Link to="/login"> 
-                            <Button className="btn btn-primary">Log in</Button>
-                        </Link>                
-                    </Col>
-                </Row>
-            </Container>
-    );
-  }
-  export default Header;
+export default Header;

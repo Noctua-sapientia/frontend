@@ -6,18 +6,19 @@ function CommentList(props) {
     
   return(
     <table className='table table-fixed table-margin'>
-      <thead>
-        <tr>
-          <th></th>
-          <th></th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
+      
       <tbody>
-        {props.comments.map((c) =>
+      {(() => {
+      if (Object.keys(props.comments).length === 0) {
+        return <div>No hay reseñas</div>
+      }else{
+        return <div>{props.comments.map((c) =>
           <Comment key={c.id} comment={c} updateReviewFunction={props.updateReviewFunction} deleteReviewFunction={props.deleteReviewFunction} onYesCancelAlert={props.onYesCancelAlert}/>
         )}
+        </div>
+      }
+    })()}
+
       </tbody>
     </table>
   )

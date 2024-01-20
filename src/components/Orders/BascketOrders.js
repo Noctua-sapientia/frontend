@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Col, Card, ListGroup, Button, Row } from 'react-bootstrap';
 import BascketOrder from './BascketOrder';
+import OrdersApi from '../../api/OrdersApi';
 import './BascketOrders.css';
 
 function BascketOrders() {
@@ -12,25 +13,86 @@ function BascketOrders() {
           title: "Harry Potter y la Piedra Filosofal",
           price: 5,
           quantity: 2,
-        //   idSeller: 1,
-        //   idBook: 1
+          sellerId: 1,
+          bookId: 12345678,
+        },
+        {
+          title: "La Sombra del Viento",
+          price: 7.5,
+          quantity: 4,
+          sellerId: 2,
+          bookId: 1
         },
         // Otros artículos...
       ]
     },
+    {
+      vendorName: "LaCasaDelLibro",
+      items: [
+        {
+          title: "Harry Potter y la Piedra Filosofal",
+          price: 5,
+          quantity: 2,
+          sellerId: 1,
+          bookId: 12345678,
+        },
+        {
+          title: "La Sombra del Viento",
+          price: 7.5,
+          quantity: 4,
+          sellerId: 2,
+          bookId: 1
+        },
+        // Otros artículos...
+      ]
+    }
+
+    
     // Otros vendedores...
   ];
+
+  const formatOrderData = (vendor, vendorIndex) => {
+
+    // Aquí deberías determinar los valores correctos para estos campos
+    const userId = 1; /* determinar el valor de userId */
+    const sellerId = 2; /* determinar el valor de sellerId, quizás basado en vendorIndex o alguna propiedad de vendor */
+    const deliveryAddress = "Mi casa"; // Esto debería obtenerse de alguna parte
+    const maxDeliveryDateAux = new Date();
+    maxDeliveryDateAux.setDate(maxDeliveryDateAux.getDate() + 7);
+    const maxDeliveryDate =  maxDeliveryDateAux.toISOString().split('T')[0];
+    const creationDatetime = new Date().toISOString(); // Fecha de creación del pedido
+    const updateDatetime = new Date().toISOString(); // Fecha de actualización del pedido
+    const shippingCost = 5; // Costo de envío
+
+  
+    const books = vendor.items.map(item => ({
+      bookId: item.bookId, /* determinar el valor de bookId */
+      units: item.quantity,
+      price: item.price,
+    }));
+  
+    return {
+      userId,
+      sellerId,
+      books,
+      deliveryAddress,
+      maxDeliveryDate,
+      creationDatetime,
+      updateDatetime,
+      shippingCost
+    };
+  };
 
   const [vendors, setVendors] = useState([]);
 
   useEffect(() => {
     const loadedVendors = localStorage.getItem('vendorsCart');
-    if (loadedVendors) {
-      setVendors(JSON.parse(loadedVendors));
-    } else {
+    // if (loadedVendors) {
+    //   setVendors(JSON.parse(loadedVendors));
+    // } else {
       setVendors(initialData);
       localStorage.setItem('vendorsCart', JSON.stringify(initialData));
-    }
+    // }
   }, []);
 
   const calculateTotalItems = (items) => {
@@ -61,6 +123,53 @@ function BascketOrders() {
     localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
   };
 
+  const handleDeleteOrder = (vendorIndex) => {
+    const updatedVendors = vendors.filter((_, index) => index !== vendorIndex);
+    setVendors(updatedVendors);
+    localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+  };
+
+  const handleCreateOrder = (vendorIndex) => {
+    const orderData = formatOrderData(vendors[vendorIndex], vendorIndex);
+    OrdersApi.createOrder(orderData)
+      .then(response => {
+        const updatedVendors = vendors.filter((_, index) => index !== vendorIndex);
+        setVendors(updatedVendors);
+        localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+
+      })
+      .catch(error => {
+        // Maneja los errores aquí, como mostrar un mensaje de error
+      });
+  };
+
+  const onDeleteBook = (vendorIndex, itemIndex) => {
+    let updatedVendors = vendors.map((vendor, vIndex) => {
+      if (vIndex === vendorIndex) {
+        // Filtrar el libro específico
+        const updatedItems = vendor.items.filter((_, iIndex) => iIndex !== itemIndex);
+        
+        // Si después de eliminar el libro, no quedan más libros, no devolver el vendedor
+        if (updatedItems.length === 0) {
+          return null;
+        }
+  
+        return {
+          ...vendor,
+          items: updatedItems
+        };
+      }
+      return vendor;
+    });
+  
+    // Filtrar los vendedores que no tienen libros
+    updatedVendors = updatedVendors.filter(vendor => vendor !== null);
+  
+    setVendors(updatedVendors);
+    localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+  };
+  
+
   return (
     <Col>
       <h2 className="section-title">Carrito de la compra</h2>
@@ -78,6 +187,7 @@ function BascketOrders() {
                       key={itemIndex} 
                       item={item} 
                       onUpdateQuantity={onUpdateQuantity} 
+                      onDeleteBook={onDeleteBook}
                       itemIndex={itemIndex} 
                       vendorIndex={vendorIndex} 
                     />
@@ -93,8 +203,20 @@ function BascketOrders() {
                 </Row>
                 <Row className="justify-content-center">
                   <div className="d-grid gap-3">
-                    <Button type="button" variant="info" className="mt-3"><i className="fas fa-truck"></i> Realizar Pedido</Button>
-                    <Button type="button" variant="secondary" className="mt-3"><i className="fas fa-trash"></i> Borrar Pedido</Button>
+                    <Button 
+                      type="button" 
+                      variant="info" 
+                      className="mt-3"
+                      onClick={() => handleCreateOrder(vendorIndex)}>
+                      <i className="fas fa-truck"></i> Realizar Pedido
+                    </Button>
+                    <Button 
+                      type="button" 
+                      variant="secondary" 
+                      className="mt-3"
+                      onClick={() => handleDeleteOrder(vendorIndex)}>
+                      <i className="fas fa-trash"></i> Borrar Pedido
+                    </Button>
                   </div>
                 </Row>
               </Col>

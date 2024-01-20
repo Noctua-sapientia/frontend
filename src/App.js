@@ -17,13 +17,10 @@ import SearchBooks from './components/Book/SearchBooks.js'
 import HistoryOrders from './components/Orders/HistoryOrders';
 import OrderDetails from './components/Orders/OrderDetails';
 import BascketOrders from './components/Orders/BascketOrders';
-import orders from './components/Orders/OrdersData';
 import Header from './header';
 import SellerPage from './components/User/SellerPage';
 
 function App() {
-
-  const [rawOrders, setOrders] = useState(orders);
 
   return (
     <Router>
@@ -44,8 +41,8 @@ function App() {
 
         <Route path="/review" element={<Review />} />
 
-        <Route path="/historyOrders" element={<HistoryOrders orders={rawOrders} />}/>
-        <Route path="/historyOrders/:orderId" element={<OrderDetails orders={rawOrders} setOrders={setOrders} />} />
+        <Route path="/historyOrders" element={<HistoryOrders />}/>
+        <Route path="/historyOrders/:orderId" element={<OrderDetails />} />
         <Route path="/bascketOrders" element={<BascketOrders />} />
 
         {/* <Route path="/pricing" element={<Pricing />} /> */}

@@ -1,55 +1,113 @@
-import React from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 import { Container, Card, Button, Row, Col } from 'react-bootstrap';
 import './OrderDetails.css';
-import { HiPencilSquare } from "react-icons/hi2";
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 
 import OrderDetailsBooks from './OrderDetailsBooks';
 import OrderDetailsInfoEditable from './OrderDetailsInfoEditable';
+import OrderDetailsInfo from './OrderDetailsInfo';
+import OrdersApi from '../../api/OrdersApi';
+import BackButton from './BackButton';
 
 
 function OrderDetails(props) {
 
-  const orderId = useParams().orderId;
-  const order = props.orders.find(order => order.orderId === Number(orderId));
-
-  const [alertMessage, setAlertMessage]= useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-
   const navigate = useNavigate();
 
-  function onDeleteOrder(order){
-    props.setOrders(prevOrders => {return prevOrders.filter(o => o.orderId !== order.orderId)});
-    navigate('/historyOrders');
+
+  // -------------------------- Errors alert ---------------------------------------
+
+  // const [alertMessage, setAlertMessage] = useState(null);
+
+  // function onCloseAlert() {
+  //   setAlertMessage(null);
+  // }
+
+
+  // --------------------------  Order loading --------------------------------------
+
+  const emptyOrder = {
+    orderId: 0,
+    userId: 0,
+    sellerId: 0,
+    books: [],
+    status: "",
+    maxDeliveryDate: "",
+    creationDatetime: "",
+    updateDatetime: "",
+    shippingCost: 0
+  };
+  const orderId = useParams().orderId;
+  const [order, setOrder] = useState(emptyOrder);
+
+  useEffect(() => {
+    async function fetchOrder() {
+      try {
+        const o = await OrdersApi.getOrder(orderId);
+        setOrder(o);
+      } catch (error) {
+        console.log(error);
+        //   setMessage('Could not contact with the server');
+      }
+    }
+    fetchOrder();
+  }, []);
+
+  console.log("Order in OrderDetails:", order);
+
+  // --------------------------  Order editing --------------------------------------
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedOrderData, setEditedOrderData] = useState(null);
+
+  const handleEditChange = (newOrderData) => {
+    console.log("Edited order data in handleEditChange:", newOrderData);
+    setEditedOrderData(newOrderData);
+  };
+
+
+  async function onEditOrder(orderId, newOrderData) {
+    console.log("Edited order data in onEditOrder:", newOrderData);    
+
+    if (editedOrderData !== null) {
+      try {
+        // Meter logica de comprobaciones
+
+        await OrdersApi.updateOrder(orderId, newOrderData);
+        setOrder(prevOrder => ({
+          ...prevOrder,
+          ...newOrderData
+        }));
+        setEditedOrderData(null);
+        setIsEditing(false);
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
-  function onEditOrder(newDataOrder, oldOrder) {
-    setAlertMessage(`Editando pedido ID=${oldOrder.orderId}`); 
+  // --------------------------  Order deleting --------------------------------------
 
-    console.log(newDataOrder);
-
-    // Logica de comprobaciones
-
-    const newOrder = { ...oldOrder, ...newDataOrder };
-
-    props.setOrders((prevOrders) => {
-      const newOrders = prevOrders.map((o) => o.orderId === oldOrder.orderId ? newOrder : o);
-      return newOrders;
-    });
-
-    navigate('/historyOrders');
-  }
-
-  function onCloseAlert() {
-    setAlertMessage(null);
+  async function onDeleteOrder(orderId) {
+    try {
+        await OrdersApi.deleteOrder(orderId);
+        navigate('/historyOrders');
+    } catch (error) {
+        console.log(error);
+    }
   }
 
 
+  // --------------------------  Order Details Page --------------------------------------
 
   return (
-    <Container className="mt-3 d-flex justify-content-center align-items-center orderDetails">
+    
+    <Container className="d-flex flex-direction-column justify-content-center align-items-center orderDetails">
 
       {/* <Row>
         <Col className="d-flex justify-content-center">
@@ -57,40 +115,65 @@ function OrderDetails(props) {
         </Col>
       </Row> */}
 
-      <Row>
-        <Col className="d-flex justify-content-center">
-          <Card className="col-12">
+      {order.orderId !== 0 &&
+        <Row>
+          <Col className="d-flex justify-content-center">
+            <Card className="">
 
-            <Card.Header className="text-center bg-primary text-white">
-              Pedido ID={order.orderId}
-            </Card.Header>
+              <Card.Header className="text-center bg-primary text-white">
 
-            <Card.Body className="d-grid gap-4">
+                <Row>
+                  <Col className="col-2"><BackButton destination="/historyOrders" /></Col>
+                  <Col className="col-8 d-flex justify-content-center">
+                    <p className="mb-0">Pedido ID={order.orderId}</p>
+                  </Col>
+                </Row>
 
-            <OrderDetailsInfoEditable key={orderId} order={order} onEdit={(newOrderData) => onEditOrder(newOrderData, order)} isEditing={isEditing} setIsEditing={setIsEditing}/>
+                
+              </Card.Header>
 
-              <hr></hr>
+              <Card.Body className="d-grid gap-4">
 
-              <OrderDetailsBooks key={orderId} order={order}/>
+                {
+                isEditing ? (
+                  <OrderDetailsInfoEditable order={order} onChange={handleEditChange} />
+                ) : (
+                  <OrderDetailsInfo order={order}/>
+                )
+                }
 
-              <Container className="orderDetails-buttons d-flex justify-content-center gap-3">
+                <OrderDetailsBooks key={orderId} order={order} />
 
-              {!isEditing && (
-              <Button variant="primary" onClick={() => setIsEditing(true)}>
-                <HiPencilSquare /> Editar
-              </Button>
-              
-              )}
-                {/* <Button variant="primary" onClick={() => setIsEditing(true)} > <HiPencilSquare /> {isEditing ? '' : 'Editar'}</Button> */}
-                <Button variant="info" onClick={() => onDeleteOrder(order)}>Delete</Button>
-              </Container>
-              
+                <Container className="orderDetails-buttons d-flex justify-content-center gap-3">
+
+
+                  {
+                  isEditing ? (
+                    <Fragment>
+                      <Button variant="success" onClick={() => onEditOrder(order.orderId, editedOrderData)}>
+                        <i className="bi bi-check"></i> Actualizar
+                      </Button>
+                      <Button variant="secondary" onClick={() => {setIsEditing(false); setEditedOrderData(null)}}>
+                        <i className="bi bi-x"></i> Cancelar
+                      </Button>
+                    </Fragment>
+                    
+                  ) : (
+                    <Button variant="primary" onClick={() => setIsEditing(true)}>
+                      <i className="bi bi-pencil"></i> Editar
+                    </Button>
+                  )}
+
+                  <Button variant="danger" onClick={() => onDeleteOrder(order.orderId)}> <i className="bi bi-trash"></i> Delete </Button>
+
+                </Container>
+
               </Card.Body>
 
-          </Card>
-        </Col>
-      </Row>
-
+            </Card>
+          </Col>
+        </Row>
+      }
     </Container>
   );
 }

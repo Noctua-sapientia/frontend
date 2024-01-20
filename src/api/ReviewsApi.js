@@ -19,6 +19,7 @@ class ReviewsApi{
         const headers = this.requestHeaders();
         const queryString = ReviewsApi.objToQueryString(filters);
         console.log(queryString);
+        console.log(ReviewsApi.API_BASE_URL);
         const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"?"+queryString, {
             method: 'GET',
             headers: headers
@@ -26,7 +27,11 @@ class ReviewsApi{
         console.log(request);
         const response = await fetch(request);
         if (! response.ok) {
-            throw Error("Response not valid" + response.status);
+            if (response.status === 404) {
+                return {};
+              } else {
+                throw new Error("Response not valid: " + response.status);
+              }
         }
 
         return response.json();

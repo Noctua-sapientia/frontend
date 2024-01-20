@@ -10,6 +10,7 @@ import MyAccount from './components/User/Account';
 import Books from './components/Books';
 
 import Review from './components/Review/Review.js';
+import BookReview from './components/Review/BookReview.js';
 
 import BookDetail from './components/Book/BookDetail.js'
 import SearchBooks from './components/Book/SearchBooks.js'
@@ -47,6 +48,8 @@ function App() {
         <Route path="/historyOrders" element={<HistoryOrders orders={rawOrders} />}/>
         <Route path="/historyOrders/:orderId" element={<OrderDetails orders={rawOrders} setOrders={setOrders} />} />
         <Route path="/bascketOrders" element={<BascketOrders />} />
+
+        <Route path="/bookReview" element={<BookReview />} />
 
         {/* <Route path="/pricing" element={<Pricing />} /> */}
 

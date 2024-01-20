@@ -21,9 +21,12 @@ function CommentWindow(props) {
           style={{
             overlay: {
               backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              opacity: 1,
+              position: 'fixed',
+               zIndex: 1000
             },
             content: {
-              maxWidth: '800px',
+              maxWidth: '650px',
               margin: 'auto',
               padding: '20px',
               maxHeight: '400px',

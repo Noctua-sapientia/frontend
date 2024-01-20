@@ -4,11 +4,11 @@ import CommentWindow from './CommentWindow.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt,faTrash  } from '@fortawesome/free-solid-svg-icons';
 import swal from 'sweetalert';
-
-
+import { useAuth } from '../AuthContext';
 
 
 function Comment(props) {
+  const {userId } = useAuth();
 
   const [modalAbierto, setModalAbierto] = useState(false);
 
@@ -55,7 +55,7 @@ function Comment(props) {
         rating: newRating,
         createdAt: props.comment.createdAt,
         bookId: props.comment.bookId,
-        customerId: props.comment.customerId
+        customerId: userId
       };
       await props.updateReviewFunction(updatedBookReview);
      // Cierra la ventana emergente después de guardar
@@ -95,7 +95,8 @@ function Comment(props) {
   return(
     <tr>
       <td >
-          {props.comment.id}
+        Aqui iria el nombre del customerId que ha escrito el comentario
+          {props.comment.customerId}
       </td>
       <td >
           {formatDate(props.comment.createdAt)}
@@ -107,7 +108,7 @@ function Comment(props) {
         </div>    
       </td>
       {(() => {
-      if (props.comment.customerId === 2) {
+      if (props.comment.customerId === userId) {
         return <td>
         <FontAwesomeIcon icon={faPencilAlt} onClick={abrirModal} className="icono-lapiz" />
         <FontAwesomeIcon icon={faTrash} onClick={() => showSweetAlert("Eliminar","¿Estás seguro de que desea eliminar el comentario?")}/>
@@ -119,7 +120,7 @@ function Comment(props) {
       }
     })()}
    
-      <CommentWindow className="backgroundInherit" isOpen={modalAbierto} onClose={cerrarModal} description={newDescription} rating={newRating} 
+      <CommentWindow isOpen={modalAbierto} onClose={cerrarModal} description={newDescription} rating={newRating} 
       saveFunction={saveData} numberOfGoldStarsChange={numberOfGoldStarsChange} 
       reviewDescriptionChange={reviewDescriptionChange} message={message} onCloseAlert={onCloseAlert}
       />

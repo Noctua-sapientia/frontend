@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import TextArea from './TextArea.js';
 import Star from './Star.js';
+import './Review.css';
 
 function NewComment(props) {
 
     const [reviewDescription, setReviewDescription] = useState('');
-    const [reviewRating, setReviewRating] = useState(0);
+    const [reviewRating, setReviewRating] = useState(1);
     //hay que pasarle el bookId y customerId
     const numberOfGoldStars = (number) => {
       // Lógica para almacenar el numero de estrellas seleccionadas
@@ -22,14 +23,14 @@ function NewComment(props) {
       if(props.activeType ==='sellers'){
         data = {
           sellerId: 6,
-          customerId: 1,
+          customerId: props.userId,
           description:reviewDescription,
           rating: reviewRating
         }
       }else if(props.activeType ==='books'){
         data = {
           bookId: 5,
-          customerId: 2,
+          customerId: props.userId,
           description:reviewDescription,
           rating: reviewRating
         };
@@ -43,7 +44,7 @@ function NewComment(props) {
 
 
     return(
-      <table className='table'>
+      <table className='tableNewComment table-margin'>
         <thead>
           <tr>
             <th></th>

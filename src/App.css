@@ -52,25 +52,21 @@
 }
 
 
-.table-fixed {
-  width: 50%; 
-  min-height: 300px;
-}
-
-.table-fixed th, .table-fixed td {
-  width: 25%; 
-}
-
-.table-margin {
-  margin: 0 auto; 
-  max-width: 80%; 
-}
 
 .faded {
   opacity: 0.6; /* Disminuye la opacidad para un efecto 'apagado' */
 }
 
-.desplegable {
-  text-align: right;
-  margin-right: 15%;
+.boton-volver {
+  background-color: #007bff;
+  color: #fff;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px; 
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.boton-volver:hover {
+  background-color: #0056b3;
 }

@@ -7,6 +7,7 @@ import swal from 'sweetalert';
 
 
 
+
 function Comment(props) {
 
   const [modalAbierto, setModalAbierto] = useState(false);
@@ -93,15 +94,14 @@ function Comment(props) {
   //que solo se muestre el lapiz con el usuario que coincida 
   return(
     <tr>
-      <td>Imagen del avatar si se pone</td>
-      <td className='TextCenter'>
+      <td >
           {props.comment.id}
       </td>
-      <td className='TextLeft'>
+      <td >
           {formatDate(props.comment.createdAt)}
       </td>
-      <td className='TextLeft'>
-        <Star numGoldStars={props.comment.rating} edit='false'/>
+      <td >
+        <Star numGoldStars={props.comment.rating} edit='false' onClick={numberOfGoldStarsChange}/>
         <div>
           {props.comment.description} 
         </div>    
@@ -112,15 +112,17 @@ function Comment(props) {
         <FontAwesomeIcon icon={faPencilAlt} onClick={abrirModal} className="icono-lapiz" />
         <FontAwesomeIcon icon={faTrash} onClick={() => showSweetAlert("Eliminar","¿Estás seguro de que desea eliminar el comentario?")}/>
       </td>
-      } 
+      } else{
+        return <td>
+
+        </td>
+      }
     })()}
-      <CommentWindow isOpen={modalAbierto} onClose={cerrarModal} description={newDescription} rating={newRating} 
+   
+      <CommentWindow className="backgroundInherit" isOpen={modalAbierto} onClose={cerrarModal} description={newDescription} rating={newRating} 
       saveFunction={saveData} numberOfGoldStarsChange={numberOfGoldStarsChange} 
       reviewDescriptionChange={reviewDescriptionChange} message={message} onCloseAlert={onCloseAlert}
-      
-      
       />
-      <CommentWindow/>
     </tr>
   )
  

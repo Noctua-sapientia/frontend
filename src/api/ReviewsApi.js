@@ -18,11 +18,12 @@ class ReviewsApi{
 
         const headers = this.requestHeaders();
         const queryString = ReviewsApi.objToQueryString(filters);
+        console.log(queryString);
         const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"?"+queryString, {
             method: 'GET',
             headers: headers
         });
-
+        console.log(request);
         const response = await fetch(request);
         if (! response.ok) {
             throw Error("Response not valid" + response.status);
@@ -30,6 +31,20 @@ class ReviewsApi{
 
         return response.json();
 
+    }
+
+    static async getNumberReviews(type){
+        const headers = this.requestHeaders();
+        const request = new Request(ReviewsApi.API_BASE_URL + "/"+type, {
+            method: 'GET',
+            headers: headers
+        });
+        const response = await fetch(request);
+        if (! response.ok) {
+            throw Error("Response not valid" + response.status);
+        }
+        const data = await response.json();
+        return data.length;
     }
 
     static async updateReview(reviewId, reviewData, type){
@@ -63,8 +78,7 @@ class ReviewsApi{
         console.log(response);
         if (!response.ok) {
             if (response.status === 409) {
-              const errorBody = await response.json();
-              swal("Error",errorBody.error);
+              swal("Error","No puede añadir una valoración ya que ya hay una existente");
             } else {
               throw new Error("Response not valid: " + response.status);
             }

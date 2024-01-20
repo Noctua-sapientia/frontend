@@ -26,7 +26,7 @@ function Header() {
                     </Col>
                     <Col xs={2}>
                         <Link to="/review">
-                            <Button className="btn btn-primary">Review</Button>
+                            <Button className="btn btn-primary">Mis reseñas</Button>
                         </Link> 
                     </Col>
                     <Col xs={2}>

@@ -28,7 +28,7 @@ function NewComment(props) {
         }
       }else if(props.activeType ==='books'){
         data = {
-          bookId: 17,
+          bookId: 5,
           customerId: 2,
           description:reviewDescription,
           rating: reviewRating

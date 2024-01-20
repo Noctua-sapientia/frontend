@@ -1,4 +1,5 @@
 import './Review.css';
+import '../../App.css';
 import React, { useEffect, useState } from 'react';
 import CommentList from './CommentList.js';
 import NewComment from './NewComment.js';
@@ -6,15 +7,25 @@ import OrderCommentsBy from './OrderCommentsBy.js';
 import Alert from './Alert.js';
 import ReviewsApi from '../../api/ReviewsApi.js';
 import swal from 'sweetalert';
-import { Link } from 'react-router-dom';
+import ReturnButton from '../ReturnButton.js';
+import Pagination from './Pagination.js';
 
 function Review() {
 
+  const limit = 3;
   const [activeData, setActiveData] = useState([]);
   const [activeType, setActiveType] = useState('books'); // Estado para rastrear el tipo activo
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(''); //para cambiar el estado del selector
+  const [numberReviews, setNumberReviews] = useState(0); 
+  const [numberPages, setNumberPages] = useState(1); 
+  const [currentPage, setCurrentPage] = useState(0); 
 
-  console.log(activeType);
+  window.onload = function() {     
+    if (window.location.hash) {         
+      window.location.href = window.location.href.split('#')[0];     
+    } 
+  }
+
   const handleSwitchToSellerReviews = () => {
     setActiveType('sellers');
   };
@@ -23,6 +34,9 @@ function Review() {
     setActiveType('books');
   };
 
+  const handleChangePage = (newPage) => {
+    setCurrentPage(newPage);
+  };
 
   const [mostrarComponente, setMostrarComponente] = useState(false);
 
@@ -30,37 +44,66 @@ function Review() {
     setMostrarComponente(!mostrarComponente);
   };
 
+  useEffect(() => {
+    async function getTotalNumberReviews(){
+      const totalNumber = await ReviewsApi.getNumberReviews(activeType);
+      console.log(totalNumber);
+      setNumberReviews(totalNumber);
+      if(numberReviews % limit === 0){
+        setNumberPages(numberReviews/limit);
+      }else{
+        setNumberPages(Math.floor(numberReviews/limit)+1);
+      }
+    }
+    getTotalNumberReviews();
+  
+  }, [activeType, activeData, numberReviews]);
+
   
 useEffect(() => {
   async function getReviewsBySelector(){
     try{
       //le pasamos como queremos que nos las devuelva
       let filters = 
-       {       
+       {     
+        
       };
       if (opcionSeleccionada === 'fechaAsc') {
         filters = {
           sort:'date',
-          order:'asc'
+          order:'asc',
+          limit:limit,
+          skip:limit*currentPage
         }
       } else if (opcionSeleccionada === 'fechaDesc') {
         filters = {
           sort:'date',
-          order:'desc'
+          order:'desc',
+          limit:limit,
+          skip:limit*currentPage
         }
       }else if(opcionSeleccionada === 'valoracionAsc'){
         filters = {
           sort:'rating',
-          order:'asc'
+          order:'asc',
+          limit:limit,
+          skip:limit*currentPage
         }
         
       }else if(opcionSeleccionada === 'valoracionDesc'){
         filters = {
           sort:'rating',
-          order:'desc'
+          order:'desc',
+          limit:limit,
+          skip:limit*currentPage
         }
           
+      }else{
+        filters = {
+          limit:limit,
+          skip:limit*currentPage
         }
+      }
       let reviews = null;
       reviews = await ReviewsApi.getReviews(filters, activeType);
       setActiveData(reviews);
@@ -71,7 +114,7 @@ useEffect(() => {
   }
   getReviewsBySelector();
 
-}, [activeType, opcionSeleccionada]);
+}, [activeType, currentPage, opcionSeleccionada]);
 
 
 
@@ -80,9 +123,6 @@ async function onAddReview(review){
   //hay que hacer comprobaciones de que no se pueda añadir por ejemplo los que tengann descripcion vacia
   if(review.description === ''){
     setMessage('Añade una descripción para la review');
-    return false;
-  }if(activeData.find(br => br.id === review.id)){
-    setMessage('No se puede crear una review con el mismo id'); 
     return false;
   }else{
     //guardamos en bd
@@ -94,8 +134,7 @@ async function onAddReview(review){
       return true;
     }else{
       return false;
-    }
-       
+    }     
     
   }
 
@@ -111,7 +150,6 @@ async function onUpdateReview(newReviewData){
   //realizar comprobaciones
   const { id, date, ...restData } = newReviewData;
   const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType);
-  console.log(newReview);
   if (newReview) {
     setActiveData((prevReviews) => {
       return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);
@@ -156,22 +194,21 @@ const onYesCancelAlert = async(reviewIdToDelete) => {
         Vendedores
       </button>
       <Alert message={message} onClose={onCloseAlert}/>
-     
-      <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
-      <h6 className="TextLeft" onClick={showNewComment} style={{ color:'blue'}}>Añadir un comentario</h6>
-      {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} showComponentFunction={setMostrarComponente} activeType={activeType}/>}
-
-
-      <h2 className="TextLeft">Comentarios ({activeData.length})</h2>
-      
+     <div classname="containerCommentOrderBy">
+     <button className="add-comment-button" onClick={showNewComment}>Añadir un comentario</button>
+        <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
+        
+        {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} showComponentFunction={setMostrarComponente} activeType={activeType}/>}
+      </div>
+      Comentarios: {numberReviews} - {numberPages}
       <div className="table-container">
         <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert}/>
       </div>
 
-      <div>
-        <Link to="/">Volver a INICIO</Link>
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginLeft: '10%', marginRight: '10%', marginBottom: '5%', marginTop: '5%' }}>
+      <ReturnButton title="Volver a inicio" />
+      <Pagination numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage}/>
       </div>
-
     </div>
     
   );

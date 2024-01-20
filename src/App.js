@@ -35,9 +35,9 @@ function App() {
 
         <Route path="/sellerUser" element={<SellerPage />} />
 
-        <Route path="/book" element={<Books />} />
-        <Route path="/books/book" element={<BookDetail />} />
-        <Route path="/books/book/seller" element={<Books />} />
+        <Route path="/books/:isbn/:seller" element={<Books />} />
+        <Route path="/books/:isbn" element={<BookDetail />} />
+        <Route path="/books" element={<SearchBooks />} />
 
         <Route path="/review" element={<Review />} />
 

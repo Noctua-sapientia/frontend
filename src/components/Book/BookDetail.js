@@ -1,27 +1,29 @@
-
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BooksApi from './BooksApi.js';
 import { Container, Col, Row, CardText } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
 import styles from './book_detail_styles.css'
+import { useParams } from 'react-router-dom';
 
-function Books(props) {
+function BookDetail() {
   const [message, setMessage] = useState(null);
   const [books, setBooks] = useState([]);
+  const { isbn } = useParams();
 
   useEffect(() => {
     async function fetchBooks() {
       try {
-        const fetchedBooks = await BooksApi.getAllBooks();
-        setBooks(fetchedBooks);
+        console.log(isbn);
+        const fetchedBooks = await BooksApi.getBooksByISBN(isbn);
+        setBooks(fetchedBooks);  // Corrección aquí
       } catch (error) {
         setMessage('Could not contact the server');
       }
     }
-
+  
     fetchBooks();
-  }, []);
+  }, [isbn]);
 
   return (
     <Fragment>
@@ -33,13 +35,19 @@ function Books(props) {
             </Col>
             <Col className='column align-items-center justify-content-center'>
               <Row>
-                <CardText>TÍTULO: HARRY POTTER Y LA PIEDRA FILOSOFAL {books.map((book) => (book.title))}</CardText>
+                <CardText>Título: {books.title}</CardText>
               </Row>
               <Row>
-                <CardText>AUTOR:  J.K.ROWLING{books.map((book) => (book.author))}</CardText>
+                <CardText>Autor: {books.author}</CardText>
               </Row>
               <Row>
-                <CardText>GÉNERO:  FANTASÍA{books.map((book) => (book.category))}</CardText>
+                <CardText>Género: {books.genre}</CardText>
+              </Row>
+              <Row>
+                <CardText>Año: {books.year}</CardText>
+              </Row>
+              <Row>
+                <CardText>Valoración: {books.rating}</CardText>
               </Row>
               <Row>
                 <CardText>VENDEDORES</CardText>
@@ -49,26 +57,22 @@ function Books(props) {
                       <th>Vendedor</th>
                       <th>Precio</th>
                       <th>Stock</th>
-                      <th>Reseñas</th>
                       <th>Compra</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {books.map((book) => (
-                      book.options.map((option, index) => (
-                        <tr key={index}>
-                          <td>{option.seller}</td>
-                          <td>{option.stock}</td>
-                          <td>{option.prize}</td>
-                          <td>{option.reviews}</td>
-                          <div className={styles.rating}>
-                                <span className={styles.stars}>★★★★★</span>
-                            </div>
-                          <td><Link to={`/books`} className="btn btn-primary">Añadir al Carrito</Link></td>
-                        </tr>
-                      ))
-                    ))}
-                  </tbody>
+                  {
+                    books.options && books.options.map((option, index) => (
+                    <tr key={index}>
+                    <td>{option.seller}</td>
+                    <td>{option.stock}</td>
+                    <td>{option.prize}</td>
+                    <td><Link to={`/books`} className="btn btn-primary">Añadir al Carrito</Link></td>
+      </tr>
+    ))
+  }
+</tbody>
+
                 </table>
               </Row>
             </Col>
@@ -80,4 +84,4 @@ function Books(props) {
   );
 }
 
-export default Books;
+export default BookDetail;

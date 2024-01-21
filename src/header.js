@@ -30,7 +30,7 @@ function Header() {
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="ml-auto">
       <Link to="/review" className="nav-link">
-        <i className="bi bi-star-half"></i> Mis reseñas
+        <i className="bi bi-star-half"></i> Valoraciones
       </Link>
       <Link to="/historyOrders" className="nav-link">
         <i className="bi bi-archive-fill"></i> Pedidos

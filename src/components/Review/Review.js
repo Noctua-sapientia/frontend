@@ -1,38 +1,20 @@
 import './Review.css';
-import '../../App.css';
 import React, { useEffect, useState } from 'react';
 import CommentList from './CommentList.js';
+import NewComment from './NewComment.js';
 import OrderCommentsBy from './OrderCommentsBy.js';
 import Alert from './Alert.js';
 import ReviewsApi from '../../api/ReviewsApi.js';
 import swal from 'sweetalert';
-import ReturnButton from '../ReturnButton.js';
-import Pagination from './Pagination.js';
-import { useAuth } from '../AuthContext';
+import { Link } from 'react-router-dom';
 
 function Review() {
 
   const [activeData, setActiveData] = useState([]);
-  const {userType, isAuthenticated, userId} = useAuth();
-  let activeTypeDefault = 'books';
-  if(userType != null && userType.toLowerCase() === 'seller'){
-    activeTypeDefault = 'sellers';
-    }
-  const [activeType, setActiveType] = useState(activeTypeDefault); // Estado para rastrear el tipo activo
+  const [activeType, setActiveType] = useState('books'); // Estado para rastrear el tipo activo
   const [opcionSeleccionada, setOpcionSeleccionada] = useState(''); //para cambiar el estado del selector
-  const [numberReviews, setNumberReviews] = useState(0); 
-  const [numberPages, setNumberPages] = useState(1); 
-  const [currentPage, setCurrentPage] = useState(0); 
 
-
-  window.onload = function() {     
-    if (window.location.hash) {         
-      window.location.href = window.location.href.split('#')[0];     
-    } 
-  }
-  
-  const limit = 3;
-
+  console.log(activeType);
   const handleSwitchToSellerReviews = () => {
     setActiveType('sellers');
   };
@@ -41,26 +23,12 @@ function Review() {
     setActiveType('books');
   };
 
-  const handleChangePage = (newPage) => {
-    setCurrentPage(newPage);
+
+  const [mostrarComponente, setMostrarComponente] = useState(false);
+
+  const showNewComment = () => {
+    setMostrarComponente(!mostrarComponente);
   };
-
-
-  useEffect(() => {
-    async function getTotalNumberReviews(){
-      const totalNumber = await ReviewsApi.getNumberReviews(activeType);
-
-      setNumberReviews(totalNumber);
-      if(numberReviews % limit === 0){
-        setNumberPages(numberReviews/limit);
-      }else{
-        setNumberPages(Math.floor(numberReviews/limit)+1);
-      }
-    }
-    getTotalNumberReviews();
-
-  }, [activeType, activeData, numberReviews]);
-
 
   
 useEffect(() => {
@@ -68,29 +36,29 @@ useEffect(() => {
     try{
       //le pasamos como queremos que nos las devuelva
       let filters = 
-      {      
-        limit:limit,
-        skip:limit*currentPage
+       {       
       };
-      if(userType.toLowerCase() === 'customer'){
-        //si es un cliente aparecera las reviews creadas por el
-        filters.customerId = userId;
-      }else if(userType.toLowerCase() === 'seller'){
-        filters.sellerId = userId;
-      }
       if (opcionSeleccionada === 'fechaAsc') {
-        filters.sort = 'date';
-        filters.order = 'asc';
+        filters = {
+          sort:'date',
+          order:'asc'
+        }
       } else if (opcionSeleccionada === 'fechaDesc') {
-        filters.sort = 'date';
-        filters.order = 'desc';
-      } else if(opcionSeleccionada === 'valoracionAsc'){
-        filters.sort = 'rating';
-        filters.order = 'asc';
+        filters = {
+          sort:'date',
+          order:'desc'
+        }
+      }else if(opcionSeleccionada === 'valoracionAsc'){
+        filters = {
+          sort:'rating',
+          order:'asc'
+        }
         
       }else if(opcionSeleccionada === 'valoracionDesc'){
-        filters.sort = 'rating';
-        filters.order = 'desc';
+        filters = {
+          sort:'rating',
+          order:'desc'
+        }
           
         }
       let reviews = null;
@@ -103,9 +71,35 @@ useEffect(() => {
   }
   getReviewsBySelector();
 
-}, [activeType, currentPage, opcionSeleccionada, userId, userType]);
+}, [activeType, opcionSeleccionada]);
 
 
+
+
+async function onAddReview(review){
+  //hay que hacer comprobaciones de que no se pueda añadir por ejemplo los que tengann descripcion vacia
+  if(review.description === ''){
+    setMessage('Añade una descripción para la review');
+    return false;
+  }if(activeData.find(br => br.id === review.id)){
+    setMessage('No se puede crear una review con el mismo id'); 
+    return false;
+  }else{
+    //guardamos en bd
+    const newReview = await ReviewsApi.createReview(review, activeType);
+    if(newReview){
+      setActiveData((prevReviews) => {
+        return [...prevReviews, newReview];
+      });
+      return true;
+    }else{
+      return false;
+    }
+       
+    
+  }
+
+}
 
 const [message, setMessage] = useState(null);
 function onCloseAlert(){
@@ -147,46 +141,40 @@ const onYesCancelAlert = async(reviewIdToDelete) => {
    
 };
 
-if (!isAuthenticated()) {
-  return <h1> No has iniciado sesión </h1>;
-}else{
 
   return(
     <div className="App">
       <h1>Mis reseñas</h1>
-      {(() => {
-      if (userType.toLowerCase() === 'customer') {
-        return <div><button className={activeType === 'books' ? 'btn btn-primary' : 'btn btn-primary faded'}
-        style={{ marginRight: "5px" }}
-        onClick={handleSwitchToBookReviews}>
-          Libros
-        </button>
-        <button className={activeType === 'sellers' ? 'btn btn-primary' : 'btn btn-primary faded'}
-                style={{ marginLeft: "5px" }}
-                onClick={handleSwitchToSellerReviews}>
-          Vendedores
-        </button></div>
-      } 
-    })()}
+      <button className={activeType === 'books' ? 'btn btn-primary' : 'btn btn-primary faded'}
+              style={{ marginRight: "5px" }}
+              onClick={handleSwitchToBookReviews}>
+        Libros
+      </button>
+      <button className={activeType === 'sellers' ? 'btn btn-primary' : 'btn btn-primary faded'}
+              style={{ marginLeft: "5px" }}
+              onClick={handleSwitchToSellerReviews}>
+        Vendedores
+      </button>
       <Alert message={message} onClose={onCloseAlert}/>
      
       <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
-      Comentarios: {numberReviews} - {numberPages}
+      <h6 className="TextLeft" onClick={showNewComment} style={{ color:'blue'}}>Añadir un comentario</h6>
+      {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} showComponentFunction={setMostrarComponente} activeType={activeType}/>}
+
+
+      <h2 className="TextLeft">Comentarios ({activeData.length})</h2>
       
       <div className="table-container">
         <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert}/>
       </div>
 
-     
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginLeft: '10%', marginRight: '10%', marginBottom: '5%', marginTop: '5%' }}>
-        <ReturnButton title="Volver a inicio" />
-        <Pagination numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage}/>
+      <div>
+        <Link to="/">Volver a INICIO</Link>
       </div>
 
     </div>
     
   );
-}
 }
 
 export default Review;

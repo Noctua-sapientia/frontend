@@ -51,6 +51,7 @@
   }
 }
 
+
 .table-fixed {
   width: 50%; 
   min-height: 300px;
@@ -74,10 +75,6 @@
   margin-right: 15%;
 }
 
-.faded {
-  opacity: 0.6; /* Disminuye la opacidad para un efecto 'apagado' */
-}
-
 .boton-volver {
   background-color: #007bff;
   color: #fff;
@@ -91,4 +88,3 @@
 .boton-volver:hover {
   background-color: #0056b3;
 }
-

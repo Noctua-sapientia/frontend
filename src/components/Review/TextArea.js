@@ -19,9 +19,9 @@ function TextArea(props){
         <div>
       
         <textarea type="text" value={props.valor} onChange={handleChange}  
-        autoFocus  style={{ width: '600px', height: '150px' }}/>
+        autoFocus   style={{ width: '750px', height: '150px' }}/>
         
-        <div className='countCaracters'>{contadorCaracteres()}</div>
+        <div className='TextRight' style={{ marginBottom: '16px' }}>{contadorCaracteres()}</div>
         </div>
     );
 }

@@ -149,29 +149,29 @@ function RegisterPage() {
               </Form.Group>
               {selectedType === 'customer' && (
                 <>
-                  <Form.Group controlId="formCustomerField1" className="registerForm">
+                  <Form.Group controlId="name" className="registerForm">
                     <Form.Control
                       type="text"
                       placeholder="Name"
-                      name="customerField1"
+                      name="name"
                       value={formData.customerField1}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
-                  <Form.Group controlId="formCustomerField2" className="registerForm">
+                  <Form.Group controlId="surname" className="registerForm">
                     <Form.Control
                       type="text"
                       placeholder="Surname"
-                      name="customerField2"
+                      name="surname"
                       value={formData.customerField2}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
-                  <Form.Group controlId="formCustomerField3" className="registerForm">
+                  <Form.Group controlId="address" className="registerForm">
                     <Form.Control
                       type=""
-                      placeholder="asdasd"
-                      name="customerField3"
+                      placeholder="Address"
+                      name="address"
                       value={formData.customerField3}
                       onChange={handleInputChange}
                     />
@@ -189,7 +189,7 @@ function RegisterPage() {
                         </Col>
                         <Col>
                           <Button variant="outline-primary" className="text-white" onClick={handleLoginWithGoogle}>
-                            Register with Google
+                            Google
                           </Button>
                         </Col>
                       </div>
@@ -200,7 +200,7 @@ function RegisterPage() {
                         </Col>
                         <Col>
                           <Button variant="outline-primary" className="text-white" onClick={handleLoginWithMicrosoft}>
-                            Register with Microsoft
+                            Microsoft
                           </Button>
                         </Col>
                       </div>
@@ -211,7 +211,7 @@ function RegisterPage() {
                         </Col>
                         <Col>
                           <Button variant="outline-primary" className="text-white" onClick={handleLoginWithMeta}>
-                            Register with Meta
+                            Meta
                           </Button>
                         </Col>
                       </div>
@@ -245,69 +245,71 @@ function RegisterPage() {
 
                   <Row>
                     <div className="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-                      <h2>Pricing</h2>
+                      <h2>Plan and pricing</h2>
+                      <h3>Select the better option for your business model</h3>
                     </div>
                   </Row>
-                  <Row>
-                    <Col md>
-                      <Card className="text-center box-shadow">
+                  <Row className="d-flex">
+                    <Col md className="align-items-stretch">
+                      <Card className="text-center box-shadow h-100">
                         <CardHeader>
                           <h4 className="my-0 font-weight-normal">Standard</h4>
                         </CardHeader>
-                        <CardBody>
-                          <h1 className="card-title pricing-card-title"> 3.99€ <small className="text-muted">/ mes</small></h1>
+                        <CardBody className="d-flex flex-column">
+                          <h1 className="card-title pricing-card-title" style={{ color: 'black' }}> 3.99€ <small className="text-muted">/ month</small></h1>
                           <ul className="list-unstyled mt-3 mb-4">
-                            <li>10 libros</li>
-                            <li>20 pedidos/mes</li>
-                            <li>30 días</li>
-                            <li>Península</li>
-                            <li>E-mail hasta 14 días</li>
+                            <li>10 books</li>
+                            <li>20 orders/month</li>
+                            <li>30 days</li>
+                            <li>Peninsular delivery</li>
+                            <li>Email support up to 14 days</li>
                             <li>True</li>
                           </ul>
-                          <Button variant="primary" onClick={() => handleRegister('plan1')}>
-                            Suscribirse al Plan 1
+                          <Button variant="primary" onClick={() => handleRegister('plan1')} style={{ outline: 'none' }} >
+                            Subscribe
                           </Button>
                         </CardBody>
                       </Card>
                     </Col>
-                    <Col md>
-                      <Card className="text-center box-shadow">
+                    <Col md className="align-items-stretch">
+                      <Card className="text-center box-shadow h-100">
                         <CardHeader>
                           <h4 className="my-0 font-weight-normal">Pro</h4>
                         </CardHeader>
-                        <CardBody>
-                          <h1 className="card-title pricing-card-title">15.99€ <small className="text-muted">/ mes</small></h1>
+                        <CardBody className="d-flex flex-column">
+                          <h1 className="card-title pricing-card-title" style={{ color: 'black' }}>15.99€ <small className="text-muted">/ mes</small></h1>
                           <ul className="list-unstyled mt-3 mb-4">
-                            <li>50 libros</li>
-                            <li>100 pedidos/mes</li>
-                            <li>14 días</li>
-                            <li>Península, Canarias y Baleares</li>
-                            <li>E-mail hasta 7 días</li>
+                            <li>50 books</li>
+                            <li>100 orders/month</li>
+                            <li>14 days</li>
+                            <li>Peninsula, Canary Islands, and Balearic Islands</li>
+                            <li>Email support up to 7 days</li>
                             <li>False</li>
                           </ul>
-                          <Button variant="primary" onClick={() => handleRegister('plan3')}>
-                            Suscribirse al Plan 2
+                          <Button variant="primary" onClick={() => handleRegister('plan2')} style={{ outline: 'none' }}>
+                            Subscribe
                           </Button>            
                           </CardBody>
                       </Card>
                     </Col>
-                    <Col md>
-                      <Card className="text-center box-shadow">
+                    <Col md className="align-items-stretch">
+                      <Card className="text-center box-shadow h-100">
                         <CardHeader>
                           <h4 className="my-0 font-weight-normal">Premium</h4>
                         </CardHeader>
-                        <CardBody>
-                          <h1 className="card-title pricing-card-title">49.79€ <small className="text-muted">/ mes</small></h1>
+                        <CardBody className="d-flex flex-column">
+                          <h1 className="card-title pricing-card-title" style={{ color: 'black' }}>49.79€ <small className="text-muted">/ mes</small></h1>
                           <ul className="list-unstyled mt-3 mb-4">
-                            <li>Ilimitado</li>
-                            <li>Ilimitado</li>
-                            <li>5 días</li>
-                            <li>Internacional</li>
-                            <li>Telefónica 24h</li>
+                            <li>Unlimited</li>
+                            <li>Unlimited</li>
+                            <li>5 days</li>
+                            <li>International</li>
+                            <li>24-hour telephone support</li>
                             <li>True</li>
                           </ul>
-                          <Button variant="primary" onClick={() => handleRegister('plan3')}>
-                            Suscribirse al Plan 3
+                          <Button variant="primary" onClick={() => handleRegister('plan3')} 
+                          style={{ outline: 'none' }}>
+                            Subscribe
                           </Button>            
                           </CardBody>
                       </Card>

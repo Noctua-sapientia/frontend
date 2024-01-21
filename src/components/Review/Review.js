@@ -48,8 +48,16 @@ function Review() {
 
   useEffect(() => {
     async function getTotalNumberReviews(){
-      const totalNumber = await ReviewsApi.getNumberReviews(activeType);
+      let filters = {
 
+      };
+      if(isAuthenticated() && userType.toLowerCase() === 'customer'){
+        filters.customerId = userId;
+      }else if(isAuthenticated() && userType.toLowerCase() === 'seller'){
+        filters.sellerId = userId;
+      }
+      const response = await ReviewsApi.getNumberReviews(activeType,filters);
+      const totalNumber = response.count;
       setNumberReviews(totalNumber);
       if(numberReviews % limit === 0){
         setNumberPages(numberReviews/limit);
@@ -59,7 +67,7 @@ function Review() {
     }
     getTotalNumberReviews();
 
-  }, [activeType, activeData, numberReviews]);
+  }, [activeType, isAuthenticated, numberReviews, userId, userType]);
 
 
   
@@ -72,10 +80,10 @@ useEffect(() => {
         limit:limit,
         skip:limit*currentPage
       };
-      if(userType.toLowerCase() === 'customer'){
+      if(isAuthenticated() && userType.toLowerCase() === 'customer'){
         //si es un cliente aparecera las reviews creadas por el
         filters.customerId = userId;
-      }else if(userType.toLowerCase() === 'seller'){
+      }else if(isAuthenticated() && userType.toLowerCase() === 'seller'){
         filters.sellerId = userId;
       }
       if (opcionSeleccionada === 'fechaAsc') {
@@ -103,7 +111,7 @@ useEffect(() => {
   }
   getReviewsBySelector();
 
-}, [activeType, currentPage, opcionSeleccionada, userId, userType]);
+}, [activeType, currentPage, isAuthenticated, opcionSeleccionada, userId, userType]);
 
 
 
@@ -171,7 +179,6 @@ if (!isAuthenticated()) {
       <Alert message={message} onClose={onCloseAlert}/>
      
       <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
-      Comentarios: {numberReviews} - {numberPages}
       
       <div className="table-container">
         <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert}/>
@@ -180,7 +187,7 @@ if (!isAuthenticated()) {
      
       <div style={{ display: 'flex', justifyContent: 'space-between', marginLeft: '10%', marginRight: '10%', marginBottom: '5%', marginTop: '5%' }}>
         <ReturnButton title="Volver a inicio" />
-        <Pagination numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage}/>
+        <Pagination classStyle="paginationMyReview" numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage}/>
       </div>
 
     </div>

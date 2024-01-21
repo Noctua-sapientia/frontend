@@ -5,18 +5,21 @@ import { Container, Col, Row, CardText } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
 import styles from './book_detail_styles.css'
 import { useParams } from 'react-router-dom';
+import ReviewsInDetail from '../Review/ReviewsInDetail.js';
+import Star from '../Review/Star.js';
 
 function BookDetail() {
   const [message, setMessage] = useState(null);
+  const [rating, setRating] = useState(1);
   const [books, setBooks] = useState([]);
   const { isbn } = useParams();
 
   useEffect(() => {
     async function fetchBooks() {
       try {
-        console.log(isbn);
         const fetchedBooks = await BooksApi.getBooksByISBN(isbn);
         setBooks(fetchedBooks);  // Corrección aquí
+        setRating(fetchedBooks.rating);
       } catch (error) {
         setMessage('Could not contact the server');
       }
@@ -25,6 +28,7 @@ function BookDetail() {
     fetchBooks();
   }, [isbn]);
 
+console.log(Math.round(rating));
   return (
     <Fragment>
       <Container className='home-container'>
@@ -46,8 +50,8 @@ function BookDetail() {
               <Row>
                 <CardText>Año: {books.year}</CardText>
               </Row>
-              <Row>
-                <CardText>Valoración: {books.rating}</CardText>
+              <Row> 
+                <CardText><Star numGoldStars={Math.round(rating)} edit='false'/> ({books.rating})</CardText>
               </Row>
               <Row>
                 <CardText>VENDEDORES</CardText>
@@ -79,6 +83,7 @@ function BookDetail() {
           </Row>
         </Col>
       </Container>
+      <ReviewsInDetail activeType="books" bookId={isbn}/>
       <Link to={`/books`} className="btn btn-primary">Volver al Catálogo</Link>
     </Fragment>
   );

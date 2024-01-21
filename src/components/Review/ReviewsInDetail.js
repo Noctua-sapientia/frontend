@@ -8,22 +8,21 @@ import OrderCommentsBy from './OrderCommentsBy.js';
 import Alert from './Alert.js';
 import ReviewsApi from '../../api/ReviewsApi.js';
 import swal from 'sweetalert';
-import ReturnButton from '../ReturnButton.js';
 import Pagination from './Pagination.js';
-import { useAuth } from '../AuthContext';
+import { useAuth } from '../AuthContext.js';
 
-function BookReview(props){
+function ReviewsInDetail(props){
     const limit = 3;
     const [activeData, setActiveData] = useState([]);
     const [opcionSeleccionada, setOpcionSeleccionada] = useState('');
     const [numberReviews, setNumberReviews] = useState(0); 
     const [numberPages, setNumberPages] = useState(1); 
     const [currentPage, setCurrentPage] = useState(0); 
-    const {userId} = useAuth();
+    const {userId, isAuthenticated, userType} = useAuth();
 
-    const bookId = 5 //sustituir por el id real del libro
-    const activeType = "books"
 
+    const activeType = props.activeType;
+    
 
     window.onload = function() {     
         if (window.location.hash) {         
@@ -43,7 +42,16 @@ function BookReview(props){
 
       useEffect(() => {
         async function getTotalNumberReviews(){
-          const totalNumber = await ReviewsApi.getNumberReviews('books');
+          let filters = {
+
+          };
+          if(activeType === 'books'){
+            filters.bookId = props.bookId;
+          }else if(activeType === 'sellers'){
+            filters.sellerId = props.sellerId;
+          }
+          const response = await ReviewsApi.getNumberReviews(activeType,filters);
+          const totalNumber = response.count;
           setNumberReviews(totalNumber);
           if(numberReviews % limit === 0){
             setNumberPages(numberReviews/limit);
@@ -53,7 +61,7 @@ function BookReview(props){
         }
         getTotalNumberReviews();
 
-      }, [activeData, numberReviews]);
+      }, [activeType, numberReviews, props.bookId, props.sellerId,activeData]);
 
 
       useEffect(() => {
@@ -64,8 +72,12 @@ function BookReview(props){
              {      
               limit:limit,
               skip:limit*currentPage,
-              bookId:bookId
             };
+            if(activeType === 'books'){
+              filters.bookId = props.bookId;
+            }else if(activeType === 'sellers'){
+              filters.sellerId = props.sellerId;
+            }
             if (opcionSeleccionada === 'fechaAsc') {
               filters.sort = 'date';
               filters.order = 'asc';
@@ -93,7 +105,7 @@ function BookReview(props){
         }
         getReviewsBySelector();
 
-      }, [currentPage, opcionSeleccionada]);
+      }, [activeType, currentPage, opcionSeleccionada, props.bookId, props.sellerId, activeData]);
 
 
       async function onAddReview(review){
@@ -105,9 +117,14 @@ function BookReview(props){
           //guardamos en bd
           const newReview = await ReviewsApi.createReview(review, activeType);
           if(newReview){
-            setActiveData((prevReviews) => {
-              return [...prevReviews, newReview];
-            });
+            if(activeData.length>0){
+              setActiveData((prevReviews) => {
+                return [...prevReviews, newReview];
+              });
+            }else{
+              setActiveData([newReview]);
+            }
+            
             return true;
           }else{
             return false;
@@ -140,7 +157,6 @@ async function onUpdateReview(newReviewData){
 
 }
 
-
 async function onDeleteReview(review){
   await ReviewsApi.deleteReviewById(review, activeType);
 
@@ -158,24 +174,36 @@ const onYesCancelAlert = async(reviewIdToDelete) => {
     return(
         <div className="App">
           <Alert message={message} onClose={onCloseAlert}/>
-         <div classname="containerCommentOrderBy">
-         <button className="add-comment-button" onClick={showNewComment}>Añadir un comentario</button>
-            <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
-
-            {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} showComponentFunction={setMostrarComponente} activeType={activeType} userId={userId}/>}
-          </div>
-          Comentarios: {numberReviews} - {numberPages}
+            {(() => {
+              if (isAuthenticated() && userType.toLowerCase() === 'customer') {
+                return <div classname="containerCommentOrderBy">
+                <button className="add-comment-button" onClick={showNewComment}>Añadir un comentario</button>
+                   <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
+                  {mostrarComponente && <NewComment addNewReviewFunction={onAddReview} showComponentFunction={setMostrarComponente} activeType={activeType} userId={userId} bookId={props.bookId}/>}
+                </div>
+              }else{
+                return <div><OrderCommentsBy handleSort={setOpcionSeleccionada}/></div>
+              } 
+            })()}
+           <h6 className='TextLeftReview'>Comentarios ({numberReviews})</h6>
           <div className="table-container">
-            <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert}/>
+            <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert} bookId={props.bookId}/>
           </div>
-
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginLeft: '10%', marginRight: '10%', marginBottom: '5%', marginTop: '5%' }}>
-          <ReturnButton title="Volver a inicio" />
-          <Pagination numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage}/>
-          </div>
+          {(() => {
+              if (Object.keys(activeData).length === 0) {
+                return <div>
+                
+                </div>
+              }else{
+                return <Pagination classStyle="paginationDetail" numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage}/>
+              } 
+            })()}
+          
+          
+      
         </div>
 
       );
 };
 
-export default BookReview;
+export default ReviewsInDetail;

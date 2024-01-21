@@ -1,110 +1,50 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Card, CardHeader, CardBody } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import imageMicrosoft from '../../img/microsoft.png';
 import imageMeta from '../../img/meta.png';
 import imageGoogle from '../../img/google.png';
+import UserApi from '../../api/UserApi';
 
 function RegisterPage() {
   const [selectedType, setSelectedType] = useState('customer');
   const [formData, setFormData] = useState({
-    email: '',
-    customerField1: '',
-    customerField2: '',
-    sellerField1: '',
-    sellerField2: '',
+    id: 4,
+    valoration:0,
+    orders:0,
+    reviews:0,
   });
+  // Obtén el objeto history
+  const navigate = useNavigate();
 
   const handleTypeChange = (type) => {
     setSelectedType(type);
-    // Reiniciar los campos del formulario al cambiar el tipo
-    setFormData({
-      email: '',
-      customerField1: '',
-      customerField2: '',
-      sellerField1: '',
-      sellerField2: '',
-    });
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
+    }));
   };
 
-
-  const handleRegister = (planId) => {
-    // Lógica de registro según el tipo seleccionado (customer o seller)
-    console.log(`register as ${selectedType}`, formData);
-
-    // Si es un vendedor, realiza el registro y pasa la información al backend
-    if (selectedType === 'seller') {
-      // Obtén el tipo de plan seleccionado (puedes obtenerlo de algún estado o como prefieras)
-
-      // Realiza la llamada al backend para registrar al usuario con la información del formulario
-      registerSeller(formData, planId);
-    }
-    else{
-      registerCustomer(formData);
-    }
-  };
-
-  // Función para registrar al vendedor en el backend
-  const registerSeller = async (formData, selectedPlan) => {
-    try {
-      // Realiza la llamada al backend, envía formData y selectedPlan
-      const response = await fetch('https://tu-backend.com/api/register-seller', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          formData,
-          selectedPlan,
-        }),
-      });
-
-      // Verifica la respuesta del backend
-      if (response.ok) {
-        console.log('Registro exitoso como vendedor');
-        // Puedes realizar alguna acción adicional después del registro
-      } else {
-        console.error('Error en el registro como vendedor');
-        // Maneja errores si es necesario
+  const handleRegister = async (planId) => {
+    try{
+      // Si es un vendedor, realiza el registro y pasa la información al backend
+      if (selectedType === 'seller') {
+        // Realiza la llamada al backend para registrar al usuario con la información del formulario
+        await UserApi.registerSeller(formData, planId);
       }
-    } catch (error) {
-      console.error('Error en la llamada al backend', error);
-      // Maneja errores de la llamada al backend
-    }
-  };
-  // Función para registrar al vendedor en el backend
-  const registerCustomer = async (formData) => {
-    try {
-      // Realiza la llamada al backend, envía formData y selectedPlan
-      const response = await fetch('https://tu-backend.com/api/register-seller', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          formData
-        }),
-      });
-
-      // Verifica la respuesta del backend
-      if (response.ok) {
-        console.log('Registro exitoso como vendedor');
-        // Puedes realizar alguna acción adicional después del registro
-      } else {
-        console.error('Error en el registro como vendedor');
-        // Maneja errores si es necesario
+      else{
+        await UserApi.registerCustomer(formData);
       }
+      console.log(`register as ${selectedType}`, formData);
+      navigate('/login');
+
     } catch (error) {
-      console.error('Error en la llamada al backend', error);
-      // Maneja errores de la llamada al backend
+      console.error('Error durante el registro:', error);
     }
   };
 
@@ -138,6 +78,15 @@ function RegisterPage() {
                 </Button>
               </div>
             <Form>
+              <Form.Group controlId="name" className="registerForm">
+                    <Form.Control
+                      type="text"
+                      placeholder="Name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                    />
+              </Form.Group>
               <Form.Group controlId="formEmail" className="registerForm">
                 <Form.Control
                   type="email"
@@ -147,35 +96,38 @@ function RegisterPage() {
                   onChange={handleInputChange}
                 />
               </Form.Group>
-              {selectedType === 'customer' && (
-                <>
-                  <Form.Group controlId="name" className="registerForm">
+              <Form.Group controlId="password" className="registerForm">
                     <Form.Control
-                      type="text"
-                      placeholder="Name"
-                      name="name"
-                      value={formData.customerField1}
+                      type="password"
+                      placeholder="Password"
+                      name="password"
+                      value={formData.password}
                       onChange={handleInputChange}
                     />
-                  </Form.Group>
-                  <Form.Group controlId="surname" className="registerForm">
+              </Form.Group>
+
+              {/* Seccion para Customers*/}
+              {selectedType === 'customer' && (
+                <>
+                  <Form.Group controlId="surnames" className="registerForm">
                     <Form.Control
                       type="text"
-                      placeholder="Surname"
-                      name="surname"
-                      value={formData.customerField2}
+                      placeholder="surnames"
+                      name="surnames"
+                      value={formData.surnames}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
                   <Form.Group controlId="address" className="registerForm">
                     <Form.Control
-                      type=""
+                      type="text"
                       placeholder="Address"
                       name="address"
-                      value={formData.customerField3}
+                      value={formData.address}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
+
                   <Button variant="primary" type="button" onClick={handleRegister}>
                     Registrarse
                   </Button>
@@ -219,18 +171,10 @@ function RegisterPage() {
                   </Row>
                 </>
               )}
-
+              {/* Seccion para Sellers*/}
               {selectedType === 'seller' && (
                 <>
-                  <Form.Group controlId="formSellerField1" className="registerForm">
-                    <Form.Control
-                      type="text"
-                      placeholder="Campo específico del vendedor 1"
-                      name="sellerField1"
-                      value={formData.sellerField1}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
+                  {/*
                   <Form.Group controlId="formSellerField2" className="registerForm">
                     <Form.Control
                       type="text"
@@ -240,7 +184,7 @@ function RegisterPage() {
                       onChange={handleInputChange}
                     />
                   </Form.Group>
-
+                  */}
                   <div className="separator"></div>
 
                   <Row>
@@ -265,7 +209,7 @@ function RegisterPage() {
                             <li>Email support up to 14 days</li>
                             <li>True</li>
                           </ul>
-                          <Button variant="primary" onClick={() => handleRegister('plan1')} style={{ outline: 'none' }} >
+                          <Button variant="primary" onClick={handleRegister} style={{ outline: 'none' }} >
                             Subscribe
                           </Button>
                         </CardBody>
@@ -286,7 +230,7 @@ function RegisterPage() {
                             <li>Email support up to 7 days</li>
                             <li>False</li>
                           </ul>
-                          <Button variant="primary" onClick={() => handleRegister('plan2')} style={{ outline: 'none' }}>
+                          <Button variant="primary" onClick={handleRegister} style={{ outline: 'none' }}>
                             Subscribe
                           </Button>            
                           </CardBody>
@@ -307,7 +251,7 @@ function RegisterPage() {
                             <li>24-hour telephone support</li>
                             <li>True</li>
                           </ul>
-                          <Button variant="primary" onClick={() => handleRegister('plan3')} 
+                          <Button variant="primary" onClick={handleRegister} 
                           style={{ outline: 'none' }}>
                             Subscribe
                           </Button>            

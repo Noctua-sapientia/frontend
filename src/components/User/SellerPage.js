@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
 import './user_styles.css'; // Importa tus estilos CSS aquí
 import logoImage from '../../img/logo.png'
-import UserApi from './UserApi.js'
+import UserApi from '../../api/UserApi.js'
 import { useAuth } from '../AuthContext';
 
 

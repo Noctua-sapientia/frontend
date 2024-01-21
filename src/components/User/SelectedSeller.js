@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
+import { useParams, Link} from 'react-router-dom';
 import './user_styles.css'; // Importa tus estilos CSS aquí
 import logoImage from '../../img/logo.png'
 import UserApi from '../../api/UserApi.js'
-import { useAuth } from '../AuthContext';
-import { Link } from 'react-router-dom';
+import { useAuth } from '../AuthContext.js';
 
 
-function CustomerPage(props) {
+function SelectedSeller(props) {
     const [user, setUser] = useState([]);
-    const {accessToken, userId } = useAuth();
-
+    const {accessToken} = useAuth();
+    const id = useParams().id;
     useEffect(() => {
         async function fetchUser() {
             try {
-                const c = await UserApi.getCustomer(accessToken, userId);
+                const c = await UserApi.getSeller(accessToken, id);
                 setUser(c);
 
             } catch (error) {
@@ -23,7 +23,7 @@ function CustomerPage(props) {
         }
 
         fetchUser();
-    }, [accessToken, userId]);
+    }, [accessToken,id]);
 
     return (
         <Container className='home-container'>
@@ -31,7 +31,7 @@ function CustomerPage(props) {
             <Col>
                 <Row>
                     <Col align='center'>
-                        <h2>My profile</h2>
+                        <h2>Seller profile</h2>
                     </Col>
                 </Row>
                 <Row>
@@ -41,7 +41,13 @@ function CustomerPage(props) {
                         <CardText>Name: {user.name}</CardText>
                         </Row>
                         <Row>
-                        <CardText>Direction: {user.address}</CardText>
+                        <CardText>Nº valorations: {user.valoration}</CardText>
+                        </Row>
+                        <Row>
+                        <CardText>Nº orders: {user.orders}</CardText>
+                        </Row>
+                        <Row>
+                        <CardText>Nº reviews: {user.reviews}</CardText>    
                         </Row>
                         <Row>
                             <Link to='/'>
@@ -52,7 +58,7 @@ function CustomerPage(props) {
                             <Link to='/'>
                                 <Button className='profile-button' href="/book"> Reviews </Button>
                             </Link>
-                        </Row>                    
+                        </Row>                   
                         {/* Agrega más botones según sea necesario */}
                     </Col>
         
@@ -70,4 +76,4 @@ function CustomerPage(props) {
     );
   }
   
-  export default CustomerPage;
+  export default SelectedSeller;

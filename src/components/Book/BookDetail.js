@@ -4,7 +4,6 @@ import BooksApi from './BooksApi.js';
 import { Container, Col, Row, CardText, Button } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
 import styles from './book_detail_styles.css'
-import { useParams } from 'react-router-dom';
 import ReviewsInDetail from '../Review/ReviewsInDetail.js';
 import Star from '../Review/Star.js';
 

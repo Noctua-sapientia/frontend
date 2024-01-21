@@ -1,12 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import BooksApi from './BooksApi.js';
-import { Container, Col, Row, CardText } from 'react-bootstrap';
+import { Container, Col, Row, CardText, Button } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
 import styles from './book_detail_styles.css'
 import { useParams } from 'react-router-dom';
 import ReviewsInDetail from '../Review/ReviewsInDetail.js';
 import Star from '../Review/Star.js';
+
 
 function BookDetail() {
   const [message, setMessage] = useState(null);
@@ -28,7 +29,37 @@ function BookDetail() {
     fetchBooks();
   }, [isbn]);
 
-console.log(Math.round(rating));
+
+  const addToCart = (bookOption) => {
+    let cart = JSON.parse(sessionStorage.getItem('vendorsCart') || '[]');
+    const vendorIndex = cart.findIndex(vendor => vendor.vendorName === bookOption.seller);
+    
+    if (vendorIndex >= 0) {
+      // El vendedor ya está en el carrito, solo añadir el libro a sus items
+      cart[vendorIndex].items.push({
+        title: books.title,
+        price: bookOption.prize,
+        quantity: 1, // o la cantidad que desees
+        sellerId: bookOption.seller,
+        bookId: isbn,
+      });
+    } else {
+      // Añadir nuevo vendedor y libro al carrito
+      cart.push({
+        vendorName: bookOption.seller, // Asegúrate de que este es el nombre correcto del vendedor
+        items: [{
+          title: books.title,
+          price: bookOption.prize,
+          quantity: 1, // o la cantidad que desees
+          sellerId: bookOption.seller,
+          bookId: isbn,
+        }]
+      });
+    }
+  
+    sessionStorage.setItem('vendorsCart', JSON.stringify(cart));
+  };
+
   return (
     <Fragment>
       <Container className='home-container'>
@@ -69,9 +100,9 @@ console.log(Math.round(rating));
                     books.options && books.options.map((option, index) => (
                     <tr key={index}>
                     <td>{option.seller}</td>
-                    <td>{option.stock}</td>
                     <td>{option.prize}</td>
-                    <td><Link to={`/books`} className="btn btn-primary">Añadir al Carrito</Link></td>
+                    <td>{option.stock}</td>
+                    <Button onClick={() => addToCart(option)}>Añadir al Carrito</Button>
       </tr>
     ))
   }

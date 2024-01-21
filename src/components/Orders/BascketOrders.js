@@ -27,6 +27,7 @@ function BascketOrders() {
       try {
         const u = await UserApi.getCustomer(accessToken, userId);
         setDeliveryAddress(u.address);
+        console.log('u.address: ', u.address);
       } catch (error) {
         console.log(error);
       //   setMessage('Could not contact with the server');
@@ -35,53 +36,6 @@ function BascketOrders() {
     fetchUser();
   }, [userType, userId]); 
 
-  // ---------------------- Initial data setup ----------------------------------
-  
-  const initialData = [
-    {
-      vendorName: "ElRinconDelLibro",
-      items: [
-        {
-          title: "Harry Potter y la Piedra Filosofal",
-          price: 5,
-          quantity: 2,
-          sellerId: 1,
-          bookId: 12345678,
-        },
-        {
-          title: "La Sombra del Viento",
-          price: 7.5,
-          quantity: 4,
-          sellerId: 2,
-          bookId: 1
-        },
-        // Otros artículos...
-      ]
-    },
-    {
-      vendorName: "LaCasaDelLibro",
-      items: [
-        {
-          title: "Harry Potter y la Piedra Filosofal",
-          price: 5,
-          quantity: 2,
-          sellerId: 1,
-          bookId: 12345678,
-        },
-        {
-          title: "La Sombra del Viento",
-          price: 7.5,
-          quantity: 4,
-          sellerId: 2,
-          bookId: 1
-        },
-        // Otros artículos...
-      ]
-    }
-
-    
-    // Otros vendedores...
-  ];
 
   // ---------------------- Utility functions ----------------------------------
 
@@ -137,13 +91,12 @@ function BascketOrders() {
   const [vendors, setVendors] = useState([]);
 
   useEffect(() => {
-    const loadedVendors = localStorage.getItem('vendorsCart');
-    // if (loadedVendors) {
-    //   setVendors(JSON.parse(loadedVendors));
-    // } else {
-      setVendors(initialData);
-      localStorage.setItem('vendorsCart', JSON.stringify(initialData));
-    // }
+    const loadedVendors = sessionStorage.getItem('vendorsCart');
+    if (loadedVendors) {
+      setVendors(JSON.parse(loadedVendors));
+    } else {
+      setVendors([]); 
+    }
   }, []);
 
   // ---------------------- Event handlers ----------------------------------
@@ -165,22 +118,23 @@ function BascketOrders() {
     });
 
     setVendors(updatedVendors);
-    localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+    sessionStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
   };
 
   const handleDeleteOrder = (vendorIndex) => {
     const updatedVendors = vendors.filter((_, index) => index !== vendorIndex);
     setVendors(updatedVendors);
-    localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+    sessionStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
   };
 
   const handleCreateOrder = (accessToken, vendorIndex) => {
     const orderData = formatOrderData(vendors[vendorIndex], vendorIndex);
+    console.log(orderData);
     OrdersApi.createOrder(accessToken, orderData)
       .then(response => {
         const updatedVendors = vendors.filter((_, index) => index !== vendorIndex);
         setVendors(updatedVendors);
-        localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+        sessionStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
 
       })
       .catch(error => {
@@ -211,7 +165,7 @@ function BascketOrders() {
     updatedVendors = updatedVendors.filter(vendor => vendor !== null);
   
     setVendors(updatedVendors);
-    localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+    sessionStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
   };
 
   // ---------------------- Basket orders page ----------------------------------

@@ -40,4 +40,12 @@ module.exports = function (app) {
       changeOrigin: true,
     })
   );
+
+  app.use(
+    '/api/v1/books',
+    createProxyMiddleware({
+      target: 'http://localhost:4002',
+      changeOrigin: true,
+    })
+  );
 };

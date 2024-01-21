@@ -1,13 +1,11 @@
 import React from 'react';
+import './Review.css';
 
 function Pagination(props){
-
-
-
-
+  console.log(props.classStyle);
     return(
         <nav aria-label="">
-        <ul className="pagination">
+        <ul className={`pagination ${props.classStyle}`}>
         {(() => {
             if (props.currentPage  === 0) {
               return  <li class="page-item disabled"><a class="page-link" href={`#${props.currentPage+1}`} onClick={()=>props.onChangePage(props.currentPage-1)}>Anterior</a></li>

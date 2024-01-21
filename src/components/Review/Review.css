@@ -93,8 +93,21 @@
   background-color: inherit;
 }
 
+.paginationMyReview{
+  text-align: right;
+ 
+}
+
+.paginationDetail{
+  margin-bottom: 5%;
+  margin-left: 65%;
+  text-align: right;
+}
+
+
 .countCaracters{
   text-align: right;
   margin-right: 5%;
   margin-bottom: 5%
 }
+

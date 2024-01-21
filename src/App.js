@@ -19,7 +19,7 @@ import OrderDetails from './components/Orders/OrderDetails';
 import BascketOrders from './components/Orders/BascketOrders';
 import Header from './header';
 import SellerPage from './components/User/SellerPage';
-import BookReview from './components/Review/BookReview.js';
+import BookReview from './components/Review/ReviewsInDetail.js';
 
 function App() {
 
@@ -45,7 +45,6 @@ function App() {
         <Route path="/historyOrders" element={<HistoryOrders />}/>
         <Route path="/historyOrders/:orderId" element={<OrderDetails />} />
         <Route path="/bascketOrders" element={<BascketOrders />} />
-        <Route path="/bookReview" element={<BookReview />} />
 
         {/* <Route path="/pricing" element={<Pricing />} /> */}
 

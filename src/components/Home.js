@@ -21,8 +21,7 @@ function Home() {
       <Link to="/review">Seccion review</Link>
       <div>---</div>
       <Link to="/pricing">Seccion pricing</Link>
-      <div>---</div>
-      <Link to="/bookReview">Seccion BookReview hay que borrarlo</Link>
+
 
     </div>
   );

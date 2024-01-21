@@ -36,9 +36,10 @@ class ReviewsApi{
 
     }
 
-    static async getNumberReviews(type){
+    static async getNumberReviews(type,filters){
         const headers = this.requestHeaders();
-        const request = new Request(ReviewsApi.API_BASE_URL + "/"+type, {
+        const queryString = ReviewsApi.objToQueryString(filters);
+        const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"/count?"+queryString, {
             method: 'GET',
             headers: headers
         });
@@ -46,8 +47,7 @@ class ReviewsApi{
         if (! response.ok) {
             throw Error("Response not valid" + response.status);
         }
-        const data = await response.json();
-        return data.length;
+        return response.json();
     }
 
     static async updateReview(reviewId, reviewData, type){

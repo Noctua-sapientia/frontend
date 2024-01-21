@@ -16,11 +16,14 @@ function Star(props) {
   }, [numGoldStars, numStarsGrey]);
 
   const changeStarColor = (index) => {
-    const goldenStar = index + 1;
-    const greyStar = 5 - goldenStar;
-    const nuevosColores = Array(goldenStar).fill('gold').concat(Array(greyStar).fill('grey'));
-    setColoresEstrellas(nuevosColores);
-    onClick(goldenStar);
+    if(edit==='true'){
+      const goldenStar = index + 1;
+      const greyStar = 5 - goldenStar;
+      const nuevosColores = Array(goldenStar).fill('gold').concat(Array(greyStar).fill('grey'));
+      setColoresEstrellas(nuevosColores);
+      onClick(goldenStar);
+    }
+
   };
 
   return (
@@ -31,7 +34,7 @@ function Star(props) {
           key={index}
           icon={faStar}
           style={{ color }}
-          onClick={edit ? () => changeStarColor(index) : null}
+          onClick={() => changeStarColor(index)}
         />
       ))}
     </div>

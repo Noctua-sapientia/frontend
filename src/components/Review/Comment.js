@@ -4,12 +4,14 @@ import CommentWindow from './CommentWindow.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt,faTrash  } from '@fortawesome/free-solid-svg-icons';
 import swal from 'sweetalert';
+import { useAuth } from '../AuthContext';
 
 
 
 function Comment(props) {
 
   const [modalAbierto, setModalAbierto] = useState(false);
+  const {userId } = useAuth();
 
   const abrirModal = () => {
     setModalAbierto(true);
@@ -54,7 +56,7 @@ function Comment(props) {
         rating: newRating,
         createdAt: props.comment.createdAt,
         bookId: props.comment.bookId,
-        customerId: props.comment.customerId
+        customerId: userId
       };
       await props.updateReviewFunction(updatedBookReview);
      // Cierra la ventana emergente después de guardar
@@ -93,25 +95,30 @@ function Comment(props) {
   //que solo se muestre el lapiz con el usuario que coincida 
   return(
     <tr>
-      <td>Imagen del avatar si se pone</td>
-      <td className='TextCenter'>
-          {props.comment.id}
+    
+      <td >
+      Aqui iria el nombre del customerId que ha escrito el comentario
+          {props.comment.customerId}
       </td>
-      <td className='TextLeft'>
+      <td>
           {formatDate(props.comment.createdAt)}
       </td>
-      <td className='TextLeft'>
-        <Star numGoldStars={props.comment.rating} edit='false'/>
+      <td>
+        <Star numGoldStars={props.comment.rating} edit='false' onClick={numberOfGoldStarsChange}/>
         <div>
           {props.comment.description} 
         </div>    
       </td>
       {(() => {
-      if (props.comment.customerId === 2) {
+       if (props.comment.customerId === userId) {
         return <td>
         <FontAwesomeIcon icon={faPencilAlt} onClick={abrirModal} className="icono-lapiz" />
         <FontAwesomeIcon icon={faTrash} onClick={() => showSweetAlert("Eliminar","¿Estás seguro de que desea eliminar el comentario?")}/>
       </td>
+      } else{
+        return <td>
+
+        </td>
       } 
     })()}
       <CommentWindow isOpen={modalAbierto} onClose={cerrarModal} description={newDescription} rating={newRating} 

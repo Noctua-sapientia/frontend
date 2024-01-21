@@ -9,7 +9,9 @@ class UserApi {
     static async getCustomer(accessToken,userId){
 
         const headers = this.requestHearders(accessToken);
-        const request = new Request('http://localhost:4001/api/v1/customers/' + 1 , {
+      
+        const request = new Request('http://localhost:4001/api/v1/customers/' + userId , {
+
             method: 'GET',
             headers: headers
         });
@@ -26,6 +28,7 @@ class UserApi {
 
         const headers = this.requestHearders(accessToken);
         const request = new Request('http://localhost:4001/api/v1/sellers/' + userId , {
+
             method: 'GET',
             headers: headers
         });

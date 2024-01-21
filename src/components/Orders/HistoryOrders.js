@@ -8,20 +8,13 @@ import HistoryOrdersList from './HistoryOrdersList';
 import OrdersApi from '../../api/OrdersApi';
 
 import { calculateOrderPayment } from './utils'; 
-import { useAuth } from '../AuthContext';
+
 
 
 function HistoryOrders(props) {
 
   // -------------------------- Errors alert ---------------------------------------
 
-
-  // -------------------------- Detecting user logged --------------------------------
-
-  const {userType, userId, accessToken } = useAuth();
-
-  console.log('userType: ', userType);
-  console.log('userId: ', userId);
 
   // --------------------------  Orders loading --------------------------------------
 
@@ -30,7 +23,7 @@ function HistoryOrders(props) {
   useEffect(() => {
     async function fetchOrders() {
       try {
-        const o = await OrdersApi.getAllOrders(accessToken, userType, userId);
+        const o = await OrdersApi.getAllOrders();
         setOrders(o);
       } catch (error) {
         console.log(error);
@@ -38,7 +31,7 @@ function HistoryOrders(props) {
       }
     }  
     fetchOrders();
-  }, [userType, userId]); 
+  }, []); 
 
   // --------------------------  Orders filtering --------------------------------------
 

@@ -9,7 +9,7 @@ class UserApi {
     static async getCustomer(accessToken,userId){
 
         const headers = this.requestHearders(accessToken);
-        const request = new Request('http://localhost:4001/api/v1/customers/' + userId , {
+        const request = new Request('http://localhost:3000/api/v1/customers/' + userId , {
             method: 'GET',
             headers: headers
         });
@@ -25,7 +25,7 @@ class UserApi {
     static async getSeller(accessToken,userId){
 
         const headers = this.requestHearders(accessToken);
-        const request = new Request('http://localhost:4001/api/v1/sellers/' + userId , {
+        const request = new Request('http://localhost:3000/api/v1/sellers/' + userId , {
             method: 'GET',
             headers: headers
         });
@@ -40,4 +40,4 @@ class UserApi {
     }
 }
 
-export default UserApi;
+export default UserApi

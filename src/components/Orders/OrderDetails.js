@@ -13,8 +13,6 @@ import OrderDetailsInfo from './OrderDetailsInfo';
 import OrdersApi from '../../api/OrdersApi';
 import BackButton from './BackButton';
 
-import { useAuth } from '../AuthContext';
-
 
 function OrderDetails(props) {
 
@@ -28,13 +26,6 @@ function OrderDetails(props) {
   // function onCloseAlert() {
   //   setAlertMessage(null);
   // }
-
-  // -------------------------- Detecting user logged --------------------------------
-
-    const {userType, userId, accessToken } = useAuth();
-
-    console.log('userType: ', userType);
-    console.log('userId: ', userId);
 
 
   // --------------------------  Order loading --------------------------------------
@@ -56,7 +47,7 @@ function OrderDetails(props) {
   useEffect(() => {
     async function fetchOrder() {
       try {
-        const o = await OrdersApi.getOrder(accessToken, orderId);
+        const o = await OrdersApi.getOrder(orderId);
         setOrder(o);
       } catch (error) {
         console.log(error);
@@ -79,14 +70,14 @@ function OrderDetails(props) {
   };
 
 
-  async function onEditOrder(accessToken, orderId, newOrderData) {
+  async function onEditOrder(orderId, newOrderData) {
     console.log("Edited order data in onEditOrder:", newOrderData);    
 
     if (editedOrderData !== null) {
       try {
         // Meter logica de comprobaciones
 
-        await OrdersApi.updateOrder(accessToken, orderId, newOrderData);
+        await OrdersApi.updateOrder(orderId, newOrderData);
         setOrder(prevOrder => ({
           ...prevOrder,
           ...newOrderData
@@ -102,9 +93,9 @@ function OrderDetails(props) {
 
   // --------------------------  Order deleting --------------------------------------
 
-  async function onDeleteOrder(accessToken, orderId) {
+  async function onDeleteOrder(orderId) {
     try {
-        await OrdersApi.deleteOrder(accessToken, orderId);
+        await OrdersApi.deleteOrder(orderId);
         navigate('/historyOrders');
     } catch (error) {
         console.log(error);
@@ -159,7 +150,7 @@ function OrderDetails(props) {
                   {
                   isEditing ? (
                     <Fragment>
-                      <Button variant="success" onClick={() => onEditOrder(accessToken, order.orderId, editedOrderData)}>
+                      <Button variant="success" onClick={() => onEditOrder(order.orderId, editedOrderData)}>
                         <i className="bi bi-check"></i> Actualizar
                       </Button>
                       <Button variant="secondary" onClick={() => {setIsEditing(false); setEditedOrderData(null)}}>
@@ -173,7 +164,7 @@ function OrderDetails(props) {
                     </Button>
                   )}
 
-                  <Button variant="danger" onClick={() => onDeleteOrder(accessToken, order.orderId)}> <i className="bi bi-trash"></i> Delete </Button>
+                  <Button variant="danger" onClick={() => onDeleteOrder(order.orderId)}> <i className="bi bi-trash"></i> Delete </Button>
 
                 </Container>
 

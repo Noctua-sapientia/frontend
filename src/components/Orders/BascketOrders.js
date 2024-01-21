@@ -1,10 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Col, Card, ListGroup, Button, Row } from 'react-bootstrap';
+
+
 import BascketOrder from './BascketOrder';
 import OrdersApi from '../../api/OrdersApi';
+import UserApi from '../User/UserApi';
+
 import './BascketOrders.css';
 
+import { useAuth } from '../AuthContext';
+
 function BascketOrders() {
+
+  // ----------------------- Detecting user logged ------------------------------
+
+
+  const {userType, userId, accessToken } = useAuth();
+
+  console.log('userType: ', userType);
+  console.log('userId: ', userId);
+  
+  const [deliveryAddress, setDeliveryAddress] = useState('');
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const u = await UserApi.getCustomer(accessToken, userId);
+        setDeliveryAddress(u.address);
+      } catch (error) {
+        console.log(error);
+      //   setMessage('Could not contact with the server');
+      }
+    }  
+    fetchUser();
+  }, [userType, userId]); 
+
+  // ---------------------- Initial data setup ----------------------------------
+  
   const initialData = [
     {
       vendorName: "ElRinconDelLibro",
@@ -51,18 +83,27 @@ function BascketOrders() {
     // Otros vendedores...
   ];
 
+  // ---------------------- Utility functions ----------------------------------
+
   const formatOrderData = (vendor, vendorIndex) => {
 
     // Aquí deberías determinar los valores correctos para estos campos
-    const userId = 1; /* determinar el valor de userId */
-    const sellerId = 2; /* determinar el valor de sellerId, quizás basado en vendorIndex o alguna propiedad de vendor */
-    const deliveryAddress = "Mi casa"; // Esto debería obtenerse de alguna parte
+
+    // userId ya lo tenemos del login y el deliveryAddress igual   
+
+    // Esto hay que cambiarlo para que sea el id del vendedor según la decision que se tome al añadir al carrito
+    const sellerId = 2; 
+    
+    // Esto hay que determinarlo en funcion del pricing al que esta suscrito el usuario
     const maxDeliveryDateAux = new Date();
     maxDeliveryDateAux.setDate(maxDeliveryDateAux.getDate() + 7);
     const maxDeliveryDate =  maxDeliveryDateAux.toISOString().split('T')[0];
+    const shippingCost = 5;
+
+
+
     const creationDatetime = new Date().toISOString(); // Fecha de creación del pedido
     const updateDatetime = new Date().toISOString(); // Fecha de actualización del pedido
-    const shippingCost = 5; // Costo de envío
 
   
     const books = vendor.items.map(item => ({
@@ -83,6 +124,16 @@ function BascketOrders() {
     };
   };
 
+  const calculateTotalItems = (items) => {
+    return items.reduce((total, item) => total + item.quantity, 0);
+  };
+
+  const calculateTotalPrice = (items) => {
+    return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  // ---------------------- State setup ----------------------------------
+
   const [vendors, setVendors] = useState([]);
 
   useEffect(() => {
@@ -95,13 +146,7 @@ function BascketOrders() {
     // }
   }, []);
 
-  const calculateTotalItems = (items) => {
-    return items.reduce((total, item) => total + item.quantity, 0);
-  };
-
-  const calculateTotalPrice = (items) => {
-    return items.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
+  // ---------------------- Event handlers ----------------------------------
 
   const onUpdateQuantity = (vendorIndex, itemIndex, newQuantity) => {
     const updatedVendors = vendors.map((vendor, vIndex) => {
@@ -129,9 +174,9 @@ function BascketOrders() {
     localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
   };
 
-  const handleCreateOrder = (vendorIndex) => {
+  const handleCreateOrder = (accessToken, vendorIndex) => {
     const orderData = formatOrderData(vendors[vendorIndex], vendorIndex);
-    OrdersApi.createOrder(orderData)
+    OrdersApi.createOrder(accessToken, orderData)
       .then(response => {
         const updatedVendors = vendors.filter((_, index) => index !== vendorIndex);
         setVendors(updatedVendors);
@@ -168,6 +213,8 @@ function BascketOrders() {
     setVendors(updatedVendors);
     localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
   };
+
+  // ---------------------- Basket orders page ----------------------------------
   
 
   return (
@@ -207,7 +254,7 @@ function BascketOrders() {
                       type="button" 
                       variant="info" 
                       className="mt-3"
-                      onClick={() => handleCreateOrder(vendorIndex)}>
+                      onClick={() => handleCreateOrder(accessToken, vendorIndex)}>
                       <i className="fas fa-truck"></i> Realizar Pedido
                     </Button>
                     <Button 

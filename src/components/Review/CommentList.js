@@ -5,7 +5,7 @@ import React from 'react';
 function CommentList(props) {
     
   return(
-    <table className='table table-fixed table-margin'>
+    <table className='tableReview table-margin'>
       
       <tbody>
       {(() => {

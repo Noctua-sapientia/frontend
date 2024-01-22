@@ -19,7 +19,9 @@ function BookDetail() {
       try {
         const fetchedBooks = await BooksApi.getBooksByISBN(isbn);
         setBooks(fetchedBooks);  // Corrección aquí
-        setRating(fetchedBooks.rating);
+        if(fetchedBooks.rating !=null || fetchedBooks.rating !== undefined) {
+          setRating(fetchedBooks.rating);
+        } 
       } catch (error) {
         setMessage('Could not contact the server');
       }

@@ -13,7 +13,7 @@ import { useAuth } from '../AuthContext';
 function Review() {
 
   const [activeData, setActiveData] = useState([]);
-  const {userType, isAuthenticated, userId} = useAuth();
+  const {userType, isAuthenticated, userId,accessToken} = useAuth();
   let activeTypeDefault = 'books';
   if(userType != null && userType.toLowerCase() === 'seller'){
     activeTypeDefault = 'sellers';
@@ -56,7 +56,7 @@ function Review() {
       }else if(isAuthenticated() && userType.toLowerCase() === 'seller'){
         filters.sellerId = userId;
       }
-      const response = await ReviewsApi.getNumberReviews(activeType,filters);
+      const response = await ReviewsApi.getNumberReviews(activeType,filters,accessToken);
       const totalNumber = response.count;
       setNumberReviews(totalNumber);
       if(numberReviews % limit === 0){
@@ -67,7 +67,7 @@ function Review() {
     }
     getTotalNumberReviews();
 
-  }, [activeType, isAuthenticated, numberReviews, userId, userType]);
+  }, [accessToken, activeType, isAuthenticated, numberReviews, userId, userType]);
 
 
   
@@ -102,7 +102,7 @@ useEffect(() => {
           
         }
       let reviews = null;
-      reviews = await ReviewsApi.getReviews(filters, activeType);
+      reviews = await ReviewsApi.getReviews(filters, activeType,accessToken);
       setActiveData(reviews);
     } catch (error) {
       console.log(error);
@@ -111,7 +111,7 @@ useEffect(() => {
   }
   getReviewsBySelector();
 
-}, [activeType, currentPage, isAuthenticated, opcionSeleccionada, userId, userType]);
+}, [accessToken, activeType, currentPage, isAuthenticated, opcionSeleccionada, userId, userType]);
 
 
 
@@ -124,7 +124,7 @@ function onCloseAlert(){
 async function onUpdateReview(newReviewData){
   //realizar comprobaciones
   const { id, date, ...restData } = newReviewData;
-  const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType);
+  const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType,accessToken);
   console.log(newReview);
   if (newReview) {
     setActiveData((prevReviews) => {
@@ -141,7 +141,7 @@ async function onUpdateReview(newReviewData){
 
 
 async function onDeleteReview(review){
-  await ReviewsApi.deleteReviewById(review, activeType);
+  await ReviewsApi.deleteReviewById(review, activeType,accessToken);
        
 }
 

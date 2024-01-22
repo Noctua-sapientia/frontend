@@ -18,7 +18,7 @@ function ReviewsInDetail(props){
     const [numberReviews, setNumberReviews] = useState(0); 
     const [numberPages, setNumberPages] = useState(1); 
     const [currentPage, setCurrentPage] = useState(0); 
-    const {userId, isAuthenticated, userType} = useAuth();
+    const {userId, isAuthenticated, userType,accessToken} = useAuth();
 
 
     const activeType = props.activeType;
@@ -50,7 +50,7 @@ function ReviewsInDetail(props){
           }else if(activeType === 'sellers'){
             filters.sellerId = props.sellerId;
           }
-          const response = await ReviewsApi.getNumberReviews(activeType,filters);
+          const response = await ReviewsApi.getNumberReviews(activeType,filters,accessToken);
           const totalNumber = response.count;
           setNumberReviews(totalNumber);
           if(numberReviews % limit === 0){
@@ -96,7 +96,7 @@ function ReviewsInDetail(props){
 
             }
             let reviews = null;
-            reviews = await ReviewsApi.getReviews(filters, activeType);
+            reviews = await ReviewsApi.getReviews(filters, activeType,accessToken);
             setActiveData(reviews);
           } catch (error) {
             console.log(error);
@@ -105,7 +105,7 @@ function ReviewsInDetail(props){
         }
         getReviewsBySelector();
 
-      }, [activeType, currentPage, opcionSeleccionada, props.bookId, props.sellerId, activeData]);
+      }, [activeType, currentPage, opcionSeleccionada, props.bookId, props.sellerId, activeData, accessToken]);
 
 
       async function onAddReview(review){
@@ -115,7 +115,7 @@ function ReviewsInDetail(props){
           return false;
         }else{
           //guardamos en bd
-          const newReview = await ReviewsApi.createReview(review, activeType);
+          const newReview = await ReviewsApi.createReview(review, activeType,accessToken);
           if(newReview){
             if(activeData.length>0){
               setActiveData((prevReviews) => {
@@ -143,7 +143,7 @@ function onCloseAlert(){
 async function onUpdateReview(newReviewData){
   //realizar comprobaciones
   const { id, date, ...restData } = newReviewData;
-  const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType);
+  const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType,accessToken);
   if (newReview) {
     setActiveData((prevReviews) => {
       return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);

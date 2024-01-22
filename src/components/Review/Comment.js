@@ -109,7 +109,7 @@ function Comment(props) {
         </div>    
       </td>
       {(() => {
-       if (props.comment.customerId === userId) {
+       if (props.comment.customerId == userId) {
         return <td>
         <FontAwesomeIcon icon={faPencilAlt} onClick={abrirModal} className="icono-lapiz" />
         <FontAwesomeIcon icon={faTrash} onClick={() => showSweetAlert("Eliminar","¿Estás seguro de que desea eliminar el comentario?")}/>

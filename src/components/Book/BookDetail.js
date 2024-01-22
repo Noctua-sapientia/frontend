@@ -14,14 +14,16 @@ function BookDetail() {
   const [books, setBooks] = useState([]);
   const { isbn } = useParams();
   const {accessToken, userId } = useAuth();
-
+console.log(accessToken);
   useEffect(() => {
     async function fetchBooks() {
       try {
         const fetchedBooks = await BooksApi.getBooksByISBN(accessToken, isbn);
 
         setBooks(fetchedBooks);  // Corrección aquí
-        setRating(fetchedBooks.rating);
+        if(fetchedBooks.rating !=null || fetchedBooks.rating !== undefined) {
+          setRating(fetchedBooks.rating);
+        } 
 
       } catch (error) {
         setMessage('Could not contact the server');
@@ -96,7 +98,7 @@ function BookDetail() {
                 <CardText>Año: {books.year}</CardText>
               </Row>
               <Row> 
-                <CardText><Star numGoldStars={Math.round(rating)} edit='false'/> ({books.rating})</CardText>
+                <CardText><Star numGoldStars={Math.round(rating)} edit='false'/> ({rating})</CardText>
               </Row>
               <Row>
                 <CardText>VENDEDORES</CardText>

@@ -18,7 +18,7 @@ import SearchBooks from './components/Book/SearchBooks.js'
 
 import HistoryOrders from './components/Orders/HistoryOrders';
 import OrderDetails from './components/Orders/OrderDetails';
-import BascketOrders from './components/Orders/BascketOrders';
+import BasketOrders from './components/Orders/BasketOrders';
 import Header from './header';
 
 function App() {
@@ -43,7 +43,7 @@ function App() {
 
         <Route path="/historyOrders" element={<HistoryOrders />}/>
         <Route path="/historyOrders/:orderId" element={<OrderDetails />} />
-        <Route path="/bascketOrders" element={<BascketOrders />} />
+        <Route path="/basketOrders" element={<BasketOrders />} />
 
         {/* Agrega más rutas según sea necesario */}
       </Routes>

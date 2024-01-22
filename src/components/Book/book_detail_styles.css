@@ -50,7 +50,7 @@
   .stock-value {
     font-weight: normal;
   }
-  
+/*   
   .add-to-cart-button {
     padding: 0.5rem 2rem;
     background-color: #007bff;
@@ -59,8 +59,8 @@
     border-radius: 5px;
     cursor: pointer;
     margin-top: 1rem;
-  }
-  
+  } */
+
   .comments-container {
     width: 100%;
     margin-top: 2rem;

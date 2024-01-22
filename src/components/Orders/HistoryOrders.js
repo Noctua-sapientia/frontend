@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 
 import { Container } from 'react-bootstrap';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 import './HistoryOrders.css';
 
 import HistoryOrdersFilter from './HistoryOrdersFilter';

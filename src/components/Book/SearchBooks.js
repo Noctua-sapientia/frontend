@@ -5,17 +5,19 @@ import BookElement from './BookElement.js';
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import imageBook1 from '../../img/HarryPotter.jpg';
+import { useAuth } from '../AuthContext';
 
 function SearchBooks() {
     const [books, setBooks] = useState([]); // Your array of books
     const [searchTerm, setSearchTerm] = useState(''); // Search term
     const [filteredBooks, setFilteredBooks] = useState([]); // Books filtered by search term
-  
+    const {accessToken, userId } = useAuth();
+
     useEffect(() => {
         // Fetch books from API or any data source
         const fetchBooks = async () => {
             try {
-                const response = await BooksApi.getAllBooks();
+                const response = await BooksApi.getAllBooks(accessToken);
                 setBooks(response);
             } catch (error) {
                 console.error('Error fetching books:', error.message);

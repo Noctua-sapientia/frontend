@@ -1,19 +1,4 @@
-// Home.js
 import React from 'react';
-/*
-import { Link } from 'react-router-dom';
-
-function Book() {
-  return (
-    <div>
-      <h1> Página de BOOKS </h1>
-      <Link to="/">Volver a INICIO</Link>
-    </div>
-  );
-}
-
-export default Book;*/
-
 import { Fragment, useState, useEffect} from 'react';
 import EditableBook from './Book/EditableBook.js'
 import Alert from './Book/Alert.js';
@@ -21,12 +6,13 @@ import NewBook from './Book/NewBook.js';
 import BooksApi from './Book/BooksApi.js';
 import { Link } from 'react-router-dom'; 
 import { useParams } from 'react-router-dom';
-
+import { useAuth } from './AuthContext';
 
 function Books(props){
 
     const [message, setMessage] = useState(null);
     const[books, setBooks] = useState([]);
+    const {accessToken, userId } = useAuth();
 
     const [filteredBooks, setFilteredBooks] = useState([]);
     const [selectedSeller, setSelectedSeller] = useState(null);
@@ -59,7 +45,7 @@ function Books(props){
     useEffect(() => {
         async function fetchBooks(){
             try{
-            const c = await BooksApi.getAllBooks();
+            const c = await BooksApi.getAllBooks(accessToken);
             setBooks(c);
             } catch (error) {
                 setMessage('No se pudo contactar con el servidor');
@@ -75,10 +61,10 @@ function Books(props){
     }
 
     function reloadBooks() {
-        // Puedes colocar aquí cualquier lógica adicional que desees al recargar los libros
+        
         async function fetchBooks() {
             try {
-                const c = await BooksApi.getAllBooks();
+                const c = await BooksApi.getAllBooks(accessToken);
                 setBooks(c);
             } catch (error) {
                 setMessage('No se pudo contactar con el servidor');
@@ -111,6 +97,7 @@ function Books(props){
             return prevBooks.filter((c) => c.title !== book.title);
         });
     }
+
 
     function validateBookTitulo(book){
         if(book.title === ''){
@@ -163,7 +150,7 @@ function Books(props){
                 <tbody>
                     <NewBook onAddBook={onAddBook} reloadBooks={reloadBooks} />
                     {filteredBooks.map((book) => 
-                            <EditableBook key={book.title} book={book} onEdit={(newBook) => onBookEdit(newBook, book)} onDelete={onBookDelete}/>
+                            <EditableBook key={book.title} book={book} onEdit={(newBook) => onBookEdit(newBook, book)} reloadBooks={reloadBooks} onDelete={onBookDelete} />
                         )}
                         <tr>
                             <td>

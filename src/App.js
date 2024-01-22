@@ -36,7 +36,7 @@ function App() {
 
         <Route path="/sellerUser" element={<SellerPage />} />
 
-        <Route path="/books/:isbn/:seller" element={<Books />} />
+        <Route path="/book/:seller" element={<Books />} />
         <Route path="/books/:isbn" element={<BookDetail />} />
         <Route path="/books" element={<SearchBooks />} />
 

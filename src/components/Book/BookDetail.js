@@ -16,7 +16,7 @@ function BookDetail() {
       try {
         console.log(isbn);
         const fetchedBooks = await BooksApi.getBooksByISBN(isbn);
-        setBooks(fetchedBooks);  // Corrección aquí
+        setBooks(fetchedBooks);  
       } catch (error) {
         setMessage('Could not contact the server');
       }
@@ -55,8 +55,8 @@ function BookDetail() {
                   <thead>
                     <tr>
                       <th>Vendedor</th>
-                      <th>Precio</th>
                       <th>Stock</th>
+                      <th>Precio</th>
                       <th>Compra</th>
                     </tr>
                   </thead>
@@ -66,12 +66,12 @@ function BookDetail() {
                     <tr key={index}>
                     <td>{option.seller}</td>
                     <td>{option.stock}</td>
-                    <td>{option.prize}</td>
+                    <td>{option.prize} €</td>
                     <td><Link to={`/books`} className="btn btn-primary">Añadir al Carrito</Link></td>
-      </tr>
-    ))
-  }
-</tbody>
+                        </tr>
+                      ))
+                    }
+                  </tbody>
 
                 </table>
               </Row>

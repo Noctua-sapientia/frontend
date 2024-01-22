@@ -2,14 +2,31 @@ import { useState } from "react";
 import Book from "./Book.js";
 import EditBook from "./EditBook.js"
 import React from "react";
+import BooksApi from './BooksApi.js';
+import { useParams } from 'react-router-dom';
 
 function EditableBook(props){
     const [isEditing, setIsEditing] = useState(false);
+    const [editedBookData, setEditedBookData] = useState(null);
+    const { isbn } = useParams();
+    
+  const handleEditBook = (book) => {
+    console.log("Edited book data in handleEditBook:", book);
+    setEditedBookData(book);
+  };
 
-    function saveBook(book){
-        const result = props.onEdit(book);
-        if (result){
+    async function saveBook(book) {
+        if (editedBookData !== null) {
+        try {
+            const result = await BooksApi.updateBook(isbn, book);
+            if (result) {
+            props.onSave(book);
+            setEditedBookData(null);
             setIsEditing(false);
+            }
+        } catch (error) {
+            console.log(error);
+        }
         }
     }
 
@@ -21,6 +38,7 @@ function EditableBook(props){
     }
 
     return bookRender;
+    
 }
 
 export default EditableBook;

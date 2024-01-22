@@ -8,20 +8,20 @@ function Pagination(props){
         <ul className={`pagination ${props.classStyle}`}>
         {(() => {
             if (props.currentPage  === 0) {
-              return  <li class="page-item disabled"><a class="page-link" href={`#${props.currentPage+1}`} onClick={()=>props.onChangePage(props.currentPage-1)}>Anterior</a></li>
+              return  <li className="page-item disabled"><a className="page-link" href={`#${props.currentPage+1}`} onClick={()=>props.onChangePage(props.currentPage-1)}>Anterior</a></li>
             } else{
-              return   <li class="page-item"><a class="page-link" href={`#${props.currentPage+1}`} onClick={()=>props.onChangePage(props.currentPage-1)}>Anterior</a></li>
+              return   <li className="page-item"><a className="page-link" href={`#${props.currentPage+1}`} onClick={()=>props.onChangePage(props.currentPage-1)}>Anterior</a></li>
 
             }
     })()}
           {[...Array(props.numberPages)].map((_, index) => (
             (() => {
               if (props.currentPage === index) {
-                return <li key={index} class="page-item active">
-                <a className="page-link" href={`#${index+1}`} onClick={()=>props.onChangePage(index)}>{index + 1} <span class="sr-only">(current)</span></a>
+                return <li key={index} className="page-item active">
+                <a className="page-link" href={`#${index+1}`} onClick={()=>props.onChangePage(index)}>{index + 1} <span className="sr-only">(current)</span></a>
               </li>
               } else{
-                return <li key={index} class="page-item">
+                return <li key={index} className="page-item">
                 <a className="page-link" href={`#${index+1}`} onClick={()=>props.onChangePage(index)}>{index + 1} </a>
               </li>
 
@@ -32,9 +32,9 @@ function Pagination(props){
 
         {(() => {
               if (props.currentPage  === props.numberPages-1) {
-                return  <li class="page-item disabled"><a class="page-link" href={`#${props.currentPage +1 }`} onClick={()=>props.onChangePage(props.currentPage+1)}>Siguiente</a></li>
+                return  <li className="page-item disabled"><a className="page-link" href={`#${props.currentPage +1 }`} onClick={()=>props.onChangePage(props.currentPage+1)}>Siguiente</a></li>
               } else{
-                return   <li class="page-item"><a class="page-link" href={`#${props.currentPage +1 }`} onClick={()=>props.onChangePage(props.currentPage+1)}>Siguiente</a></li>
+                return   <li className="page-item"><a className="page-link" href={`#${props.currentPage +1 }`} onClick={()=>props.onChangePage(props.currentPage+1)}>Siguiente</a></li>
 
               }
         })()}

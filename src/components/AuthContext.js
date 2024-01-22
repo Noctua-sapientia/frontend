@@ -55,6 +55,7 @@ export const AuthProvider = ({ children }) => {
   const handleLogout = () => {
     setAccessToken(null);
     setUserType(null);
+    setUserId(null);
 
     // Limpiar sessionStorage al cerrar sesión
     sessionStorage.removeItem('accessToken');

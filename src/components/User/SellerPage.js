@@ -49,17 +49,7 @@ function SellerPage(props) {
                         </Row>
                         <Row>
                         <CardText>Nº reviews: {user.reviews}</CardText>    
-                        </Row>
-                        <Row>
-                            <Link to={`/books/${user.userId}`}>
-                                <Button className='profile-button'> Books </Button>
-                            </Link>
-                        </Row>
-                        <Row>
-                            <Link to={`/books/${user.userId}`}>
-                                <Button className='profile-button'> Reviews </Button>
-                            </Link>
-                        </Row>                     
+                        </Row>               
                         {/* Agrega más botones según sea necesario */}
                     </Col>
         

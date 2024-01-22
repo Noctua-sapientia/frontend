@@ -42,17 +42,7 @@ function CustomerPage(props) {
                         </Row>
                         <Row>
                         <CardText>Direction: {user.address}</CardText>
-                        </Row>
-                        <Row>
-                            <Link to='/'>
-                                <Button className='profile-button' href="/book"> Books </Button>
-                            </Link>
-                        </Row>
-                        <Row>
-                            <Link to='/'>
-                                <Button className='profile-button' href="/book"> Reviews </Button>
-                            </Link>
-                        </Row>                    
+                        </Row>              
                         {/* Agrega más botones según sea necesario */}
                     </Col>
         

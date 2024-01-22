@@ -144,7 +144,7 @@ function BookDetail() {
           </Row>
         </Col>
       </Container>
-      {/* <ReviewsInDetail activeType="books" bookId={isbn}/> */}
+      <ReviewsInDetail activeType="books" bookId={isbn}/>
       <Link to={`/books`} className="btn btn-primary">Volver al Catálogo</Link>
     </Fragment>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { ListGroup, InputGroup, Form, Button } from 'react-bootstrap';
 
 function BasketOrder({ item, onUpdateQuantity, onDeleteBook, itemIndex, vendorIndex }) {
+  
   const handleQuantityChange = (e) => {
     onUpdateQuantity(vendorIndex, itemIndex, parseInt(e.target.value));
   };
@@ -26,7 +27,10 @@ function BasketOrder({ item, onUpdateQuantity, onDeleteBook, itemIndex, vendorIn
               onChange={handleQuantityChange}
             />
           </Form>
-          <Button variant="danger" size="sm" className="ml-2" onClick={handleDeleteBook}><i className="fas fa-trash"></i></Button>
+
+          <Button variant="secondary" size="sm" className="ml-2" onClick={handleDeleteBook}>
+          <i class="bi bi-trash"></i>
+          </Button>
         </InputGroup>
       </div>
     </ListGroup.Item>

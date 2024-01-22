@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Container, Col, Card, ListGroup, Button, Row } from 'react-bootstrap';
 
 
-import BascketOrder from './BascketOrder';
+import BasketOrder from './BasketOrder';
 import OrdersApi from '../../api/OrdersApi';
 import UserApi from '../User/UserApi';
 
-import './BascketOrders.css';
+import './BasketOrders.css';
 
 import { useAuth } from '../AuthContext';
 
-function BascketOrders() {
+function BasketOrders() {
 
   // ----------------------- Detecting user logged ------------------------------
 
@@ -37,6 +37,23 @@ function BascketOrders() {
   }, [userType, userId]); 
 
 
+    // -------------------  Order info loading (other services info) ---------------------
+
+    // const [seller, setSeller] = useState({});
+  
+    // useEffect(() => {
+    //   async function fetchSeller() {
+    //     try {
+    //       const s = await UserApi.getSeller(accessToken, PONER_SELLER_DE_CADA_PEDIDO);
+    //       setSeller(s);
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   }
+    //   fetchSeller();
+    // }, [PONER_SELLER_DE_CADA_PEDIDO]);
+
+
   // ---------------------- Utility functions ----------------------------------
 
   const formatOrderData = (vendor, vendorIndex) => {
@@ -46,7 +63,7 @@ function BascketOrders() {
     // userId ya lo tenemos del login y el deliveryAddress igual   
 
     // Esto hay que cambiarlo para que sea el id del vendedor según la decision que se tome al añadir al carrito
-    const sellerId = 2; 
+    const sellerId = vendor.vendorName; 
     
     // Esto hay que determinarlo en funcion del pricing al que esta suscrito el usuario
     const maxDeliveryDateAux = new Date();
@@ -83,7 +100,9 @@ function BascketOrders() {
   };
 
   const calculateTotalPrice = (items) => {
-    return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    console.log('items: ', items);
+    const total_price = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return Math.round(total_price * 100) / 100;
   };
 
   // ---------------------- State setup ----------------------------------
@@ -174,17 +193,19 @@ function BascketOrders() {
   return (
     <Col>
       <h2 className="section-title">Carrito de la compra</h2>
-      <Container className="basket-orders">
+      <Container>
         {vendors.map((vendor, vendorIndex) => (
-          <Card className="basket-order mb-5" key={vendorIndex}>
-            <Card.Header className="text-center basket-order-header">
+          <Card key={vendorIndex}>
+            <Card.Header className="text-center bg-primary text-white">
               <h5>Pedido a vendedor @{vendor.vendorName}</h5>
             </Card.Header>
-            <Card.Body className="row align-items-center">
-              <Col md={7} className="basket-order-products">
-                <ListGroup variant="flush">
+            <Card.Body className="align-items-center">
+            <Container>
+            <Row>
+              <Col className="col-7">
+                <ListGroup variant="flush" className="basket-order">
                   {vendor.items.map((item, itemIndex) => (
-                    <BascketOrder 
+                    <BasketOrder
                       key={itemIndex} 
                       item={item} 
                       onUpdateQuantity={onUpdateQuantity} 
@@ -195,7 +216,7 @@ function BascketOrders() {
                   ))}
                 </ListGroup>
               </Col>
-              <Col md={5} className="basket-order-data">
+              <Col className="col-5 align-self-center">
                 <Row className="justify-content-center">
                   <ListGroup>
                     <ListGroup.Item><b>Número de artículos:</b> {calculateTotalItems(vendor.items)}</ListGroup.Item>
@@ -203,24 +224,26 @@ function BascketOrders() {
                   </ListGroup>
                 </Row>
                 <Row className="justify-content-center">
-                  <div className="d-grid gap-3">
-                    <Button 
-                      type="button" 
-                      variant="info" 
-                      className="mt-3"
-                      onClick={() => handleCreateOrder(accessToken, vendorIndex)}>
-                      <i className="fas fa-truck"></i> Realizar Pedido
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="secondary" 
-                      className="mt-3"
-                      onClick={() => handleDeleteOrder(vendorIndex)}>
-                      <i className="fas fa-trash"></i> Borrar Pedido
-                    </Button>
-                  </div>
+                  <Container className="d-flex justify-content-center gap-3">
+                      <Button 
+                        type="button" 
+                        variant="primary" 
+                        className="mt-3"
+                        onClick={() => handleCreateOrder(accessToken, vendorIndex)}>
+                        <i class="bi bi-bag-fill"></i> Comprar
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="secondary" 
+                        className="mt-3"
+                        onClick={() => handleDeleteOrder(vendorIndex)}>
+                        <i className="bi bi-trash"></i> Borrar cesta
+                      </Button>
+                  </Container>
                 </Row>
               </Col>
+            </Row>
+            </Container>
             </Card.Body>
           </Card>
         ))}
@@ -229,4 +252,4 @@ function BascketOrders() {
   );
 }
 
-export default BascketOrders;
+export default BasketOrders;

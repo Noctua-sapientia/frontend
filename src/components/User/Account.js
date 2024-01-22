@@ -17,7 +17,7 @@ const MyAccount = () => {
     <Container className="mt-5">
       <Row>
         <Col>
-          {userType === 'seller' ? (
+          {userType === 'Seller' ? (
             <SellerPage />
           ) : (
             <CustomerPage />

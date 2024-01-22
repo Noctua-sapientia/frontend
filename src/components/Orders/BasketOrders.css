@@ -8,13 +8,18 @@
         border-color: #17a2b8;
         background-color: #edf7f8;
     }
-      
-    .basket-order-header{
-        border-color: #17a2b8;
-        background-color: #17a2b8;
-        color: white;
-    }
+
     
+    .card-header {
+      background-color: #0dcaf0;
+      color: white;
+    }
+
+    .card-body {
+      border-color: #0dcaf0;
+      background-color: #edf7f8;
+    }
+
     
     .basket-order .list-group-item {
       background-color: inherit;

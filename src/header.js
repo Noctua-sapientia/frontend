@@ -29,7 +29,7 @@ function Header() {
       <Link to="/historyOrders" className="nav-link">
         <i className="bi bi-archive-fill"></i> Mis pedidos
       </Link>
-      <Link to="/bascketOrders" className="nav-link">
+      <Link to="/basketOrders" className="nav-link">
       <i className="bi bi-cart-fill"></i> Mi cesta
       </Link>
       <Link to="/myaccount" className="nav-link">

@@ -14,7 +14,7 @@ function Home() {
       <div>---</div>
       <Link to="/historyOrders">Seccion orders</Link>
       <div>---</div>
-      <Link to="/bascketOrders">Seccion carrito</Link>
+      <Link to="/basketOrders">Seccion carrito</Link>
       <div>---</div>
       <Link to="/books">Seccion books</Link>
       <div>---</div>

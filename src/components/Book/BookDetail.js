@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import BooksApi from './BooksApi.js';
+import UsersApi from '../../api/UserApi.js'
 import { Container, Col, Row, CardText, Button } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
 import styles from './book_detail_styles.css';
@@ -19,10 +20,20 @@ function BookDetail() {
     async function fetchBooks() {
       try {
         const fetchedBooks = await BooksApi.getBooksByISBN(accessToken, isbn);
-
-        setBooks(fetchedBooks);  // Corrección aquí
+        console.log(fetchedBooks);
+  
+        const fechedBooksWithUserName = [];
+  
+        for (const item of fetchedBooks.options) {
+          const user = await UsersApi.getSeller(accessToken, item.seller);
+          console.log(user);
+          const sellerName = user ? user.name : item.seller;
+          fechedBooksWithUserName.push({ ...item, seller: sellerName });
+        }
+        fetchedBooks.options = fechedBooksWithUserName;
+        console.log(fechedBooksWithUserName);
+        setBooks(fetchedBooks);
         setRating(fetchedBooks.rating);
-
       } catch (error) {
         setMessage('Could not contact the server');
       }
@@ -30,6 +41,7 @@ function BookDetail() {
   
     fetchBooks();
   }, [isbn]);
+  
 
   const navigate = useNavigate();
 

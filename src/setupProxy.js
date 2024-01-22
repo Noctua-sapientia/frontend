@@ -48,4 +48,12 @@ module.exports = function (app) {
       changeOrigin: true,
     })
   );
+
+  app.use(
+    '/api/v1/orders',
+    createProxyMiddleware({
+      target: 'http://localhost:4003',
+      changeOrigin: true,
+    })
+  );
 };

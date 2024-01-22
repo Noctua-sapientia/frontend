@@ -10,7 +10,6 @@ import UserApi from '../../api/UserApi';
 function RegisterPage() {
   const [selectedType, setSelectedType] = useState('customer');
   const [formData, setFormData] = useState({
-    id: 4,
     valoration:0,
     orders:0,
     reviews:0,

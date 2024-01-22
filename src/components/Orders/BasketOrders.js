@@ -39,19 +39,7 @@ function BasketOrders() {
 
     // -------------------  Order info loading (other services info) ---------------------
 
-    // const [seller, setSeller] = useState({});
-  
-    // useEffect(() => {
-    //   async function fetchSeller() {
-    //     try {
-    //       const s = await UserApi.getSeller(accessToken, PONER_SELLER_DE_CADA_PEDIDO);
-    //       setSeller(s);
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   }
-    //   fetchSeller();
-    // }, [PONER_SELLER_DE_CADA_PEDIDO]);
+
 
 
   // ---------------------- Utility functions ----------------------------------
@@ -117,6 +105,26 @@ function BasketOrders() {
       setVendors([]); 
     }
   }, []);
+
+  const [vendorNames, setVendorNames] = useState({});
+
+
+  useEffect(() => {
+    vendors.forEach(vendor => {
+      if (!vendorNames[vendor.vendorName]) {
+        UserApi.getSeller(accessToken, vendor.vendorName)
+          .then(sellerInfo => {
+            setVendorNames(prevVendorNames => ({
+              ...prevVendorNames,
+              [vendor.vendorName]: sellerInfo.name
+            }));
+          })
+          .catch(error => {
+            console.log(`Error al obtener la información del vendedor ${vendor.vendorName}:`, error);
+          });
+      }
+    });
+  }, [vendors, accessToken, vendorNames]);
 
   // ---------------------- Event handlers ----------------------------------
 
@@ -197,7 +205,7 @@ function BasketOrders() {
         {vendors.map((vendor, vendorIndex) => (
           <Card key={vendorIndex}>
             <Card.Header className="text-center bg-primary text-white">
-              <h5>Pedido a vendedor @{vendor.vendorName}</h5>
+              <h5>Pedido a vendedor @{vendorNames[vendor.vendorName]}</h5>
             </Card.Header>
             <Card.Body className="align-items-center">
             <Container>

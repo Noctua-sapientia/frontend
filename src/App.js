@@ -35,7 +35,7 @@ function App() {
         <Route path="/myaccount" element={<MyAccount />} />
         <Route path="/seller/:id" element={<selectedSeller />} />
 
-        <Route path="/books/:isbn/:seller" element={<Books />} />
+        <Route path="/book/:seller" element={<Books />} />
         <Route path="/books/:isbn" element={<BookDetail />} />
         <Route path="/books" element={<SearchBooks />} />
 

@@ -20,11 +20,41 @@ import Alert from './Book/Alert.js';
 import NewBook from './Book/NewBook.js';
 import BooksApi from './Book/BooksApi.js';
 import { Link } from 'react-router-dom'; 
+import { useParams } from 'react-router-dom';
+
 
 function Books(props){
 
     const [message, setMessage] = useState(null);
     const[books, setBooks] = useState([]);
+
+    const [filteredBooks, setFilteredBooks] = useState([]);
+    const [selectedSeller, setSelectedSeller] = useState(null);
+    const { seller } = useParams();
+    useEffect(() => {
+    
+        setSelectedSeller(seller)
+        console.log(selectedSeller)
+        // Filtra los libros por vendedor cuando el vendedor cambia
+        if (selectedSeller !== null) {
+            console.log(books)
+            const filtered = books.filter((book) => {
+                const hasSelectedSeller = book.options.some(option => Number(option.seller) === Number(selectedSeller));
+                book.options = book.options.filter((option)=> Number(option.seller) === Number(selectedSeller));
+                return hasSelectedSeller;
+              });
+              
+            setFilteredBooks(filtered);
+            console.log(filteredBooks)
+        } else {
+            setFilteredBooks(books);
+        }
+    }, [books, selectedSeller]);
+
+    function onSellerChange(sellerId) {
+        // Actualiza el estado del vendedor seleccionado
+        setSelectedSeller(sellerId);
+    }
 
     useEffect(() => {
         async function fetchBooks(){
@@ -44,19 +74,33 @@ function Books(props){
         setMessage(null);
     }
 
+    function reloadBooks() {
+        // Puedes colocar aquí cualquier lógica adicional que desees al recargar los libros
+        async function fetchBooks() {
+            try {
+                const c = await BooksApi.getAllBooks();
+                setBooks(c);
+            } catch (error) {
+                setMessage('No se pudo contactar con el servidor');
+            }
+        }
+
+        fetchBooks();
+    }
+
     function onBookEdit(newBook, oldBook){
         const validation = validateBookTitulo(newBook);
         if (! validation){
             return false;
         }
 
-        if(newBook.titulo !== oldBook.titulo){
+        if(newBook.title !== oldBook.title){
             setMessage('No se puede cambiar el título del libro');
             return false;
         }
 
         setBooks((prevBooks) => {
-            const newBooks = prevBooks.map((c) => c.titulo === oldBook.titulo ? newBook : c);
+            const newBooks = prevBooks.map((c) => c.title === oldBook.title ? newBook : c);
             return newBooks
         })
         return true;
@@ -64,12 +108,12 @@ function Books(props){
 
     function onBookDelete(book){
         setBooks((prevBooks) => {
-            return prevBooks.filter((c) => c.titulo !== book.titulo);
+            return prevBooks.filter((c) => c.title !== book.title);
         });
     }
 
     function validateBookTitulo(book){
-        if(book.titulo === ''){
+        if(book.title === ''){
             setMessage('El titulo debe ser añadido');
             return false;
         }
@@ -82,15 +126,15 @@ function Books(props){
         return false;
        }
 
-       if(books.find(c => c.titulo === book.titulo)){
-        if(books.find(c => c.vendedores === book.vendedores)){
+       if(books.find(c => c.title === book.title)){
+        if(books.find(c => c.seller === book.seller)){
         setMessage('Libro duplicado para este vendedor');
         return false;
      }
     }
 
         setBooks((prevBooks) => {
-            if (! prevBooks.find(c => c.titulo === book.titulo)){
+            if (! prevBooks.find(c => c.title === book.title)){
                     return [...prevBooks, book];
             } else {
                 setMessage('Libro duplicado para este vendedor');
@@ -106,21 +150,20 @@ function Books(props){
             <table className="table">
                 <thead>
                     <tr>
+                        <th>ISBN</th>
                         <th>Titulo</th>
                         <th>Autor</th>
                         <th>Categoria</th>
                         <th>Año</th>
-                        <th>Vendedores</th>
                         <th>Precio</th>
                         <th>Stock</th>
-                        <th>Reseñas</th>
-                        <th>&nbsp</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <NewBook onAddBook={onAddBook}/>
-                    {books.map((book) => 
-                            <EditableBook key={book.titulo} book={book} onEdit={(newBook) => onBookEdit(newBook, book)} onDelete={onBookDelete}/>
+                    <NewBook onAddBook={onAddBook} reloadBooks={reloadBooks} />
+                    {filteredBooks.map((book) => 
+                            <EditableBook key={book.title} book={book} onEdit={(newBook) => onBookEdit(newBook, book)} onDelete={onBookDelete}/>
                         )}
                         <tr>
                             <td>

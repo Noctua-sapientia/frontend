@@ -18,8 +18,10 @@ function BookDetail() {
     async function fetchBooks() {
       try {
         const fetchedBooks = await BooksApi.getBooksByISBN(isbn);
+
         setBooks(fetchedBooks);  // Corrección aquí
         setRating(fetchedBooks.rating);
+
       } catch (error) {
         setMessage('Could not contact the server');
       }
@@ -101,8 +103,8 @@ function BookDetail() {
                   <thead>
                     <tr>
                       <th>Vendedor</th>
-                      <th>Precio</th>
                       <th>Stock</th>
+                      <th>Precio</th>
                       <th>Compra</th>
                     </tr>
                   </thead>

@@ -6,18 +6,19 @@ import imageBook1 from '../../img/HarryPotter.jpg';
 import styles from './book_detail_styles.css';
 import ReviewsInDetail from '../Review/ReviewsInDetail.js';
 import Star from '../Review/Star.js';
-
+import { useAuth } from '../AuthContext';
 
 function BookDetail() {
   const [message, setMessage] = useState(null);
   const [rating, setRating] = useState(1);
   const [books, setBooks] = useState([]);
   const { isbn } = useParams();
+  const {accessToken, userId } = useAuth();
 
   useEffect(() => {
     async function fetchBooks() {
       try {
-        const fetchedBooks = await BooksApi.getBooksByISBN(isbn);
+        const fetchedBooks = await BooksApi.getBooksByISBN(accessToken, isbn);
 
         setBooks(fetchedBooks);  // Corrección aquí
         setRating(fetchedBooks.rating);

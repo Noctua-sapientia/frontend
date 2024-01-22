@@ -1,6 +1,7 @@
 import { useState } from "react"
 import BooksApi from './BooksApi.js';
 import { useParams } from 'react-router-dom';
+import { useAuth } from '../AuthContext';
 
 import React from "react";
 
@@ -13,7 +14,7 @@ function NewBook(props) {
     const [precio, setPrize] = useState('');
     const [stock, setStock] = useState('');
     const { seller } = useParams();
-
+    const {accessToken, userId } = useAuth();
     const [forceRender, setForceRender] = useState(false);
 
     function onClick() {
@@ -30,7 +31,7 @@ function NewBook(props) {
             year: año,
             options: options
         };
-        const result = BooksApi.postBook(newBook);
+        const result = BooksApi.postBook(accessToken, newBook);
 
         if (result) {
             setIsbn('');

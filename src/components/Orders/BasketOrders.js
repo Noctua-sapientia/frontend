@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Container, Col, Card, ListGroup, Button, Row } from 'react-bootstrap';
 
 
-import BascketOrder from './BascketOrder';
+import BasketOrder from './BasketOrder';
 import OrdersApi from '../../api/OrdersApi';
 import UserApi from '../User/UserApi';
 
-import './BascketOrders.css';
+import './BasketOrders.css';
 
 import { useAuth } from '../AuthContext';
 
-function BascketOrders() {
+function BasketOrders() {
 
   // ----------------------- Detecting user logged ------------------------------
 
@@ -27,6 +27,7 @@ function BascketOrders() {
       try {
         const u = await UserApi.getCustomer(accessToken, userId);
         setDeliveryAddress(u.address);
+        console.log('u.address: ', u.address);
       } catch (error) {
         console.log(error);
       //   setMessage('Could not contact with the server');
@@ -35,53 +36,23 @@ function BascketOrders() {
     fetchUser();
   }, [userType, userId]); 
 
-  // ---------------------- Initial data setup ----------------------------------
-  
-  const initialData = [
-    {
-      vendorName: "ElRinconDelLibro",
-      items: [
-        {
-          title: "Harry Potter y la Piedra Filosofal",
-          price: 5,
-          quantity: 2,
-          sellerId: 1,
-          bookId: 12345678,
-        },
-        {
-          title: "La Sombra del Viento",
-          price: 7.5,
-          quantity: 4,
-          sellerId: 2,
-          bookId: 1
-        },
-        // Otros artículos...
-      ]
-    },
-    {
-      vendorName: "LaCasaDelLibro",
-      items: [
-        {
-          title: "Harry Potter y la Piedra Filosofal",
-          price: 5,
-          quantity: 2,
-          sellerId: 1,
-          bookId: 12345678,
-        },
-        {
-          title: "La Sombra del Viento",
-          price: 7.5,
-          quantity: 4,
-          sellerId: 2,
-          bookId: 1
-        },
-        // Otros artículos...
-      ]
-    }
 
-    
-    // Otros vendedores...
-  ];
+    // -------------------  Order info loading (other services info) ---------------------
+
+    // const [seller, setSeller] = useState({});
+  
+    // useEffect(() => {
+    //   async function fetchSeller() {
+    //     try {
+    //       const s = await UserApi.getSeller(accessToken, PONER_SELLER_DE_CADA_PEDIDO);
+    //       setSeller(s);
+    //     } catch (error) {
+    //       console.log(error);
+    //     }
+    //   }
+    //   fetchSeller();
+    // }, [PONER_SELLER_DE_CADA_PEDIDO]);
+
 
   // ---------------------- Utility functions ----------------------------------
 
@@ -92,7 +63,7 @@ function BascketOrders() {
     // userId ya lo tenemos del login y el deliveryAddress igual   
 
     // Esto hay que cambiarlo para que sea el id del vendedor según la decision que se tome al añadir al carrito
-    const sellerId = 2; 
+    const sellerId = vendor.vendorName; 
     
     // Esto hay que determinarlo en funcion del pricing al que esta suscrito el usuario
     const maxDeliveryDateAux = new Date();
@@ -129,7 +100,9 @@ function BascketOrders() {
   };
 
   const calculateTotalPrice = (items) => {
-    return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    console.log('items: ', items);
+    const total_price = items.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return Math.round(total_price * 100) / 100;
   };
 
   // ---------------------- State setup ----------------------------------
@@ -137,13 +110,12 @@ function BascketOrders() {
   const [vendors, setVendors] = useState([]);
 
   useEffect(() => {
-    const loadedVendors = localStorage.getItem('vendorsCart');
-    // if (loadedVendors) {
-    //   setVendors(JSON.parse(loadedVendors));
-    // } else {
-      setVendors(initialData);
-      localStorage.setItem('vendorsCart', JSON.stringify(initialData));
-    // }
+    const loadedVendors = sessionStorage.getItem('vendorsCart');
+    if (loadedVendors) {
+      setVendors(JSON.parse(loadedVendors));
+    } else {
+      setVendors([]); 
+    }
   }, []);
 
   // ---------------------- Event handlers ----------------------------------
@@ -165,22 +137,23 @@ function BascketOrders() {
     });
 
     setVendors(updatedVendors);
-    localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+    sessionStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
   };
 
   const handleDeleteOrder = (vendorIndex) => {
     const updatedVendors = vendors.filter((_, index) => index !== vendorIndex);
     setVendors(updatedVendors);
-    localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+    sessionStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
   };
 
   const handleCreateOrder = (accessToken, vendorIndex) => {
     const orderData = formatOrderData(vendors[vendorIndex], vendorIndex);
+    console.log(orderData);
     OrdersApi.createOrder(accessToken, orderData)
       .then(response => {
         const updatedVendors = vendors.filter((_, index) => index !== vendorIndex);
         setVendors(updatedVendors);
-        localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+        sessionStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
 
       })
       .catch(error => {
@@ -211,7 +184,7 @@ function BascketOrders() {
     updatedVendors = updatedVendors.filter(vendor => vendor !== null);
   
     setVendors(updatedVendors);
-    localStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
+    sessionStorage.setItem('vendorsCart', JSON.stringify(updatedVendors));
   };
 
   // ---------------------- Basket orders page ----------------------------------
@@ -220,17 +193,19 @@ function BascketOrders() {
   return (
     <Col>
       <h2 className="section-title">Carrito de la compra</h2>
-      <Container className="basket-orders">
+      <Container>
         {vendors.map((vendor, vendorIndex) => (
-          <Card className="basket-order mb-5" key={vendorIndex}>
-            <Card.Header className="text-center basket-order-header">
+          <Card key={vendorIndex}>
+            <Card.Header className="text-center bg-primary text-white">
               <h5>Pedido a vendedor @{vendor.vendorName}</h5>
             </Card.Header>
-            <Card.Body className="row align-items-center">
-              <Col md={7} className="basket-order-products">
-                <ListGroup variant="flush">
+            <Card.Body className="align-items-center">
+            <Container>
+            <Row>
+              <Col className="col-7">
+                <ListGroup variant="flush" className="basket-order">
                   {vendor.items.map((item, itemIndex) => (
-                    <BascketOrder 
+                    <BasketOrder
                       key={itemIndex} 
                       item={item} 
                       onUpdateQuantity={onUpdateQuantity} 
@@ -241,7 +216,7 @@ function BascketOrders() {
                   ))}
                 </ListGroup>
               </Col>
-              <Col md={5} className="basket-order-data">
+              <Col className="col-5 align-self-center">
                 <Row className="justify-content-center">
                   <ListGroup>
                     <ListGroup.Item><b>Número de artículos:</b> {calculateTotalItems(vendor.items)}</ListGroup.Item>
@@ -249,24 +224,26 @@ function BascketOrders() {
                   </ListGroup>
                 </Row>
                 <Row className="justify-content-center">
-                  <div className="d-grid gap-3">
-                    <Button 
-                      type="button" 
-                      variant="info" 
-                      className="mt-3"
-                      onClick={() => handleCreateOrder(accessToken, vendorIndex)}>
-                      <i className="fas fa-truck"></i> Realizar Pedido
-                    </Button>
-                    <Button 
-                      type="button" 
-                      variant="secondary" 
-                      className="mt-3"
-                      onClick={() => handleDeleteOrder(vendorIndex)}>
-                      <i className="fas fa-trash"></i> Borrar Pedido
-                    </Button>
-                  </div>
+                  <Container className="d-flex justify-content-center gap-3">
+                      <Button 
+                        type="button" 
+                        variant="primary" 
+                        className="mt-3"
+                        onClick={() => handleCreateOrder(accessToken, vendorIndex)}>
+                        <i class="bi bi-bag-fill"></i> Comprar
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="secondary" 
+                        className="mt-3"
+                        onClick={() => handleDeleteOrder(vendorIndex)}>
+                        <i className="bi bi-trash"></i> Borrar cesta
+                      </Button>
+                  </Container>
                 </Row>
               </Col>
+            </Row>
+            </Container>
             </Card.Body>
           </Card>
         ))}
@@ -275,4 +252,4 @@ function BascketOrders() {
   );
 }
 
-export default BascketOrders;
+export default BasketOrders;

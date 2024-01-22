@@ -2,9 +2,12 @@ import swal from 'sweetalert';
 class ReviewsApi{
     static API_BASE_URL = "/api/v1/reviews";
     
-    static requestHeaders(){
-        return {'Content-Type': 'application/json'}
-    }
+    static requestHeaders(accessToken) {
+        return {  'Content-Type': 'application/json',
+                  'Authorization': accessToken
+              };
+      }
+  
 
     static objToQueryString(obj) {
         const keyValuePairs = [];
@@ -14,9 +17,9 @@ class ReviewsApi{
         return keyValuePairs.join('&');
       }
 
-       static async getReviews(filters, type) {
+       static async getReviews(filters, type,accessToken) {
 
-        const headers = this.requestHeaders();
+        const headers = this.requestHeaders(accessToken);
         const queryString = ReviewsApi.objToQueryString(filters);
         const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"?"+queryString, {
             method: 'GET',
@@ -36,9 +39,10 @@ class ReviewsApi{
 
     }
 
-    static async getNumberReviews(type){
-        const headers = this.requestHeaders();
-        const request = new Request(ReviewsApi.API_BASE_URL + "/"+type, {
+    static async getNumberReviews(type,filters,accessToken){
+        const headers = this.requestHeaders(accessToken);
+        const queryString = ReviewsApi.objToQueryString(filters);
+        const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"/count?"+queryString, {
             method: 'GET',
             headers: headers
         });
@@ -46,12 +50,11 @@ class ReviewsApi{
         if (! response.ok) {
             throw Error("Response not valid" + response.status);
         }
-        const data = await response.json();
-        return data.length;
+        return response.json();
     }
 
-    static async updateReview(reviewId, reviewData, type){
-        const headers = this.requestHeaders();
+    static async updateReview(reviewId, reviewData, type,accessToken){
+        const headers = this.requestHeaders(accessToken);
         const body = JSON.stringify(reviewData);
 
         const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"/" + reviewId, {
@@ -68,8 +71,8 @@ class ReviewsApi{
         return response.json();
     }
 
-    static async createReview(reviewData, type){
-        const headers = this.requestHeaders();
+    static async createReview(reviewData, type,accessToken){
+        const headers = this.requestHeaders(accessToken);
         const body = JSON.stringify(reviewData);
         const request = new Request(ReviewsApi.API_BASE_URL + "/"+type, {
             method: 'POST',
@@ -90,8 +93,8 @@ class ReviewsApi{
           }
     }
 
-    static async deleteReviewById(reviewId, type){
-        const headers = this.requestHeaders();
+    static async deleteReviewById(reviewId, type,accessToken){
+        const headers = this.requestHeaders(accessToken);
         const request = new Request(ReviewsApi.API_BASE_URL + "/"+type+"/" + reviewId, {
             method: 'DELETE',
             headers: headers,

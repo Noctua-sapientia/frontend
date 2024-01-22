@@ -1,6 +1,6 @@
 class OrdersApi {
 
-    static API_BASE_URL = "http://localhost:4003/api/v1";
+    static API_BASE_URL = "/api/v1";
  
     static requestHeaders(accessToken) {
       return {  'Content-Type': 'application/json',

@@ -11,7 +11,7 @@ function OrderCommentsBy(props) {
   
   return(
     <Dropdown className="desplegable">
-        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+        <Dropdown.Toggle variant="info" id="dropdown-basic">
          {tituloDropdown}
         </Dropdown.Toggle>
 

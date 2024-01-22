@@ -31,7 +31,6 @@ function Comment(props) {
 
   const cerrarModal = () => {
     setModalAbierto(false);
-    console.log(props.comment.rating);
     setNewDescription(props.comment.description);
     setNewRating(props.comment.rating);
   };
@@ -88,7 +87,7 @@ function Comment(props) {
   
 };
 
-    
+    console.log(props.comment.customerId,userId);
 
   //se añade la info que se le quiera pasar a la ventana modal
   //const params = {"description": props.comment.description, "rating": props.comment.rating, "isOpen": modalAbierto, "onClose": cerrarModal}
@@ -104,13 +103,13 @@ function Comment(props) {
           {formatDate(props.comment.createdAt)}
       </td>
       <td>
-        <Star numGoldStars={props.comment.rating} edit='false' onClick={numberOfGoldStarsChange}/>
+        <Star numGoldStars={props.comment.rating} edit='false'/>
         <div>
           {props.comment.description} 
         </div>    
       </td>
       {(() => {
-       if (props.comment.customerId === userId) {
+       if (props.comment.customerId == userId) {
         return <td>
         <FontAwesomeIcon icon={faPencilAlt} onClick={abrirModal} className="icono-lapiz" />
         <FontAwesomeIcon icon={faTrash} onClick={() => showSweetAlert("Eliminar","¿Estás seguro de que desea eliminar el comentario?")}/>
@@ -125,9 +124,7 @@ function Comment(props) {
       saveFunction={saveData} numberOfGoldStarsChange={numberOfGoldStarsChange} 
       reviewDescriptionChange={reviewDescriptionChange} message={message} onCloseAlert={onCloseAlert}
       
-      
       />
-      <CommentWindow/>
     </tr>
   )
  

@@ -1,110 +1,50 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, Button, Card, CardHeader, CardBody } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import imageMicrosoft from '../../img/microsoft.png';
 import imageMeta from '../../img/meta.png';
 import imageGoogle from '../../img/google.png';
+import UserApi from '../../api/UserApi';
 
 function RegisterPage() {
   const [selectedType, setSelectedType] = useState('customer');
   const [formData, setFormData] = useState({
-    email: '',
-    customerField1: '',
-    customerField2: '',
-    sellerField1: '',
-    sellerField2: '',
+    id: 4,
+    valoration:0,
+    orders:0,
+    reviews:0,
   });
+  // Obtén el objeto history
+  const navigate = useNavigate();
 
   const handleTypeChange = (type) => {
     setSelectedType(type);
-    // Reiniciar los campos del formulario al cambiar el tipo
-    setFormData({
-      email: '',
-      customerField1: '',
-      customerField2: '',
-      sellerField1: '',
-      sellerField2: '',
-    });
   };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value,
-    });
+    }));
   };
 
-
-  const handleRegister = (planId) => {
-    // Lógica de registro según el tipo seleccionado (customer o seller)
-    console.log(`register as ${selectedType}`, formData);
-
-    // Si es un vendedor, realiza el registro y pasa la información al backend
-    if (selectedType === 'seller') {
-      // Obtén el tipo de plan seleccionado (puedes obtenerlo de algún estado o como prefieras)
-
-      // Realiza la llamada al backend para registrar al usuario con la información del formulario
-      registerSeller(formData, planId);
-    }
-    else{
-      registerCustomer(formData);
-    }
-  };
-
-  // Función para registrar al vendedor en el backend
-  const registerSeller = async (formData, selectedPlan) => {
-    try {
-      // Realiza la llamada al backend, envía formData y selectedPlan
-      const response = await fetch('https://tu-backend.com/api/register-seller', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          formData,
-          selectedPlan,
-        }),
-      });
-
-      // Verifica la respuesta del backend
-      if (response.ok) {
-        console.log('Registro exitoso como vendedor');
-        // Puedes realizar alguna acción adicional después del registro
-      } else {
-        console.error('Error en el registro como vendedor');
-        // Maneja errores si es necesario
+  const handleRegister = async (planId) => {
+    try{
+      // Si es un vendedor, realiza el registro y pasa la información al backend
+      if (selectedType === 'seller') {
+        // Realiza la llamada al backend para registrar al usuario con la información del formulario
+        await UserApi.registerSeller(formData, planId);
       }
-    } catch (error) {
-      console.error('Error en la llamada al backend', error);
-      // Maneja errores de la llamada al backend
-    }
-  };
-  // Función para registrar al vendedor en el backend
-  const registerCustomer = async (formData) => {
-    try {
-      // Realiza la llamada al backend, envía formData y selectedPlan
-      const response = await fetch('https://tu-backend.com/api/register-seller', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          formData
-        }),
-      });
-
-      // Verifica la respuesta del backend
-      if (response.ok) {
-        console.log('Registro exitoso como vendedor');
-        // Puedes realizar alguna acción adicional después del registro
-      } else {
-        console.error('Error en el registro como vendedor');
-        // Maneja errores si es necesario
+      else{
+        await UserApi.registerCustomer(formData);
       }
+      console.log(`register as ${selectedType}`, formData);
+      navigate('/login');
+
     } catch (error) {
-      console.error('Error en la llamada al backend', error);
-      // Maneja errores de la llamada al backend
+      console.error('Error durante el registro:', error);
     }
   };
 
@@ -138,6 +78,15 @@ function RegisterPage() {
                 </Button>
               </div>
             <Form>
+              <Form.Group controlId="name" className="registerForm">
+                    <Form.Control
+                      type="text"
+                      placeholder="Name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                    />
+              </Form.Group>
               <Form.Group controlId="formEmail" className="registerForm">
                 <Form.Control
                   type="email"
@@ -147,35 +96,38 @@ function RegisterPage() {
                   onChange={handleInputChange}
                 />
               </Form.Group>
+              <Form.Group controlId="password" className="registerForm">
+                    <Form.Control
+                      type="password"
+                      placeholder="Password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                    />
+              </Form.Group>
+
+              {/* Seccion para Customers*/}
               {selectedType === 'customer' && (
                 <>
-                  <Form.Group controlId="formCustomerField1" className="registerForm">
+                  <Form.Group controlId="surnames" className="registerForm">
                     <Form.Control
                       type="text"
-                      placeholder="Name"
-                      name="customerField1"
-                      value={formData.customerField1}
+                      placeholder="surnames"
+                      name="surnames"
+                      value={formData.surnames}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
-                  <Form.Group controlId="formCustomerField2" className="registerForm">
+                  <Form.Group controlId="address" className="registerForm">
                     <Form.Control
                       type="text"
-                      placeholder="Surname"
-                      name="customerField2"
-                      value={formData.customerField2}
+                      placeholder="Address"
+                      name="address"
+                      value={formData.address}
                       onChange={handleInputChange}
                     />
                   </Form.Group>
-                  <Form.Group controlId="formCustomerField3" className="registerForm">
-                    <Form.Control
-                      type=""
-                      placeholder="asdasd"
-                      name="customerField3"
-                      value={formData.customerField3}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
+
                   <Button variant="primary" type="button" onClick={handleRegister}>
                     Registrarse
                   </Button>
@@ -189,7 +141,7 @@ function RegisterPage() {
                         </Col>
                         <Col>
                           <Button variant="outline-primary" className="text-white" onClick={handleLoginWithGoogle}>
-                            Register with Google
+                            Google
                           </Button>
                         </Col>
                       </div>
@@ -200,7 +152,7 @@ function RegisterPage() {
                         </Col>
                         <Col>
                           <Button variant="outline-primary" className="text-white" onClick={handleLoginWithMicrosoft}>
-                            Register with Microsoft
+                            Microsoft
                           </Button>
                         </Col>
                       </div>
@@ -211,7 +163,7 @@ function RegisterPage() {
                         </Col>
                         <Col>
                           <Button variant="outline-primary" className="text-white" onClick={handleLoginWithMeta}>
-                            Register with Meta
+                            Meta
                           </Button>
                         </Col>
                       </div>
@@ -219,18 +171,10 @@ function RegisterPage() {
                   </Row>
                 </>
               )}
-
+              {/* Seccion para Sellers*/}
               {selectedType === 'seller' && (
                 <>
-                  <Form.Group controlId="formSellerField1" className="registerForm">
-                    <Form.Control
-                      type="text"
-                      placeholder="Campo específico del vendedor 1"
-                      name="sellerField1"
-                      value={formData.sellerField1}
-                      onChange={handleInputChange}
-                    />
-                  </Form.Group>
+                  {/*
                   <Form.Group controlId="formSellerField2" className="registerForm">
                     <Form.Control
                       type="text"
@@ -240,74 +184,76 @@ function RegisterPage() {
                       onChange={handleInputChange}
                     />
                   </Form.Group>
-
+                  */}
                   <div className="separator"></div>
 
                   <Row>
                     <div className="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-                      <h2>Pricing</h2>
+                      <h2>Plan and pricing</h2>
+                      <h3>Select the better option for your business model</h3>
                     </div>
                   </Row>
-                  <Row>
-                    <Col md>
-                      <Card className="text-center box-shadow">
+                  <Row className="d-flex">
+                    <Col md className="align-items-stretch">
+                      <Card className="text-center box-shadow h-100">
                         <CardHeader>
                           <h4 className="my-0 font-weight-normal">Standard</h4>
                         </CardHeader>
-                        <CardBody>
-                          <h1 className="card-title pricing-card-title"> 3.99€ <small className="text-muted">/ mes</small></h1>
+                        <CardBody className="d-flex flex-column">
+                          <h1 className="card-title pricing-card-title" style={{ color: 'black' }}> 3.99€ <small className="text-muted">/ month</small></h1>
                           <ul className="list-unstyled mt-3 mb-4">
-                            <li>10 libros</li>
-                            <li>20 pedidos/mes</li>
-                            <li>30 días</li>
-                            <li>Península</li>
-                            <li>E-mail hasta 14 días</li>
+                            <li>10 books</li>
+                            <li>20 orders/month</li>
+                            <li>30 days</li>
+                            <li>Peninsular delivery</li>
+                            <li>Email support up to 14 days</li>
                             <li>True</li>
                           </ul>
-                          <Button variant="primary" onClick={() => handleRegister('plan1')}>
-                            Suscribirse al Plan 1
+                          <Button variant="primary" onClick={handleRegister} style={{ outline: 'none' }} >
+                            Subscribe
                           </Button>
                         </CardBody>
                       </Card>
                     </Col>
-                    <Col md>
-                      <Card className="text-center box-shadow">
+                    <Col md className="align-items-stretch">
+                      <Card className="text-center box-shadow h-100">
                         <CardHeader>
                           <h4 className="my-0 font-weight-normal">Pro</h4>
                         </CardHeader>
-                        <CardBody>
-                          <h1 className="card-title pricing-card-title">15.99€ <small className="text-muted">/ mes</small></h1>
+                        <CardBody className="d-flex flex-column">
+                          <h1 className="card-title pricing-card-title" style={{ color: 'black' }}>15.99€ <small className="text-muted">/ mes</small></h1>
                           <ul className="list-unstyled mt-3 mb-4">
-                            <li>50 libros</li>
-                            <li>100 pedidos/mes</li>
-                            <li>14 días</li>
-                            <li>Península, Canarias y Baleares</li>
-                            <li>E-mail hasta 7 días</li>
+                            <li>50 books</li>
+                            <li>100 orders/month</li>
+                            <li>14 days</li>
+                            <li>Peninsula, Canary Islands, and Balearic Islands</li>
+                            <li>Email support up to 7 days</li>
                             <li>False</li>
                           </ul>
-                          <Button variant="primary" onClick={() => handleRegister('plan3')}>
-                            Suscribirse al Plan 2
+                          <Button variant="primary" onClick={handleRegister} style={{ outline: 'none' }}>
+                            Subscribe
                           </Button>            
                           </CardBody>
                       </Card>
                     </Col>
-                    <Col md>
-                      <Card className="text-center box-shadow">
+                    <Col md className="align-items-stretch">
+                      <Card className="text-center box-shadow h-100">
                         <CardHeader>
                           <h4 className="my-0 font-weight-normal">Premium</h4>
                         </CardHeader>
-                        <CardBody>
-                          <h1 className="card-title pricing-card-title">49.79€ <small className="text-muted">/ mes</small></h1>
+                        <CardBody className="d-flex flex-column">
+                          <h1 className="card-title pricing-card-title" style={{ color: 'black' }}>49.79€ <small className="text-muted">/ mes</small></h1>
                           <ul className="list-unstyled mt-3 mb-4">
-                            <li>Ilimitado</li>
-                            <li>Ilimitado</li>
-                            <li>5 días</li>
-                            <li>Internacional</li>
-                            <li>Telefónica 24h</li>
+                            <li>Unlimited</li>
+                            <li>Unlimited</li>
+                            <li>5 days</li>
+                            <li>International</li>
+                            <li>24-hour telephone support</li>
                             <li>True</li>
                           </ul>
-                          <Button variant="primary" onClick={() => handleRegister('plan3')}>
-                            Suscribirse al Plan 3
+                          <Button variant="primary" onClick={handleRegister} 
+                          style={{ outline: 'none' }}>
+                            Subscribe
                           </Button>            
                           </CardBody>
                       </Card>

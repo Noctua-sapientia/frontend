@@ -1,4 +1,6 @@
 class BooksApi {
+
+    static API_BASE_URL = "/api/v1/books";
   
     static requestHeaders() {
       return {
@@ -8,7 +10,7 @@ class BooksApi {
   
     static async getAllBooks() {
       const headers = this.requestHeaders();
-      const request = new Request('http://localhost:4002/api/v1/books', {
+      const request = new Request(BooksApi.API_BASE_URL, {
         method: 'GET',
         headers: headers
       });
@@ -60,7 +62,7 @@ class BooksApi {
 
     static async getBooksByISBN(isbn) {
       const headers = this.requestHeaders();
-      const request = new Request(`http://localhost:4002/api/v1/books/${isbn}`, {
+      const request = new Request(BooksApi.API_BASE_URL+"/"+isbn, {
         method: 'GET',
         headers: headers
       });

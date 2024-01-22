@@ -31,10 +31,10 @@ function OrderDetails(props) {
 
   // -------------------------- Detecting user logged --------------------------------
 
-    const {userType, userId, accessToken } = useAuth();
+  const {userType, userId, accessToken } = useAuth();
 
-    console.log('userType: ', userType);
-    console.log('userId: ', userId);
+  console.log('userType: ', userType);
+  console.log('userId: ', userId);
 
 
   // --------------------------  Order loading --------------------------------------
@@ -155,25 +155,29 @@ function OrderDetails(props) {
 
                 <Container className="orderDetails-buttons d-flex justify-content-center gap-3">
 
+                  {userType === 'Seller' && (
+                      isEditing ? (
+                        <Fragment>
+                          <Button variant="success" onClick={() => onEditOrder(accessToken, order.orderId, editedOrderData)}>
+                            <i className="bi bi-check"></i> Actualizar
+                          </Button>
+                          <Button variant="secondary" onClick={() => {setIsEditing(false); setEditedOrderData(null)}}>
+                            <i className="bi bi-x"></i> Cancelar
+                          </Button>
+                        </Fragment>
+                        
+                      ) : (
+                        <Button variant="primary" onClick={() => setIsEditing(true)}>
+                          <i className="bi bi-pencil"></i> Editar
+                        </Button>
+                      )
+                    )}
+                  
 
-                  {
-                  isEditing ? (
-                    <Fragment>
-                      <Button variant="success" onClick={() => onEditOrder(accessToken, order.orderId, editedOrderData)}>
-                        <i className="bi bi-check"></i> Actualizar
-                      </Button>
-                      <Button variant="secondary" onClick={() => {setIsEditing(false); setEditedOrderData(null)}}>
-                        <i className="bi bi-x"></i> Cancelar
-                      </Button>
-                    </Fragment>
-                    
-                  ) : (
-                    <Button variant="primary" onClick={() => setIsEditing(true)}>
-                      <i className="bi bi-pencil"></i> Editar
-                    </Button>
+                  {['Delivered', 'Cancelled'].includes(order.status) && (
+                    <Button variant="danger" onClick={() => onDeleteOrder(accessToken, order.orderId)}> <i className="bi bi-trash"></i> Borrar </Button>
                   )}
 
-                  <Button variant="danger" onClick={() => onDeleteOrder(accessToken, order.orderId)}> <i className="bi bi-trash"></i> Delete </Button>
 
                 </Container>
 

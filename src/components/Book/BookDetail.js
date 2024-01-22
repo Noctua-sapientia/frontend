@@ -1,22 +1,27 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import BooksApi from './BooksApi.js';
-import { Container, Col, Row, CardText } from 'react-bootstrap';
+import { Container, Col, Row, CardText, Button } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
-import styles from './book_detail_styles.css'
-import { useParams } from 'react-router-dom';
+import styles from './book_detail_styles.css';
+import ReviewsInDetail from '../Review/ReviewsInDetail.js';
+import Star from '../Review/Star.js';
+
 
 function BookDetail() {
   const [message, setMessage] = useState(null);
+  const [rating, setRating] = useState(1);
   const [books, setBooks] = useState([]);
   const { isbn } = useParams();
 
   useEffect(() => {
     async function fetchBooks() {
       try {
-        console.log(isbn);
         const fetchedBooks = await BooksApi.getBooksByISBN(isbn);
-        setBooks(fetchedBooks);  
+
+        setBooks(fetchedBooks);  // Corrección aquí
+        setRating(fetchedBooks.rating);
+
       } catch (error) {
         setMessage('Could not contact the server');
       }
@@ -24,6 +29,49 @@ function BookDetail() {
   
     fetchBooks();
   }, [isbn]);
+
+  const navigate = useNavigate();
+
+  const addToCart = (bookOption) => {
+    let cart = JSON.parse(sessionStorage.getItem('vendorsCart') || '[]');
+    const vendorIndex = cart.findIndex(vendor => vendor.vendorName === bookOption.seller);
+    
+    if (vendorIndex >= 0) {
+      // El vendedor ya está en el carrito, solo añadir el libro a sus items
+
+      const itemIndex = cart[vendorIndex].items.findIndex(item => item.bookId === isbn);
+      if (itemIndex >= 0) {
+        // El libro ya está en el carrito, incrementar la cantidad
+        cart[vendorIndex].items[itemIndex].quantity += 1;
+      } else {
+        // El libro no está en el carrito, añadir como nuevo libro
+        cart[vendorIndex].items.push({
+          title: books.title,
+          price: bookOption.prize,
+          quantity: 1, // o la cantidad que desees
+          sellerId: bookOption.seller,
+          bookId: isbn,
+        });
+      }
+      
+    } else {
+      // Añadir nuevo vendedor y libro al carrito
+      cart.push({
+        vendorName: bookOption.seller, // Asegúrate de que este es el nombre correcto del vendedor
+        items: [{
+          title: books.title,
+          price: bookOption.prize,
+          quantity: 1, // o la cantidad que desees
+          sellerId: bookOption.seller,
+          bookId: isbn,
+        }]
+      });
+    }
+  
+    sessionStorage.setItem('vendorsCart', JSON.stringify(cart));
+    navigate('/basketOrders');
+
+  };
 
   return (
     <Fragment>
@@ -46,8 +94,8 @@ function BookDetail() {
               <Row>
                 <CardText>Año: {books.year}</CardText>
               </Row>
-              <Row>
-                <CardText>Valoración: {books.rating}</CardText>
+              <Row> 
+                <CardText><Star numGoldStars={Math.round(rating)} edit='false'/> ({books.rating})</CardText>
               </Row>
               <Row>
                 <CardText>VENDEDORES</CardText>
@@ -65,12 +113,31 @@ function BookDetail() {
                     books.options && books.options.map((option, index) => (
                     <tr key={index}>
                     <td>{option.seller}</td>
+                    <td>{option.prize}</td>
                     <td>{option.stock}</td>
-                    <td>{option.prize} €</td>
-                    <td><Link to={`/books`} className="btn btn-primary">Añadir al Carrito</Link></td>
-                        </tr>
-                      ))
-                    }
+                    <td>
+                          <button 
+                              onClick={() => addToCart(option)}
+                              style={{
+                                  all: 'initial',
+                                  backgroundColor: '#007bff', 
+                                  color: 'white', 
+                                  padding: '10px 10px', 
+                                  border: 'none', // Sin borde
+                                  borderRadius: '5px', // Bordes redondeados
+                                  cursor: 'pointer', // Cursor en forma de mano
+                                  textAlign: 'center', // Alineación del texto
+                                  fontFamily: 'Arial, sans-serif', // Tipo de letra
+                              }}
+                              onMouseEnter={e => e.target.style.color = 'black'}
+                              onMouseLeave={e => e.target.style.color = 'white'}
+                          >
+                              Añadir al Carrito
+                          </button>
+                      </td>
+
+                    </tr>
+                    ))}
                   </tbody>
 
                 </table>
@@ -79,6 +146,7 @@ function BookDetail() {
           </Row>
         </Col>
       </Container>
+      <ReviewsInDetail activeType="books" bookId={isbn}/>
       <Link to={`/books`} className="btn btn-primary">Volver al Catálogo</Link>
     </Fragment>
   );

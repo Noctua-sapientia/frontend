@@ -19,17 +19,18 @@ function NewComment(props) {
 
     };
     const save = () => {
+      console.log(props.userId);
       let data = null;
       if(props.activeType ==='sellers'){
         data = {
-          sellerId: 6,
+          sellerId: props.sellerId,
           customerId: props.userId,
           description:reviewDescription,
           rating: reviewRating
         }
       }else if(props.activeType ==='books'){
         data = {
-          bookId: 17,
+          bookId: props.bookId,
           customerId: props.userId,
           description:reviewDescription,
           rating: reviewRating

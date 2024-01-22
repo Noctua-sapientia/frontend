@@ -4,10 +4,12 @@ import Home from './components/Home';
 
 import LoginPage from './components/User/LoginPage';
 import RegisterPage from './components/User/RegisterPage';
-
-import VendorPage from './components/User/SellerPage';
+import selectedSeller from './components/User/SelectedSeller.js';
 import MyAccount from './components/User/Account';
+
+
 import Books from './components/Books';
+import BookReview from './components/Review/ReviewsInDetail.js';
 
 import Review from './components/Review/Review.js';
 
@@ -16,10 +18,8 @@ import SearchBooks from './components/Book/SearchBooks.js'
 
 import HistoryOrders from './components/Orders/HistoryOrders';
 import OrderDetails from './components/Orders/OrderDetails';
-import BascketOrders from './components/Orders/BascketOrders';
+import BasketOrders from './components/Orders/BasketOrders';
 import Header from './header';
-import SellerPage from './components/User/SellerPage';
-import BookReview from './components/Review/BookReview.js';
 
 function App() {
 
@@ -33,8 +33,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/login/register" element={<RegisterPage />} />
         <Route path="/myaccount" element={<MyAccount />} />
-
-        <Route path="/sellerUser" element={<SellerPage />} />
+        <Route path="/seller/:id" element={<selectedSeller />} />
 
         <Route path="/book/:seller" element={<Books />} />
         <Route path="/books/:isbn" element={<BookDetail />} />
@@ -44,10 +43,7 @@ function App() {
 
         <Route path="/historyOrders" element={<HistoryOrders />}/>
         <Route path="/historyOrders/:orderId" element={<OrderDetails />} />
-        <Route path="/bascketOrders" element={<BascketOrders />} />
-        <Route path="/bookReview" element={<BookReview />} />
-
-        {/* <Route path="/pricing" element={<Pricing />} /> */}
+        <Route path="/basketOrders" element={<BasketOrders />} />
 
         {/* Agrega más rutas según sea necesario */}
       </Routes>

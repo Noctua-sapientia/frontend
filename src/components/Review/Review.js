@@ -13,7 +13,7 @@ import { useAuth } from '../AuthContext';
 function Review() {
 
   const [activeData, setActiveData] = useState([]);
-  const {userType, isAuthenticated, userId} = useAuth();
+  const {userType, isAuthenticated, userId,accessToken} = useAuth();
   let activeTypeDefault = 'books';
   if(userType != null && userType.toLowerCase() === 'seller'){
     activeTypeDefault = 'sellers';
@@ -48,8 +48,16 @@ function Review() {
 
   useEffect(() => {
     async function getTotalNumberReviews(){
-      const totalNumber = await ReviewsApi.getNumberReviews(activeType);
+      let filters = {
 
+      };
+      if(isAuthenticated() && userType.toLowerCase() === 'customer'){
+        filters.customerId = userId;
+      }else if(isAuthenticated() && userType.toLowerCase() === 'seller'){
+        filters.sellerId = userId;
+      }
+      const response = await ReviewsApi.getNumberReviews(activeType,filters,accessToken);
+      const totalNumber = response.count;
       setNumberReviews(totalNumber);
       if(numberReviews % limit === 0){
         setNumberPages(numberReviews/limit);
@@ -59,7 +67,7 @@ function Review() {
     }
     getTotalNumberReviews();
 
-  }, [activeType, activeData, numberReviews]);
+  }, [accessToken, activeType, isAuthenticated, numberReviews, userId, userType]);
 
 
   
@@ -72,10 +80,10 @@ useEffect(() => {
         limit:limit,
         skip:limit*currentPage
       };
-      if(userType.toLowerCase() === 'customer'){
+      if(isAuthenticated() && userType.toLowerCase() === 'customer'){
         //si es un cliente aparecera las reviews creadas por el
         filters.customerId = userId;
-      }else if(userType.toLowerCase() === 'seller'){
+      }else if(isAuthenticated() && userType.toLowerCase() === 'seller'){
         filters.sellerId = userId;
       }
       if (opcionSeleccionada === 'fechaAsc') {
@@ -94,7 +102,7 @@ useEffect(() => {
           
         }
       let reviews = null;
-      reviews = await ReviewsApi.getReviews(filters, activeType);
+      reviews = await ReviewsApi.getReviews(filters, activeType,accessToken);
       setActiveData(reviews);
     } catch (error) {
       console.log(error);
@@ -103,7 +111,7 @@ useEffect(() => {
   }
   getReviewsBySelector();
 
-}, [activeType, currentPage, opcionSeleccionada, userId, userType]);
+}, [accessToken, activeType, currentPage, isAuthenticated, opcionSeleccionada, userId, userType]);
 
 
 
@@ -116,7 +124,7 @@ function onCloseAlert(){
 async function onUpdateReview(newReviewData){
   //realizar comprobaciones
   const { id, date, ...restData } = newReviewData;
-  const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType);
+  const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType,accessToken);
   console.log(newReview);
   if (newReview) {
     setActiveData((prevReviews) => {
@@ -133,7 +141,7 @@ async function onUpdateReview(newReviewData){
 
 
 async function onDeleteReview(review){
-  await ReviewsApi.deleteReviewById(review, activeType);
+  await ReviewsApi.deleteReviewById(review, activeType,accessToken);
        
 }
 
@@ -171,7 +179,6 @@ if (!isAuthenticated()) {
       <Alert message={message} onClose={onCloseAlert}/>
      
       <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
-      Comentarios: {numberReviews} - {numberPages}
       
       <div className="table-container">
         <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert}/>
@@ -180,7 +187,7 @@ if (!isAuthenticated()) {
      
       <div style={{ display: 'flex', justifyContent: 'space-between', marginLeft: '10%', marginRight: '10%', marginBottom: '5%', marginTop: '5%' }}>
         <ReturnButton title="Volver a inicio" />
-        <Pagination numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage}/>
+        <Pagination classStyle="paginationMyReview" numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage}/>
       </div>
 
     </div>

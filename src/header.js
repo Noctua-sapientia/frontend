@@ -16,30 +16,24 @@ function Header() {
             alt="logo"
           />
         </Link>
-        {/* Usa flex-grow-1 en el Form para que ocupe el espacio disponible */}
-        <Form className="flex-grow-1 mx-2">
-          <FormControl
-            type="text"
-            placeholder="Buscar..."
-            aria-label="Buscar..."
-            aria-describedby="basic-addon2"
-            className="mr-sm-2 w-100"
-          />
-        </Form>
+
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
   <Navbar.Collapse id="basic-navbar-nav">
     <Nav className="ml-auto">
+      <Link to="/books" className='nav-link'>
+        <i class="bi bi-book-half"></i> Libros
+      </Link>
       <Link to="/review" className="nav-link">
         <i className="bi bi-star-half"></i> Mis reseñas
       </Link>
       <Link to="/historyOrders" className="nav-link">
-        <i className="bi bi-archive-fill"></i> Pedidos
+        <i className="bi bi-archive-fill"></i> Mis pedidos
       </Link>
-      <Link to="/bascketOrders" className="nav-link">
-      <i className="bi bi-cart-fill"></i> Cesta
+      <Link to="/basketOrders" className="nav-link">
+      <i className="bi bi-cart-fill"></i> Mi cesta
       </Link>
       <Link to="/myaccount" className="nav-link">
-        <i className="bi bi-person-circle"></i> Cuenta
+        <i className="bi bi-person-circle"></i> Mi cuenta
       </Link>
       <Link to="/login" className="nav-link">
         <i className="bi bi-box-arrow-in-right"></i> Log in

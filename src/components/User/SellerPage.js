@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
 import './user_styles.css'; // Importa tus estilos CSS aquí
 import logoImage from '../../img/logo.png'
-import UserApi from './UserApi.js'
+import UserApi from '../../api/UserApi.js'
 import { useAuth } from '../AuthContext';
+import { Link } from 'react-router-dom';
+
 
 
 function SellerPage(props) {
@@ -24,11 +26,6 @@ function SellerPage(props) {
         fetchUser();
     }, [accessToken, userId]);
 
-    /*
-    function OnUserEdit(user){
-        setMessage(user);
-    }
-    */
     return (
         <Container className='home-container'>
             {/* Cabecera */}
@@ -54,11 +51,15 @@ function SellerPage(props) {
                         <CardText>Nº reviews: {user.reviews}</CardText>    
                         </Row>
                         <Row>
-                        <Button className='profile-button' href="/book"> Mis libros </Button>
+                            <Link to={`/books/${user.userId}`}>
+                                <Button className='profile-button'> Books </Button>
+                            </Link>
                         </Row>
                         <Row>
-                        <Button className='profile-button' href="/review"> Mis reseñas </Button>
-                        </Row>                   
+                            <Link to={`/books/${user.userId}`}>
+                                <Button className='profile-button'> Reviews </Button>
+                            </Link>
+                        </Row>                     
                         {/* Agrega más botones según sea necesario */}
                     </Col>
         

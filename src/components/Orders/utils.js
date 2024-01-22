@@ -17,7 +17,7 @@ function calculateOrderPayment(order){
 
   return {
     shippingCost: shippingCost,
-    subtotal: subtotal, 
+    subtotal: Math.round(subtotal* 100) / 100,
     payment: subtotal + shippingCost
   };
 }

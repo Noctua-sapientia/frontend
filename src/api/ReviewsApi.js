@@ -65,7 +65,12 @@ class ReviewsApi{
 
         const response = await fetch(request);
         if (!response.ok) {
-            throw Error("Response not valid: " + response.status);
+            if (response.status === 403) {
+                swal("Error","No se ha podido editar la valoración. Recibirá un correo con más detalles");
+            }else{
+                throw Error("Response not valid: " + response.status);
+            }
+            
         }
 
         return response.json();
@@ -85,8 +90,10 @@ class ReviewsApi{
         if (!response.ok) {
             if (response.status === 409) {
               swal("Error","No puede añadir una valoración ya que ya hay una existente");
-            } else {
-              throw new Error("Response not valid: " + response.status);
+            }else if (response.status === 403) {
+                swal("Error","No se ha podido crear la valoración. Recibirá un correo con más detalles");
+            }else{
+                throw Error("Response not valid: " + response.status);
             }
           } else {
             return response.json();

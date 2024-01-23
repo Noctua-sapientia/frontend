@@ -116,8 +116,8 @@ console.log(accessToken);
                     books.options && books.options.map((option, index) => (
                     <tr key={index}>
                     <td>{option.seller}</td>
-                    <td>{option.prize}</td>
                     <td>{option.stock}</td>
+                    <td>{option.prize}</td>
                     <td>
                           <button 
                               onClick={() => addToCart(option)}

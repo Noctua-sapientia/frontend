@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 
 import BooksApi from '../Book/BooksApi';
+import { useAuth } from '../AuthContext';
 
 function OrderDetailsBook(props) {
 
@@ -9,11 +10,12 @@ function OrderDetailsBook(props) {
 
   const bookId = props.book.bookId;
   const [book, setBook] = useState({});
+  const {userType, userId, accessToken } = useAuth();
 
   useEffect(() => {
     async function fetchBook() {
       try {
-        const b = await BooksApi.getBooksByISBN(bookId);
+        const b = await BooksApi.getBooksByISBN(accessToken, bookId);
         setBook(b);
       } catch (error) {
         console.log(error);

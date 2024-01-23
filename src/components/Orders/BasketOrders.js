@@ -5,12 +5,20 @@ import { Container, Col, Card, ListGroup, Button, Row } from 'react-bootstrap';
 import BasketOrder from './BasketOrder';
 import OrdersApi from '../../api/OrdersApi';
 import UserApi from '../User/UserApi';
+import OrderAlert from './OrderAlert';
 
 import './BasketOrders.css';
 
 import { useAuth } from '../AuthContext';
 
 function BasketOrders() {
+
+  // -------------------------- Alert ---------------------------------------
+  const [alertMessage, setAlertMessage] = useState(null);
+
+  function onAlertClose() {
+    setAlertMessage(null);
+  }
 
   // ----------------------- Detecting user logged ------------------------------
 
@@ -23,6 +31,14 @@ function BasketOrders() {
   const [deliveryAddress, setDeliveryAddress] = useState('');
 
   useEffect(() => {
+    if (!userId) {
+      setAlertMessage('Debe iniciar sesión para ver su historial de pedidos');
+      return;
+    }
+    if (userType === 'Seller') {
+      setAlertMessage('Los vendedores no tienen habilitada la funcionalidad cesta de la compra');
+      return;
+    }
     async function fetchUser() {
       try {
         const u = await UserApi.getCustomer(accessToken, userId);
@@ -30,28 +46,11 @@ function BasketOrders() {
         console.log('u.address: ', u.address);
       } catch (error) {
         console.log(error);
-      //   setMessage('Could not contact with the server');
+        setAlertMessage('No se ha podido obtener información del usuario');
       }
     }  
     fetchUser();
   }, [userType, userId]); 
-
-
-    // -------------------  Order info loading (other services info) ---------------------
-
-    // const [seller, setSeller] = useState({});
-  
-    // useEffect(() => {
-    //   async function fetchSeller() {
-    //     try {
-    //       const s = await UserApi.getSeller(accessToken, PONER_SELLER_DE_CADA_PEDIDO);
-    //       setSeller(s);
-    //     } catch (error) {
-    //       console.log(error);
-    //     }
-    //   }
-    //   fetchSeller();
-    // }, [PONER_SELLER_DE_CADA_PEDIDO]);
 
 
   // ---------------------- Utility functions ----------------------------------
@@ -118,6 +117,25 @@ function BasketOrders() {
     }
   }, []);
 
+  const [vendorNames, setVendorNames] = useState({});
+
+  useEffect(() => {
+    vendors.forEach(vendor => {
+      if (!vendorNames[vendor.vendorName]) {
+        UserApi.getSeller(accessToken, vendor.vendorName)
+          .then(sellerInfo => {
+            setVendorNames(prevVendorNames => ({
+              ...prevVendorNames,
+              [vendor.vendorName]: sellerInfo.name
+            }));
+          })
+          .catch(error => {
+            console.log(`Error al obtener la información del vendedor ${vendor.vendorName}:`, error);
+          });
+      }
+    });
+  }, [vendors, accessToken, vendorNames]);
+
   // ---------------------- Event handlers ----------------------------------
 
   const onUpdateQuantity = (vendorIndex, itemIndex, newQuantity) => {
@@ -157,7 +175,7 @@ function BasketOrders() {
 
       })
       .catch(error => {
-        // Maneja los errores aquí, como mostrar un mensaje de error
+        setAlertMessage('No se ha podido realizar el pedido');
       });
   };
 
@@ -191,13 +209,23 @@ function BasketOrders() {
   
 
   return (
-    <Col>
-      <h2 className="section-title">Carrito de la compra</h2>
-      <Container>
+    <Container>
+      <Row>
+        <h2 className="section-title">Carrito de la compra</h2>
+      </Row>
+
+      <Row className='d-flex justify-content-center'>
+        <OrderAlert message={alertMessage} onClick={onAlertClose} />
+      </Row>
+
+      {userId && userType === 'Customer' && (
+
+      <Row className="d-flex justify-content-center">
+        <Container className="col-10">  
         {vendors.map((vendor, vendorIndex) => (
-          <Card key={vendorIndex}>
+          <Card key={vendorIndex} className='mt-3'>
             <Card.Header className="text-center bg-primary text-white">
-              <h5>Pedido a vendedor @{vendor.vendorName}</h5>
+              <h5>Pedido a vendedor @{vendorNames[vendor.vendorName]}</h5>
             </Card.Header>
             <Card.Body className="align-items-center">
             <Container>
@@ -230,7 +258,7 @@ function BasketOrders() {
                         variant="primary" 
                         className="mt-3"
                         onClick={() => handleCreateOrder(accessToken, vendorIndex)}>
-                        <i class="bi bi-bag-fill"></i> Comprar
+                        <i className="bi bi-bag-fill"></i> Comprar
                       </Button>
                       <Button 
                         type="button" 
@@ -247,8 +275,10 @@ function BasketOrders() {
             </Card.Body>
           </Card>
         ))}
-      </Container>
-    </Col>
+        </Container>
+      </Row>
+      )}
+    </Container>
   );
 }
 

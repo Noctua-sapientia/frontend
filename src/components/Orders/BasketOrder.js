@@ -29,7 +29,7 @@ function BasketOrder({ item, onUpdateQuantity, onDeleteBook, itemIndex, vendorIn
           </Form>
 
           <Button variant="secondary" size="sm" className="ml-2" onClick={handleDeleteBook}>
-          <i class="bi bi-trash"></i>
+          <i className="bi bi-trash"></i>
           </Button>
         </InputGroup>
       </div>

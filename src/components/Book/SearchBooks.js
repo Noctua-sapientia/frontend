@@ -4,7 +4,7 @@ import BooksApi from './BooksApi';
 import BookElement from './BookElement.js';
 import { Container, Button, Row, Col, CardText } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import imageBook1 from '../../img/HarryPotter.jpg';
+import imageBook1 from '../../img/bookGeneral.png';
 import { useAuth } from '../AuthContext';
 
 function SearchBooks() {

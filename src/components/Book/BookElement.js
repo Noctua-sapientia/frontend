@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, Col, Row, Card, Button } from 'react-bootstrap';
-import imageBook1 from '../../img/HarryPotter.jpg';
+import imageBook1 from '../../img/bookGeneral.png';
 
 function BookElement({ book }) {
   return (

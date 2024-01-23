@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import BooksApi from './BooksApi.js';
 import UsersApi from '../../api/UserApi.js'
 import { Container, Col, Row, CardText, Button } from 'react-bootstrap';
-import imageBook1 from '../../img/HarryPotter.jpg';
+import imageBook1 from '../../img/bookGeneral.png';
 import styles from './book_detail_styles.css';
 import ReviewsInDetail from '../Review/ReviewsInDetail.js';
 import Star from '../Review/Star.js';

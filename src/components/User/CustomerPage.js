@@ -41,7 +41,7 @@ function CustomerPage(props) {
                         <CardText>Name: {user.name}</CardText>
                         </Row>
                         <Row>
-                        <CardText>Direction: {user.address}</CardText>
+                        <CardText>Address: {user.address}</CardText>
                         </Row>              
                         {/* Agrega más botones según sea necesario */}
                     </Col>

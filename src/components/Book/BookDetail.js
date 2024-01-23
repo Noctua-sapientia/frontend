@@ -15,7 +15,7 @@ function BookDetail() {
   const [books, setBooks] = useState([]);
   const { isbn } = useParams();
   const {accessToken, userId } = useAuth();
-console.log(accessToken);
+  console.log(accessToken);
   useEffect(() => {
     async function fetchBooks() {
       try {
@@ -29,7 +29,7 @@ console.log(accessToken);
           const user = await UsersApi.getSeller(accessToken, item.seller);
           console.log(user);
           const sellerName = user ? user.name : item.seller;
-          fechedBooksWithUserName.push({ ...item, seller: sellerName });
+          fechedBooksWithUserName.push({ ...item, sellerName: sellerName });
         }
         fetchedBooks.options = fechedBooksWithUserName;
         console.log(fechedBooksWithUserName);
@@ -54,6 +54,8 @@ console.log(accessToken);
   const addToCart = (bookOption) => {
     let cart = JSON.parse(sessionStorage.getItem('vendorsCart') || '[]');
     const vendorIndex = cart.findIndex(vendor => vendor.vendorName === bookOption.seller);
+
+    console.log(bookOption.seller);
     
     if (vendorIndex >= 0) {
       // El vendedor ya está en el carrito, solo añadir el libro a sus items
@@ -94,7 +96,7 @@ console.log(accessToken);
 
   return (
     <Fragment>
-      <Container className='home-container'>
+      <Container className='home-container'> 
         <Col>
           <Row>
             <Col className='column'>
@@ -131,7 +133,7 @@ console.log(accessToken);
                   {
                     books.options && books.options.map((option, index) => (
                     <tr key={index}>
-                    <td>{option.seller}</td>
+                    <td>{option.sellerName}</td>
                     <td>{option.stock}</td>
                     <td>{option.prize}</td>
                     <td>

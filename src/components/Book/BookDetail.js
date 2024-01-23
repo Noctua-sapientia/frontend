@@ -1,6 +1,7 @@
 import React, { Fragment, useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import BooksApi from './BooksApi.js';
+import UsersApi from '../../api/UserApi.js'
 import { Container, Col, Row, CardText, Button } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
 import styles from './book_detail_styles.css';
@@ -20,10 +21,24 @@ console.log(accessToken);
       try {
         const fetchedBooks = await BooksApi.getBooksByISBN(accessToken, isbn);
 
-        setBooks(fetchedBooks);  // Corrección aquí
+        console.log(fetchedBooks);
+  
+        const fechedBooksWithUserName = [];
+  
+        for (const item of fetchedBooks.options) {
+          const user = await UsersApi.getSeller(accessToken, item.seller);
+          console.log(user);
+          const sellerName = user ? user.name : item.seller;
+          fechedBooksWithUserName.push({ ...item, seller: sellerName });
+        }
+        fetchedBooks.options = fechedBooksWithUserName;
+        console.log(fechedBooksWithUserName);
+        setBooks(fetchedBooks);
+
         if(fetchedBooks.rating !=null || fetchedBooks.rating !== undefined) {
           setRating(fetchedBooks.rating);
         } 
+
 
       } catch (error) {
         setMessage('Could not contact the server');
@@ -32,6 +47,7 @@ console.log(accessToken);
   
     fetchBooks();
   }, [isbn]);
+  
 
   const navigate = useNavigate();
 
@@ -116,8 +132,8 @@ console.log(accessToken);
                     books.options && books.options.map((option, index) => (
                     <tr key={index}>
                     <td>{option.seller}</td>
-                    <td>{option.prize}</td>
                     <td>{option.stock}</td>
+                    <td>{option.prize}</td>
                     <td>
                           <button 
                               onClick={() => addToCart(option)}

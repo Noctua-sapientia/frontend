@@ -14,7 +14,7 @@ function BookDetail() {
   const [rating, setRating] = useState(1);
   const [books, setBooks] = useState([]);
   const { isbn } = useParams();
-  const {accessToken, userId } = useAuth();
+  const {accessToken, userId, userType} = useAuth();
   console.log(accessToken);
   useEffect(() => {
     async function fetchBooks() {
@@ -126,7 +126,8 @@ function BookDetail() {
                       <th>Vendedor</th>
                       <th>Stock</th>
                       <th>Precio</th>
-                      <th>Compra</th>
+                      {userType === 'Customer' && 
+                      <th>Compra</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -136,6 +137,7 @@ function BookDetail() {
                     <td>{option.sellerName}</td>
                     <td>{option.stock}</td>
                     <td>{option.prize}</td>
+                    {userType === 'Customer' &&
                     <td>
                           <button 
                               onClick={() => addToCart(option)}
@@ -156,6 +158,7 @@ function BookDetail() {
                               Añadir al Carrito
                           </button>
                       </td>
+                    }
 
                     </tr>
                     ))}

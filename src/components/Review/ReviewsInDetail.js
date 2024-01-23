@@ -40,72 +40,75 @@ function ReviewsInDetail(props){
         setMostrarComponente(!mostrarComponente);
       };
 
-      useEffect(() => {
-        async function getTotalNumberReviews(){
-          let filters = {
+      async function getTotalNumberReviews(){
+        let filters = {
 
+        };
+        if(activeType === 'books'){
+          filters.bookId = props.bookId;
+        }else if(activeType === 'sellers'){
+          filters.sellerId = props.sellerId;
+        }
+        const response = await ReviewsApi.getNumberReviews(activeType,filters,accessToken);
+        const totalNumber = response.count;
+        setNumberReviews(totalNumber);
+        if(numberReviews % limit === 0){
+          setNumberPages(numberReviews/limit);
+        }else{
+          setNumberPages(Math.floor(numberReviews/limit)+1);
+        }
+      }
+
+      async function getReviewsBySelector(){
+        try{
+          //le pasamos como queremos que nos las devuelva
+          let filters = 
+           {      
+            limit:limit,
+            offset:limit*currentPage,
           };
           if(activeType === 'books'){
             filters.bookId = props.bookId;
           }else if(activeType === 'sellers'){
             filters.sellerId = props.sellerId;
           }
-          const response = await ReviewsApi.getNumberReviews(activeType,filters,accessToken);
-          const totalNumber = response.count;
-          setNumberReviews(totalNumber);
-          if(numberReviews % limit === 0){
-            setNumberPages(numberReviews/limit);
-          }else{
-            setNumberPages(Math.floor(numberReviews/limit)+1);
+          if (opcionSeleccionada === 'fechaAsc') {
+            filters.sort = 'date';
+            filters.order = 'asc';
+
+          } else if (opcionSeleccionada === 'fechaDesc') {
+            filters.sort = 'date';
+            filters.order = 'desc';
+
+          }else if(opcionSeleccionada === 'valoracionAsc'){
+            filters.sort = 'rating';
+            filters.order = 'asc';
+
+          }else if(opcionSeleccionada === 'valoracionDesc'){
+            filters.sort = 'rating';
+            filters.order = 'desc';
+
           }
-        }
-        getTotalNumberReviews();
-
-      }, [activeType, numberReviews, props.bookId, props.sellerId,activeData]);
-
+          let reviews = null;
+          reviews = await ReviewsApi.getReviews(filters, activeType,accessToken);
+          setActiveData(reviews);
+        } catch (error) {
+          console.log(error);
+          setMessage('Could not connect to server');
+        }     
+      }
 
       useEffect(() => {
-        async function getReviewsBySelector(){
-          try{
-            //le pasamos como queremos que nos las devuelva
-            let filters = 
-             {      
-              limit:limit,
-              skip:limit*currentPage,
-            };
-            if(activeType === 'books'){
-              filters.bookId = props.bookId;
-            }else if(activeType === 'sellers'){
-              filters.sellerId = props.sellerId;
-            }
-            if (opcionSeleccionada === 'fechaAsc') {
-              filters.sort = 'date';
-              filters.order = 'asc';
-
-            } else if (opcionSeleccionada === 'fechaDesc') {
-              filters.sort = 'date';
-              filters.order = 'desc';
-
-            }else if(opcionSeleccionada === 'valoracionAsc'){
-              filters.sort = 'rating';
-              filters.order = 'asc';
-
-            }else if(opcionSeleccionada === 'valoracionDesc'){
-              filters.sort = 'rating';
-              filters.order = 'desc';
-
-            }
-            let reviews = null;
-            reviews = await ReviewsApi.getReviews(filters, activeType,accessToken);
-            setActiveData(reviews);
-          } catch (error) {
-            console.log(error);
-            setMessage('Could not connect to server');
-          }     
-        }
+        
         getReviewsBySelector();
 
-      }, [activeType, currentPage, opcionSeleccionada, props.bookId, props.sellerId, activeData, accessToken]);
+      }, [currentPage,opcionSeleccionada]);
+
+      useEffect(() => {
+        
+        getTotalNumberReviews();
+       
+      }, [activeData]);
 
 
       async function onAddReview(review){
@@ -158,7 +161,7 @@ async function onUpdateReview(newReviewData){
 }
 
 async function onDeleteReview(review){
-  await ReviewsApi.deleteReviewById(review, activeType);
+  await ReviewsApi.deleteReviewById(review, activeType, accessToken);
 
 }
 
@@ -167,9 +170,9 @@ const onYesCancelAlert = async(reviewIdToDelete) => {
     swal({text:"El comentario se ha eliminado correctamente"});
     setActiveData((prevReviews) => {
     return prevReviews.filter((r) => r.id !== reviewIdToDelete)});
+    getReviewsBySelector();
 
   };
-
 
     return(
         <div className="App">

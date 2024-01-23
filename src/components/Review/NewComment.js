@@ -18,9 +18,9 @@ function NewComment(props) {
       setReviewDescription(description);
 
     };
-    const save = () => {
+    const save = async () => {
       console.log(props.userId);
-      let data = null;
+      let data;
       if(props.activeType ==='sellers'){
         data = {
           sellerId: props.sellerId,
@@ -37,7 +37,7 @@ function NewComment(props) {
         };
       }
        
-        const result =  props.addNewReviewFunction(data);
+        const result = await props.addNewReviewFunction(data);
         if (result){
           props.showComponentFunction(false);
         }

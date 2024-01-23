@@ -1,12 +1,14 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect} from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { Container } from 'react-bootstrap';
+import { Container, Row } from 'react-bootstrap';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './HistoryOrders.css';
 
 import HistoryOrdersFilter from './HistoryOrdersFilter';
 import HistoryOrdersList from './HistoryOrdersList';
 import OrdersApi from '../../api/OrdersApi';
+import OrderAlert from './OrderAlert';
 
 import { calculateOrderPayment } from './utils'; 
 import { useAuth } from '../AuthContext';
@@ -14,32 +16,46 @@ import { useAuth } from '../AuthContext';
 
 function HistoryOrders(props) {
 
-  // -------------------------- Errors alert ---------------------------------------
+  // -------------------------- Alert ---------------------------------------
+  const [alertMessage, setAlertMessage] = useState(null);
+
+  function onAlertClose() {
+    setAlertMessage(null);
+  }
 
 
   // -------------------------- Detecting user logged --------------------------------
 
-  const {userType, userId, accessToken } = useAuth();
+  const navigate = useNavigate();
+
+  const {userType, userId, accessToken} = useAuth();
 
   console.log('userType: ', userType);
   console.log('userId: ', userId);
+  
 
   // --------------------------  Orders loading --------------------------------------
 
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
+    if (!userId) {
+      setAlertMessage('Debe iniciar sesión para ver su historial de pedidos');
+      return;
+    }
+
     async function fetchOrders() {
       try {
         const o = await OrdersApi.getAllOrders(accessToken, userType, userId);
         setOrders(o);
       } catch (error) {
         console.log(error);
-      //   setMessage('Could not contact with the server');
+        setAlertMessage('No hay pedidos disponibles');
       }
     }  
     fetchOrders();
-  }, [userType, userId]); 
+
+  },  [userType, userId]);
 
   // --------------------------  Orders filtering --------------------------------------
 
@@ -87,11 +103,18 @@ function HistoryOrders(props) {
 
   return (
     <Container>
-      <h2 className="section-title">Mi historial de pedidos</h2>
-      <div className="section-content">
+      <Row>      
+        <h2 className="section-title">Mi historial de pedidos</h2>
+      </Row>
+      <Row className='d-flex justify-content-center'>
+        <OrderAlert message={alertMessage} onClick={onAlertClose} />
+      </Row>
+      {userId && 
+      <Row className="section-content">
         <HistoryOrdersFilter onFilterChange={handleFilterChange} />
         <HistoryOrdersList orders={filteredOrders} />
-      </div>
+      </Row>
+      }
     </Container>
   );
 }

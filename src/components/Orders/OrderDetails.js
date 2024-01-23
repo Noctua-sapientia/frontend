@@ -12,6 +12,7 @@ import OrderDetailsInfoEditable from './OrderDetailsInfoEditable';
 import OrderDetailsInfo from './OrderDetailsInfo';
 import OrdersApi from '../../api/OrdersApi';
 import BackButton from './BackButton';
+import OrderAlert from './OrderAlert';
 
 import { useAuth } from '../AuthContext';
 
@@ -21,13 +22,13 @@ function OrderDetails(props) {
   const navigate = useNavigate();
 
 
-  // -------------------------- Errors alert ---------------------------------------
+  // -------------------------- Alert ---------------------------------------
 
-  // const [alertMessage, setAlertMessage] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(null);
 
-  // function onCloseAlert() {
-  //   setAlertMessage(null);
-  // }
+  function onCloseAlert() {
+    setAlertMessage(null);
+  }
 
   // -------------------------- Detecting user logged --------------------------------
 
@@ -54,19 +55,24 @@ function OrderDetails(props) {
   const [order, setOrder] = useState(emptyOrder);
 
   useEffect(() => {
+    if (!userId) {
+      setAlertMessage('Debe iniciar sesión para ver su historial de pedidos');
+      return;
+    }
+
     async function fetchOrder() {
       try {
         const o = await OrdersApi.getOrder(accessToken, orderId);
         setOrder(o);
       } catch (error) {
         console.log(error);
-        //   setMessage('Could not contact with the server');
+        setAlertMessage('El pedido solicitado no está disponible');
       }
     }
     fetchOrder();
-  }, []);
+  }, [userId, orderId]);
 
-  console.log("Order in OrderDetails:", order);
+  // console.log("Order in OrderDetails:", order);
 
   // --------------------------  Order editing --------------------------------------
 
@@ -96,6 +102,7 @@ function OrderDetails(props) {
 
       } catch (error) {
         console.log(error);
+        setAlertMessage('No se ha podido actualizar el pedido');
       }
     }
   }
@@ -108,6 +115,7 @@ function OrderDetails(props) {
         navigate('/historyOrders');
     } catch (error) {
         console.log(error);
+        setAlertMessage('No se ha eliminar el pedido');
     }
   }
 
@@ -116,15 +124,13 @@ function OrderDetails(props) {
 
   return (
     
-    <Container className="d-flex flex-direction-column justify-content-center align-items-center orderDetails">
+    <Container className="orderDetails">
 
-      {/* <Row>
-        <Col className="d-flex justify-content-center">
-          <OrderAlert message={alertMessage} onClick={onCloseAlert} />
-        </Col>
-      </Row> */}
+      <Row className='d-flex justify-content-center'>
+        <OrderAlert message={alertMessage} onClose={onCloseAlert} />
+      </Row>
 
-      {order.orderId !== 0 &&
+      {userId && order.orderId !== 0 &&
         <Row>
           <Col className="d-flex justify-content-center">
             <Card className="">

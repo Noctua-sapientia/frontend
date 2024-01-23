@@ -31,7 +31,7 @@ class OrdersApi {
         );
         const response = await fetch(request);
         if (!response.ok) {
-            throw Error("Response not valid" + response.status);
+            throw Error("Error: " + response.status + " - " + response.statusText);
         }
     
         return response.json();

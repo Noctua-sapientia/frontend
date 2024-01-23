@@ -3,6 +3,7 @@ import './Review.css';
 
 function Pagination(props){
   console.log(props.classStyle);
+  console.log(props.numberPages);
     return(
         <nav aria-label="">
         <ul className={`pagination ${props.classStyle}`}>

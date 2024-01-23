@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import Star from './Star.js';
 import CommentWindow from './CommentWindow.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -87,7 +87,7 @@ function Comment(props) {
   
 };
 
-    console.log(props.comment.customerId,userId);
+
 
   //se añade la info que se le quiera pasar a la ventana modal
   //const params = {"description": props.comment.description, "rating": props.comment.rating, "isOpen": modalAbierto, "onClose": cerrarModal}
@@ -96,8 +96,7 @@ function Comment(props) {
     <tr>
     
       <td >
-      Aqui iria el nombre del customerId que ha escrito el comentario
-          {props.comment.customerId}
+        {props.customerName}
       </td>
       <td>
           {formatDate(props.comment.createdAt)}

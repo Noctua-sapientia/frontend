@@ -59,59 +59,59 @@ function Review() {
       const response = await ReviewsApi.getNumberReviews(activeType,filters,accessToken);
       const totalNumber = response.count;
       setNumberReviews(totalNumber);
-      if(numberReviews % limit === 0){
-        setNumberPages(numberReviews/limit);
+      if(totalNumber % limit === 0){
+        setNumberPages(totalNumber/limit);
       }else{
-        setNumberPages(Math.floor(numberReviews/limit)+1);
+        setNumberPages(Math.floor(totalNumber/limit)+1);
       }
     }
     getTotalNumberReviews();
 
-  }, [accessToken, activeType, isAuthenticated, numberReviews, userId, userType]);
+  }, [activeData]);
 
-
-  
-useEffect(() => {
-  async function getReviewsBySelector(){
-    try{
-      //le pasamos como queremos que nos las devuelva
-      let filters = 
-      {      
-        limit:limit,
-        skip:limit*currentPage
-      };
-      if(isAuthenticated() && userType.toLowerCase() === 'customer'){
-        //si es un cliente aparecera las reviews creadas por el
-        filters.customerId = userId;
-      }else if(isAuthenticated() && userType.toLowerCase() === 'seller'){
-        filters.sellerId = userId;
-      }
-      if (opcionSeleccionada === 'fechaAsc') {
-        filters.sort = 'date';
-        filters.order = 'asc';
-      } else if (opcionSeleccionada === 'fechaDesc') {
-        filters.sort = 'date';
-        filters.order = 'desc';
-      } else if(opcionSeleccionada === 'valoracionAsc'){
-        filters.sort = 'rating';
-        filters.order = 'asc';
+console.log(accessToken);
+async function getReviewsBySelector(){
+  try{
+    //le pasamos como queremos que nos las devuelva
+    let filters = 
+    {      
+      limit:limit,
+      offset:limit*currentPage
+    };
+    if(isAuthenticated() && userType.toLowerCase() === 'customer'){
+      //si es un cliente aparecera las reviews creadas por el
+      filters.customerId = userId;
+    }else if(isAuthenticated() && userType.toLowerCase() === 'seller'){
+      filters.sellerId = userId;
+    }
+    if (opcionSeleccionada === 'fechaAsc') {
+      filters.sort = 'date';
+      filters.order = 'asc';
+    } else if (opcionSeleccionada === 'fechaDesc') {
+      filters.sort = 'date';
+      filters.order = 'desc';
+    } else if(opcionSeleccionada === 'valoracionAsc'){
+      filters.sort = 'rating';
+      filters.order = 'asc';
+      
+    }else if(opcionSeleccionada === 'valoracionDesc'){
+      filters.sort = 'rating';
+      filters.order = 'desc';
         
-      }else if(opcionSeleccionada === 'valoracionDesc'){
-        filters.sort = 'rating';
-        filters.order = 'desc';
-          
-        }
-      let reviews = null;
-      reviews = await ReviewsApi.getReviews(filters, activeType,accessToken);
-      setActiveData(reviews);
-    } catch (error) {
-      console.log(error);
-      setMessage('Could not connect to server');
-    }     
-  }
+      }
+    let reviews = null;
+    reviews = await ReviewsApi.getReviews(filters, activeType,accessToken);
+    setActiveData(reviews);
+  } catch (error) {
+    console.log(error);
+    setMessage('Could not connect to server');
+  }     
+}
+useEffect(() => {
+  
   getReviewsBySelector();
 
-}, [accessToken, activeType, currentPage, isAuthenticated, opcionSeleccionada, userId, userType]);
+}, [activeType, currentPage, opcionSeleccionada]);
 
 
 
@@ -125,7 +125,6 @@ async function onUpdateReview(newReviewData){
   //realizar comprobaciones
   const { id, date, ...restData } = newReviewData;
   const newReview = await ReviewsApi.updateReview(newReviewData.id, restData, activeType,accessToken);
-  console.log(newReview);
   if (newReview) {
     setActiveData((prevReviews) => {
       return prevReviews.map((r) => r.id === newReviewData.id ? newReviewData : r);
@@ -152,7 +151,7 @@ const onYesCancelAlert = async(reviewIdToDelete) => {
   swal({text:"El comentario se ha eliminado correctamente"});
   setActiveData((prevReviews) => {
   return prevReviews.filter((r) => r.id !== reviewIdToDelete)});
-   
+  getReviewsBySelector();
 };
 
 if (!isAuthenticated()) {
@@ -181,7 +180,7 @@ if (!isAuthenticated()) {
       <OrderCommentsBy handleSort={setOpcionSeleccionada}/>
       
       <div className="table-container">
-        <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert}/>
+        <CommentList comments={activeData} updateReviewFunction={onUpdateReview} deleteReviewFunction={onDeleteReview} onYesCancelAlert={onYesCancelAlert} mode={activeType}/>
       </div>
 
      

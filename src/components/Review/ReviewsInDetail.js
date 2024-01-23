@@ -52,10 +52,12 @@ function ReviewsInDetail(props){
         const response = await ReviewsApi.getNumberReviews(activeType,filters,accessToken);
         const totalNumber = response.count;
         setNumberReviews(totalNumber);
-        if(numberReviews % limit === 0){
-          setNumberPages(numberReviews/limit);
+        if(totalNumber % limit === 0){
+          setNumberPages(totalNumber/limit);
+  
         }else{
-          setNumberPages(Math.floor(numberReviews/limit)+1);
+          setNumberPages(Math.floor(totalNumber/limit)+1);
+
         }
       }
 
@@ -123,9 +125,12 @@ function ReviewsInDetail(props){
             if(activeData.length>0){
               setActiveData((prevReviews) => {
                 return [...prevReviews, newReview];
+                
               });
+              getReviewsBySelector();
             }else{
               setActiveData([newReview]);
+              getReviewsBySelector();
             }
             
             return true;
@@ -198,7 +203,7 @@ const onYesCancelAlert = async(reviewIdToDelete) => {
                 
                 </div>
               }else{
-                return <Pagination classStyle="paginationDetail" numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage}/>
+                return <Pagination classStyle="paginationDetail" numberPages={numberPages} onChangePage={handleChangePage} currentPage={currentPage} mode="detail"/>
               } 
             })()}
           

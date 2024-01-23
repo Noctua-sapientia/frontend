@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import BooksApi from './BooksApi.js';
 import UsersApi from '../../api/UserApi.js'
+import OrdersApi from '../../api/OrdersApi.js';
 import { Container, Col, Row, CardText, Button } from 'react-bootstrap';
 import imageBook1 from '../../img/HarryPotter.jpg';
 import styles from './book_detail_styles.css';
@@ -15,38 +16,66 @@ function BookDetail() {
   const [books, setBooks] = useState([]);
   const { isbn } = useParams();
   const {accessToken, userId, userType} = useAuth();
+
+  const [bookSales, setBookSales] = useState(null);
+  const [hasBought, setHasBought] = useState(false);
+
   console.log(accessToken);
   useEffect(() => {
     async function fetchBooks() {
       try {
         const fetchedBooks = await BooksApi.getBooksByISBN(accessToken, isbn);
-
         console.log(fetchedBooks);
   
-        const fechedBooksWithUserName = [];
+        const fetchedBooksWithUserName = [];
   
         for (const item of fetchedBooks.options) {
           const user = await UsersApi.getSeller(accessToken, item.seller);
           console.log(user);
           const sellerName = user ? user.name : item.seller;
-          fechedBooksWithUserName.push({ ...item, sellerName: sellerName });
+          fetchedBooksWithUserName.push({ ...item, sellerName: sellerName });
         }
-        fetchedBooks.options = fechedBooksWithUserName;
-        console.log(fechedBooksWithUserName);
+        fetchedBooks.options = fetchedBooksWithUserName;
+        console.log(fetchedBooksWithUserName);
         setBooks(fetchedBooks);
-
-        if(fetchedBooks.rating !=null || fetchedBooks.rating !== undefined) {
+  
+        if (fetchedBooks.rating != null || fetchedBooks.rating !== undefined) {
           setRating(fetchedBooks.rating);
-        } 
-
-
+        }
       } catch (error) {
         setMessage('Could not contact the server');
       }
     }
   
     fetchBooks();
-  }, [isbn]);
+  
+    async function fetchOrders() {
+      try {
+        const orders = await OrdersApi.getAllOrders(accessToken, userType, userId);
+  
+        if (userType === 'Seller') {
+          // Contar pedidos que incluyen el libro basado en el ISBN y que pertenecen al vendedor logueado
+          const salesCount = orders.reduce((count, order) => {
+            return count + (parseInt(order.sellerId) === parseInt(userId) && order.books.some(book => parseInt(book.bookId) === parseInt(isbn)) ? order.books.filter(book => parseInt(book.bookId) === parseInt(isbn)).length : 0);
+          }, 0);
+          setBookSales(salesCount);
+        } else if (userType === 'Customer') {
+          console.log(userId);
+          // Verificar si el cliente ha comprado este libro antes y que el pedido pertenece al cliente logueado
+          const hasBoughtBefore = orders.some(order => 
+            parseInt(order.userId) === parseInt(userId) && order.books.some(book => parseInt(book.bookId) === parseInt(isbn))
+          );
+          setHasBought(hasBoughtBefore);
+        }
+      } catch (error) {
+        console.error('Error fetching orders:', error);
+      }
+    }
+  
+    if (userType) {
+      fetchOrders();
+    }
+  }, [isbn, userType, userId, accessToken]);
   
 
   const navigate = useNavigate();
@@ -98,6 +127,16 @@ function BookDetail() {
     <Fragment>
       <Container className='home-container'> 
         <Col>
+        {
+          userType === 'Seller' && (
+            <p>Número de pedidos de este libro: {bookSales !== null ? bookSales : 'Cargando...'}</p>
+          )
+        }
+        {
+          userType === 'Customer' && hasBought && (
+            <p>Ya has comprado este libro anteriormente.</p>
+          )
+        }
           <Row>
             <Col className='column'>
               <img src={imageBook1} className="icono" style={{ width: '50%', height: '60vh'}} />

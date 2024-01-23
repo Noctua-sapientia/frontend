@@ -36,6 +36,10 @@ function Header() {
       <Link to="/books" className='nav-link'>
         <i className="bi bi-book-half"></i> Libros
       </Link>)}
+      {accessToken && userType === "Seller" && (
+      <Link to = {`/book/${userId}`} className='nav-link'>
+        <i className="bi bi-book-half"></i> Mis Libros
+      </Link>)}
       {accessToken && (
       <Link to="/review" className="nav-link">
         <i className="bi bi-star-half"></i> Mis reseñas

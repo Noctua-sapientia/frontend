@@ -29,7 +29,7 @@ function EditBook(props) {
             <td><input className="form-control" name="stock" value={stock} onChange={(event) => setStock(event.target.value)}/></td>
 
             <td>
-                <button className="btn btn-primary" onClick={() => BooksApi.updateBook(accessToken, userId, {isbn: isbn, title: title, author:author, genre: genre, year: year, prize: prize, stock: stock, options: props.book.options})}>Guardar</button>
+                <button className="btn btn-primary" onClick={() => {BooksApi.updateBook(accessToken, userId, {isbn: isbn, title: title, author:author, genre: genre, year: year, prize: prize, stock: stock, options: props.book.options}); props.setIsEditing(false)}}>Guardar</button>
                 <button className="btn btn-primary" onClick={() => props.onCancel()}>Cancelar</button>
             </td>
         </tr>

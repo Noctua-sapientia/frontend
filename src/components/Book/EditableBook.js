@@ -26,7 +26,7 @@ function EditableBook(props){
 
     var bookRender;
     if(isEditing){
-        bookRender = <EditBook book = {props.book} onCancel={onCancel} onSave={saveBook}/>;
+        bookRender = <EditBook book = {props.book} setIsEditing={setIsEditing} reloadBooks={props.reloadBooks} onCancel={onCancel} onSave={saveBook}/>;
     } else {
         bookRender = <Book book = {props.book} reloadBooks={props.reloadBooks} onDelete={props.onDelete} onEdit={() => setIsEditing(true)}/>
     }

@@ -49,15 +49,27 @@ function Comment(props) {
     if(newDescription === ''){
       setMessage('Añade una descripción para la review');
     }else{
-      const updatedBookReview = {
-        id: props.comment.id,
-        description: newDescription,
-        rating: newRating,
-        createdAt: props.comment.createdAt,
-        bookId: props.comment.bookId,
-        customerId: userId
-      };
-      await props.updateReviewFunction(updatedBookReview);
+      let updateReview;
+      if(props.mode==='books'){
+         updateReview = {
+          id: props.comment.id,
+          description: newDescription,
+          rating: newRating,
+          createdAt: props.comment.createdAt,
+          bookId: props.comment.bookId,
+          customerId: userId
+        };
+      }else{
+        updateReview = {
+          id: props.comment.id,
+          description: newDescription,
+          rating: newRating,
+          createdAt: props.comment.createdAt,
+          sellerId: props.comment.sellerId,
+          customerId: userId
+      }
+    }
+      await props.updateReviewFunction(updateReview);
      // Cierra la ventana emergente después de guardar
      setModalAbierto(false);
     }

@@ -28,7 +28,6 @@ const searchBookName = async (idBook)=>{
 const searchNames = async () => {
   try {
     let names;
-    console.log(props.mode)
     if(props.mode==='books' && userType.toLowerCase() === 'customer'){
       names = await Promise.all(
         props.comments.map((comment) =>
@@ -48,7 +47,6 @@ const searchNames = async () => {
         )
       );
     }
-     
     setUserNames(names);
   } catch (error) {
     console.error('Error fetching customer names:', error);
@@ -72,7 +70,7 @@ useEffect(() => {
         return <div>No hay reseñas</div>
       }else{
         return <div>{props.comments.map((comment, index) =>
-          <Comment key={comment.id} comment={comment} customerName={userNames[index]} updateReviewFunction={props.updateReviewFunction} deleteReviewFunction={props.deleteReviewFunction} onYesCancelAlert={props.onYesCancelAlert}/>
+          <Comment key={comment.id} comment={comment} customerName={userNames[index]} updateReviewFunction={props.updateReviewFunction} deleteReviewFunction={props.deleteReviewFunction} onYesCancelAlert={props.onYesCancelAlert} mode={props.mode}/>
         )}
         </div>
       }

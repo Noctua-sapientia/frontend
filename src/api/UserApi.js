@@ -22,6 +22,23 @@ class UserApi {
 
         return response.json();
     }
+    static async deleteCustomer(accessToken,userId){
+
+      const headers = this.requestHearders(accessToken);
+      const request = new Request('/api/v1/customers/' + userId , {
+          method: 'DELETE',
+          headers: headers
+      });
+
+      const response = await fetch(request);
+
+      if (! response.ok){
+          throw Error("Response not valid" + response.status);
+      }
+
+      return response.json();
+    }
+    
     static async registerCustomer(formData) {
       try {
         const headers = this.requestHearders(); // Puedes ajustar esto según tus necesidades
@@ -46,6 +63,32 @@ class UserApi {
         throw error; // Re-lanzar el error para que se maneje externamente si es necesario
       }
     }
+
+    static async updateCustomer(accessToken, formData) {
+      try {
+        const headers = this.requestHearders(accessToken); // Puedes ajustar esto según tus necesidades
+        const response = await fetch('/api/v1/customers/', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            ...headers,
+          },
+          body: JSON.stringify(formData),
+        });
+  
+        if (response.ok) {
+          console.log('Registro exitoso como cliente');
+          // Puedes realizar alguna acción adicional después del registro
+        } else {
+          console.error('Error en el registro como cliente');
+          // Maneja errores si es necesario
+        }
+      } catch (error) {
+        console.error('Error en la llamada al backend', error);
+        throw error; // Re-lanzar el error para que se maneje externamente si es necesario
+      }
+    }
+
     static async getSeller(accessToken,userId){
 
         const headers = this.requestHearders(accessToken);

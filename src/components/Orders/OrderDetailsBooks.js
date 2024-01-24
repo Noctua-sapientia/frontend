@@ -33,15 +33,15 @@ function OrderDetailsBooks(props) {
             <tbody className="orderDetails-products-payment">
                 <tr className="tr-topBorder">
                 <td colSpan="3" className="text-end">Subtotal:</td>
-                <td>{orderPayment.subtotal}€</td>
+                <td>{Math.round(orderPayment.subtotal * 100) / 100}€</td>
                 </tr>
                 <tr>
                 <td colSpan="3" className="text-end">Coste de envío:</td>
-                <td>{props.order.shippingCost}€</td>
+                <td>{Math.round(props.order.shippingCost * 100) / 100}€</td>
                 </tr>
                 <tr>
                 <td colSpan="3" className="text-end">Total:</td>
-                <td>{orderPayment.payment}€</td>
+                <td>{Math.round(orderPayment.payment * 100) / 100}€</td>
                 </tr>
             </tbody>
             </Table>

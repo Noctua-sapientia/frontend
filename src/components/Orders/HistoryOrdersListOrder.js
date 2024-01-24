@@ -17,7 +17,7 @@ function HistoryOrdersListOrder(props) {
       <th>{props.order.orderId}</th>
       <td>{parseDate(props.order.creationDatetime)}</td>
       <td>{parseDate(props.order.maxDeliveryDate)}</td>
-      <td>{calculateOrderPayment(props.order).payment}€</td>
+      <td>{Math.round(calculateOrderPayment(props.order).payment * 100) / 100}€</td>
       <td>{getBadgeStatus(props.order.status)}</td>
       <td>
         <Button variant="info" onClick={() => goToOrderDetails(props.order.orderId)}>Ver detalles</Button>
